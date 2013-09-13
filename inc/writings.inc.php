@@ -143,20 +143,13 @@ class Writings extends Collector {
 		$banks = new Banks();
 		$banks->select();
 		$banks_name = $banks->names();
+		
 		$grid = array();
-		$selected_writing = determine_integer_from_post_get_session(null, "writings_id");
-
 		foreach ($this as $writing) {
-			$class_comment = "";
 			$informations = $writing->show_further_information();
-			if (!empty($informations)) {
-				$class_comment = "table_writings_comment";
-			}
-			if ($writing->is_recently_modified()) {
-				$class = "draggable modified";
-			} else {
-				$class = "draggable";
-			}
+			
+			$class_comment = empty($informations) ? "" : "table_writings_comment";
+			$class = $writing->is_recently_modified() ? "draggable modified" : "draggable";
 			
 			$grid[] =  array(
 				'class' => $class,

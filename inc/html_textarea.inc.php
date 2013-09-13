@@ -1,11 +1,11 @@
 <?php
 /*
-	opentime
-	$Author: manon.polle $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/html_textarea.inc.php $
-	$Revision: 5452 $
+	lozeil
+	$Author: adrien $
+	$URL: $
+	$Revision: $
 
-	Copyright (C) No Parking 2011 - 2011
+	Copyright (C) No Parking 2013 - 2013
 */
 
 class Html_Textarea {

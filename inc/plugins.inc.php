@@ -1,11 +1,11 @@
 <?php
 /*
-	opentime
-	$Author: perrick $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/plugins.inc.php $
-	$Revision: 5765 $
+	lozeil
+	$Author: adrien $
+	$URL: $
+	$Revision: $
 
-	Copyright (C) No Parking 2010 - 2013
+	Copyright (C) No Parking 2013 - 2013
 */
 
 class Plugins {

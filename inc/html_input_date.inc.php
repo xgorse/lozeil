@@ -1,11 +1,11 @@
 <?php
 /*
-	opentime
-	$Author: bodart $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/html_input_date.inc.php $
-	$Revision: 5938 $
+	lozeil
+	$Author: adrien $
+	$URL: $
+	$Revision: $
 
-	Copyright (C) No Parking 2011 - 2012
+	Copyright (C) No Parking 2013 - 2013
 */
 
 class Html_Input_Date extends Html_Input {

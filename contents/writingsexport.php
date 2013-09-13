@@ -1,11 +1,11 @@
 <?php
 /*
-	opentime
-	$Author: perrick $
-	$URL: svn://svn.noparking.net/var/repos/opentime/contents/contactexport.php $
-	$Revision:197 $
+	lozeil
+	$Author: adrien $
+	$URL: $
+	$Revision: $
 
-	Copyright (C) No Parking 2001 - 2011
+	Copyright (C) No Parking 2013 - 2013
 */
 
 $dbExport = new db();
