@@ -54,11 +54,9 @@ class Writings_Simulations extends Collector  {
 		return $timeline;
 	}
 	
-	
 	function display_timeline_at($timestamp) {
 		return "<div id=\"heading_timeline\">".$this->show_timeline_at($timestamp)."</div>";
 	}
-	
 	
 	function grid_header() {
 		$grid =  array(
@@ -168,8 +166,10 @@ class Writings_Simulations extends Collector  {
 				$last = determine_first_day_of_month($writingssimulation->date_stop);
 				$amount = $writingssimulation->amount_inc_vat;
 				$periodicity = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $writingssimulation->periodicity, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-
-				if (count($periodicity) == 1 and !is_numeric($periodicity[0])) {
+				
+				if ($first == $last) {
+					$amounts[$first][] = $amount;
+				} elseif (count($periodicity) == 1 and !is_numeric($periodicity[0])) {
 					if(preg_match("/(m)/i", $periodicity[0])) {
 						while ($first < $last) {
 							$first = strtotime('+1 months', $first);

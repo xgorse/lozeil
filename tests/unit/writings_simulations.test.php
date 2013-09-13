@@ -109,6 +109,23 @@ class tests_Writings_simulations extends TableTestCase {
 		$writingssimulation->display = 1;
 		$writingssimulation->save();
 		
+		$writingssimulation = new Writings_Simulation();
+		$writingssimulation->name = "Salarié";
+		$writingssimulation->amount_inc_vat = "11";
+		$writingssimulation->date_start = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->date_stop = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->periodicity = "truc";
+		$writingssimulation->display = 1;
+		$writingssimulation->save();
+		
+		$writingssimulation = new Writings_Simulation();
+		$writingssimulation->name = "Salarié";
+		$writingssimulation->amount_inc_vat = "12";
+		$writingssimulation->date_start = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->date_stop = mktime(0, 0, 0, 8, 25, 2013);
+		$writingssimulation->display = 1;
+		$writingssimulation->save();
+		
 		$writingssimulations = new Writings_Simulations();
 		$writingssimulations->select();
 		
@@ -151,11 +168,13 @@ class tests_Writings_simulations extends TableTestCase {
 				1 => '8.000000',
 				2 => '9.000000',
 				3 => '10.000000'
+			),
+			mktime(0, 0, 0, 8, 1, 2013) => array(
+				0 => '11.000000',
+				1 => '12.000000'
 			)
 		);
 		$this->assertIdentical($writingssimulations->get_amounts_in_array(), $supposed_array);
-		
-		
 		$this->truncateTable("writingssimulations");
 	}
 }

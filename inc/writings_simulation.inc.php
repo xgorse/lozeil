@@ -227,7 +227,6 @@ class Writings_Simulation extends Record {
 			case empty($form['date_stop']['d']) :
 			case empty($form['date_stop']['m']) :
 			case empty($form['date_stop']['Y']) :
-			case empty($form['periodicity']) :
 				return false;
 			default :
 				return true;
