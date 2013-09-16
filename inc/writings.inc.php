@@ -10,8 +10,9 @@
 
 class Writings extends Collector {
 	public $filters = null;
+	public $balance = array();
 	
-	private $month = 0;
+	private $amounts = 0;
 	
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
@@ -49,6 +50,31 @@ class Writings extends Collector {
 		$columns[] = $this->db->config['table_categories'].".name as category_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_banks'].".name as bank_name";
 
 		return $columns;
+	}
+	
+	function get_where() {
+		$query_where = parent::get_where();
+		
+		if (isset($this->filters['timestamp_start'])) {
+			$query_where[] = $this->db->config['table_writings'].".timestamp >= ".(int)$this->filters['timestamp_start'];
+		}
+		if (isset($this->filters['timestamp_stop'])) {
+			$query_where[] = $this->db->config['table_writings'].".timestamp <= ".(int)$this->filters['timestamp_stop'];
+		}
+		if (isset($this->filters['start'])) {
+			$query_where[] = $this->db->config['table_writings'].".day >= ".(int)$this->filters['start'];
+		}
+		if (isset($this->filters['stop'])) {
+			$query_where[] = $this->db->config['table_writings'].".day <= ".(int)$this->filters['stop'];
+		}
+		if (isset($this->filters['*']) and !empty($this->filters['*'])) {
+			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filters['*']."%");
+		}
+		if (isset($this->filters['categories_id'])) {
+			$query_where[] = $this->db->config['table_writings'].".categories_id = ".(int)$this->filters['categories_id'];
+		}
+		
+		return $query_where;
 	}
 	
 	function grid_header() {
@@ -216,37 +242,63 @@ class Writings extends Collector {
 		return "<div id=\"table_writings\"><form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".$this->show()."</form></div>";
 	}
 	
+	function amount_per_month() {
+		$amounts = array();
+		foreach ($this as $writing) {
+			if (isset($amounts[determine_first_day_of_month($writing->day)])) {
+				$amounts[determine_first_day_of_month($writing->day)] += (float)$writing->amount_inc_vat;
+			} else {
+				$amounts[determine_first_day_of_month($writing->day)] = (float)$writing->amount_inc_vat;
+			}
+		}
+		$this->amounts = $amounts;
+		return $amounts;
+	}
+	
+	function show_balance_at($timestamp) {
+		$amount = 0;
+		if (empty($this->amounts)) {
+			$this->amount_per_month();
+		}
+		foreach ($this->amounts as $month => $balance) {
+			if($month < $timestamp) {
+				$amount += $balance;
+			}
+		}
+		return round($amount, 2);
+	}
+	
 	function show_timeline_at($timestamp) {
 		$grid = array();
-		$this->month = determine_first_day_of_month($timestamp);
 		
 		$writings = new Writings();
-		$writings->filter_with(array('stop' => strtotime('+11 months', $this->month)));
+		$writings->month = determine_first_day_of_month($timestamp);
+		$writings->filter_with(array('stop' => strtotime('+11 months', $writings->month)));
 		$writings->select_columns('amount_inc_vat', 'day');
 		$writings->select();
-
-		$timeline_iterator = strtotime('-2 months', $this->month);
-
-		while ($timeline_iterator <= strtotime('+10 months', $this->month)) {
-			$class = "navigation";
-			if ($timeline_iterator == $this->month) {
+		
+		$timeline_iterator = strtotime('-2 months', $writings->month);
+		while ($timeline_iterator <= strtotime('+10 months', $writings->month)) {
+			if ($timeline_iterator == $writings->month) {
 				$class = "encours";
-			} 
-			$grid['leaves'][$timeline_iterator]['class'] = "heading_timeline_month_".$class;
-			$next_month = determine_first_day_of_next_month($timeline_iterator);
-			$balance = $writings->show_balance_at($next_month);
-			
+			} else {
+				$class = "navigation";
+			}
+			$balance = $writings->show_balance_at(determine_first_day_of_next_month($timeline_iterator));
 			$balance_class = $balance > 0 ? "positive_balance" : "negative_balance";
 			
-			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=writings.php&timestamp=".$timeline_iterator),
+			$grid['leaves'][$timeline_iterator] = array(
+				'class' => "heading_timeline_month_".$class,
+				'value' => Html_Tag::a(link_content("content=writings.php&timestamp=".$timeline_iterator),
 					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
 					date("Y", $timeline_iterator))."<br /><br />
-					<span class=\"".$balance_class."\">".$balance."</span>";
-			$timeline_iterator = $next_month;
+					<span class=\"".$balance_class."\">".$balance."</span>"
+				);
+			
+			$timeline_iterator = determine_first_day_of_next_month($timeline_iterator);
 		}
 		$list = new Html_List($grid);
 		$timeline = $list->show();
-
 		return $timeline;
 	}
 	
@@ -254,43 +306,9 @@ class Writings extends Collector {
 		return "<div id=\"heading_timeline\">".$this->show_timeline_at($timestamp)."</div>";
 	}
 	
-	function get_where() {
-		$query_where = parent::get_where();
-		
-		if (isset($this->filters['timestamp_start'])) {
-			$query_where[] = $this->db->config['table_writings'].".timestamp >= ".(int)$this->filters['timestamp_start'];
-		}
-		if (isset($this->filters['timestamp_stop'])) {
-			$query_where[] = $this->db->config['table_writings'].".timestamp <= ".(int)$this->filters['timestamp_stop'];
-		}
-		if (isset($this->filters['start'])) {
-			$query_where[] = $this->db->config['table_writings'].".day >= ".(int)$this->filters['start'];
-		}
-		if (isset($this->filters['stop'])) {
-			$query_where[] = $this->db->config['table_writings'].".day <= ".(int)$this->filters['stop'];
-		}
-		if (isset($this->filters['*']) and !empty($this->filters['*'])) {
-			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filters['*']."%");
-		}
-		if (isset($this->filters['categories_id'])) {
-			$query_where[] = $this->db->config['table_writings'].".categories_id = ".(int)$this->filters['categories_id'];
-		}
-		
-		return $query_where;
-	}
 	
 	function show_balance_on_current_date() {
 		return Html_Tag::a(link_content("content=writings.php&timestamp=".determine_first_day_of_month(time())),utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€"));
-	}
-	
-	function show_balance_at($timestamp) {
-		$amount = 0;
-		foreach ($this->instances as $writing) {
-			if($writing->day < $timestamp) {
-				$amount += $writing->amount_inc_vat;
-			}
-		}
-		return round($amount, 2);
 	}
 	
 	function show_balance_between($timestamp_min, $timestamp_max) {
