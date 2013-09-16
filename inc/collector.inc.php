@@ -17,6 +17,7 @@ class Collector implements iterator, countable, arrayAccess {
 	protected $limit_row_count = null;
 	protected $order_col_name = null;
 	protected $order_direction = null;
+	protected $order_extra = null;
 	protected $columns = array();
 	protected $restrictions = array();
 	protected $instances = array();
@@ -292,6 +293,9 @@ class Collector implements iterator, countable, arrayAccess {
 
 			if ($this->order_direction !== null) {
 				$order .= " ".$this->order_direction;
+			}
+			if ($this->order_extra !== null) {
+				$order .= " ".$this->order_extra;
 			}
 		}
 		

@@ -208,7 +208,6 @@ class tests_Writings extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->select();
-		$writings->set_balance_per_month();
 		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 29, 2013)), 150.56);
 		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 19, 2013)), 150.56);
 		
@@ -217,8 +216,8 @@ class tests_Writings extends TableTestCase {
 		$writing2->day = mktime(10, 0, 0, 7, 18, 2013);
 		$writing2->save();
 		
+		$writings = new Writings();
 		$writings->select();
-		$writings->set_balance_per_month();
 		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 29, 2013)), -2000);
 
 		$this->truncateTable("writings");
@@ -275,39 +274,8 @@ class tests_Writings extends TableTestCase {
 			mktime(0, 0, 0, 8, 1, 2013) => 111.560000,
 			mktime(0, 0, 0, 9, 1, 2013) => 200.000000
 		);
-		$this->assertIdentical($writings->amount_per_month(), $array_expected);
+		$writings->amount_per_month();
+		$this->assertIdentical($writings->amounts, $array_expected);
 		$this->truncateTable("writings");
-	}
-	
-	function test_set_balance_per_month() {
-		$writing = new Writing();
-		$writing->amount_inc_vat = 100;
-		$writing->day = mktime(0, 0, 0, 7, 16, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 110;
-		$writing->day = mktime(0, 0, 0, 8, 16, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 1.56;
-		$writing->day = mktime(0, 0, 0, 8, 1, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 120;
-		$writing->day = mktime(0, 0, 0, 9, 16, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 80;
-		$writing->day = mktime(0, 0, 0, 9, 30, 2013);
-		$writing->save();
-		$writings = new Writings();
-		$writings->select();
-		$array_expected = array(
-			mktime(0, 0, 0, 7, 1, 2013) => 100.000000,
-			mktime(0, 0, 0, 8, 1, 2013) => 211.560000,
-			mktime(0, 0, 0, 9, 1, 2013) => 411.560000
-		);
-		$writings->set_balance_per_month();
-		$this->assertIdentical($writings->balance, $array_expected);
 	}
 }

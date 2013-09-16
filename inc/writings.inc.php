@@ -10,9 +10,7 @@
 
 class Writings extends Collector {
 	public $filters = null;
-	public $balance = array();
-	
-	private $amounts = 0;
+	public $amounts = array();
 	
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
@@ -75,6 +73,14 @@ class Writings extends Collector {
 		}
 		
 		return $query_where;
+	}
+	
+	
+	function set_order($col_name, $direction = null) {
+		$this->order_extra = ", amount_inc_vat ASC";
+		$query_order = parent::set_order($col_name, $direction);
+		
+		return $query_order;
 	}
 	
 	function grid_header() {
@@ -252,7 +258,6 @@ class Writings extends Collector {
 			}
 		}
 		$this->amounts = $amounts;
-		return $amounts;
 	}
 	
 	function show_balance_at($timestamp) {
