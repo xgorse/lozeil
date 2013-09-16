@@ -41,7 +41,7 @@ switch ($_REQUEST['action']) {
 if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
 	$writings->filter_with(array('*' => $_SESSION['filter_value_*']));
 }
-$writings->set_order($_SESSION['order_col_name'], $_SESSION['order_direction']);
+$writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 echo $writings->show();

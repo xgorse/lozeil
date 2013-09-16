@@ -15,8 +15,7 @@ class Collector implements iterator, countable, arrayAccess {
 	protected $calc_found_rows = false;
 	protected $limit_offset = null;
 	protected $limit_row_count = null;
-	protected $order_col_name = null;
-	protected $order_direction = null;
+	protected $order = array();
 	protected $order_extra = null;
 	protected $columns = array();
 	protected $restrictions = array();
@@ -103,13 +102,8 @@ class Collector implements iterator, countable, arrayAccess {
 		return $this;
 	}
 
-	function set_order($col_name, $direction = null) {
-		$this->order_col_name = $col_name;
-
-		if ($direction !== null) {
-			$this->order_direction = $direction;
-		}
-
+	function add_order($clause) {
+		$this->order[] = $clause;
 		return $this;
 	}
 
@@ -217,7 +211,11 @@ class Collector implements iterator, countable, arrayAccess {
 		}
 
 		$query .= $group_by;
-		$query .= $order;
+		
+		if (sizeof($order) > 0) {
+			$query .= " ORDER BY ".join(", ", $order);
+		}
+
 		$query .= $limit;
 		
 		return $query;
@@ -286,19 +284,6 @@ class Collector implements iterator, countable, arrayAccess {
 	}
 	
 	protected function get_order() {
-		$order = "";
-		
-		if ($this->order_col_name !== null) {
-			$order = " ORDER BY ".$this->order_col_name;
-
-			if ($this->order_direction !== null) {
-				$order .= " ".$this->order_direction;
-			}
-			if ($this->order_extra !== null) {
-				$order .= " ".$this->order_extra;
-			}
-		}
-		
-		return $order;
+		return array();
 	}
 }

@@ -76,11 +76,8 @@ class Writings extends Collector {
 	}
 	
 	
-	function set_order($col_name, $direction = null) {
-		$this->order_extra = ", amount_inc_vat DESC";
-		$query_order = parent::set_order($col_name, $direction);
-		
-		return $query_order;
+	function get_order() {
+		$this->add_order("amount_inc_vat DESC");
 	}
 	
 	function grid_header() {

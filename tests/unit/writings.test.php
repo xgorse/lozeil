@@ -115,7 +115,7 @@ class tests_Writings extends TableTestCase {
 		$writing4->save();
 		
 		$writings = new Writings();
-		$writings->set_order('day', 'ASC');
+		$writings->add_order("day ASC");
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$writings->select();
 		
@@ -133,7 +133,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertNoPattern("/279/", $table);
 		
 		$writings = new Writings();
-		$writings->set_order('day', 'ASC');
+		$writings->add_order("day ASC");
 		$writings->filter_with(array('*' => "élément"));
 		$writings->select();
 		
@@ -142,7 +142,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertNoPattern("/Ceci est un test/", $table);
 		
 		$writings = new Writings();
-		$writings->set_order('day', 'ASC');
+		$writings->add_order("day ASC");
 		$writings->filter_with(array('*' => "Bank"));
 		$writings->select();
 		
@@ -151,7 +151,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/Bank 2/", $table);
 		
 		$writings = new Writings();
-		$writings->set_order('day', 'ASC');
+		$writings->add_order("day ASC");
 		$writings->filter_with(array('*' => "Source 1"));
 		$writings->select();
 		
