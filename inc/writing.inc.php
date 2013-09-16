@@ -137,7 +137,6 @@ class Writing extends Record {
 				$this->information = !empty($this->information) ? $this->information : $to_merge->information;
 				$this->number = !empty($this->number) ? $this->number : $to_merge->number;
 				$this->search_index = $this->search_index();
-				$this->unique_key = "";
 				$this->save();
 				$to_merge->delete();
 			} else {
@@ -153,7 +152,7 @@ class Writing extends Record {
 				$this->number = !empty($to_merge->number) ? $to_merge->number : $this->number;
 				$this->paid = $to_merge->paid;
 				$this->search_index = $this->search_index();
-				$this->unique_key = "";
+				$this->unique_key = $to_merge->unique_key;
 				$this->save();
 				$to_merge->delete();
 			}
