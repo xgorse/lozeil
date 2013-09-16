@@ -77,7 +77,7 @@ class Writings extends Collector {
 	
 	
 	function set_order($col_name, $direction = null) {
-		$this->order_extra = ", amount_inc_vat ASC";
+		$this->order_extra = ", amount_inc_vat DESC";
 		$query_order = parent::set_order($col_name, $direction);
 		
 		return $query_order;
