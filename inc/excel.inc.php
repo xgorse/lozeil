@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: $
-	$URL: $
-	$Revision: $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 function export_excel($title, $value) {
 	$error_reporting = error_reporting(E_ALL ^ E_NOTICE);

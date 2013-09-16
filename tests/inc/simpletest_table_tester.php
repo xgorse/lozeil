@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: svn://svn.noparking.net/var/repos/opentime/tests/inc/simpletest_table_tester.php $
-	$Revision: 5145 $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class RecordExistsExpectation extends SimpleExpectation {
 	private $table = "";

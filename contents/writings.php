@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction'])) {
 	$_SESSION['order_col_name'] = 'day';
