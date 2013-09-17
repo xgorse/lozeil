@@ -50,6 +50,8 @@ class Theme_Default {
 		$js_files[] = "medias/js/calendar.js";
 		$js_files[] = "medias/js/common.js";
 		$js_files[] = "medias/js/common.jquery.js";
+		$js_files[] = "medias/js/d3.js";
+		$js_files[] = "medias/js/cubism.js";
 		if ($GLOBALS['content'] == "writings.php") {
 			$js_files[] = "medias/js/writings.jquery.js";
 		}
