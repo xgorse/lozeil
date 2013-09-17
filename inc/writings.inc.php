@@ -1,5 +1,12 @@
 <?php
-/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+/*
+	lozeil
+	$Author: adrien $
+	$URL: $
+	$Revision:  $
+
+	Copyright (C) No Parking 2013 - 2013
+*/
 
 class Writings extends Collector {
 	public $filters = null;
@@ -264,7 +271,7 @@ class Writings extends Collector {
 	}
 	
 	function show_timeline_at($timestamp) {
-		$grid = array();
+		$balance = array();
 		
 		$writings = new Writings();
 		$writings->month = determine_first_day_of_month($timestamp);
@@ -272,29 +279,14 @@ class Writings extends Collector {
 		$writings->select_columns('amount_inc_vat', 'day');
 		$writings->select();
 		
-		$timeline_iterator = strtotime('-2 months', $writings->month);
-		while ($timeline_iterator <= strtotime('+10 months', $writings->month)) {
-			if ($timeline_iterator == $writings->month) {
-				$class = "encours";
-			} else {
-				$class = "navigation";
-			}
-			$balance = $writings->show_balance_at(determine_first_day_of_next_month($timeline_iterator));
-			$balance_class = $balance > 0 ? "positive_balance" : "negative_balance";
-			
-			$grid['leaves'][$timeline_iterator] = array(
-				'class' => "heading_timeline_month_".$class,
-				'value' => Html_Tag::a(link_content("content=writings.php&timestamp=".$timeline_iterator),
-					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
-					date("Y", $timeline_iterator))."<br /><br />
-					<span class=\"".$balance_class."\">".$balance."</span>"
-				);
-			
-			$timeline_iterator = determine_first_day_of_next_month($timeline_iterator);
-		}
-		$list = new Html_List($grid);
-		$timeline = $list->show();
-		return $timeline;
+		$cubismchart = new Html_Cubismchart();
+//		$timeline_iterator = strtotime('-2 months', $writings->month);
+//		while ($timeline_iterator <= strtotime('+10 months', $writings->month)) {
+//			$balance[$timeline_iterator] = $writings->show_balance_at(determine_first_day_of_next_month($timeline_iterator));
+//			$timeline_iterator = determine_first_day_of_next_month($timeline_iterator);
+//		}
+//		$linechart->data = $balance;
+		return $cubismchart->show();
 	}
 	
 	function display_timeline_at($timestamp) {

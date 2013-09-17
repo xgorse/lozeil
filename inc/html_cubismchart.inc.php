@@ -4,6 +4,6 @@
 class Html_Cubismchart {
 	
 	function show() {
-		return "<div id=\"example1\></div>";
+		return "<div id=\"example1\"></div>";
 	}
 }
