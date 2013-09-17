@@ -275,17 +275,11 @@ class Writings extends Collector {
 		
 		$writings = new Writings();
 		$writings->month = determine_first_day_of_month($timestamp);
-		$writings->filter_with(array('stop' => strtotime('+11 months', $writings->month)));
 		$writings->select_columns('amount_inc_vat', 'day');
 		$writings->select();
 		
 		$cubismchart = new Html_Cubismchart();
-//		$timeline_iterator = strtotime('-2 months', $writings->month);
-//		while ($timeline_iterator <= strtotime('+10 months', $writings->month)) {
-//			$balance[$timeline_iterator] = $writings->show_balance_at(determine_first_day_of_next_month($timeline_iterator));
-//			$timeline_iterator = determine_first_day_of_next_month($timeline_iterator);
-//		}
-//		$linechart->data = $balance;
+		$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(strtotime('-2 months', $writings->month));
 		return $cubismchart->show();
 	}
 	
@@ -338,10 +332,12 @@ class Writings extends Collector {
 	
 	function balance_per_day_in_a_year_in_array($timestamp_max) {
 		$values = array();
-		for ($i = 0; $i <= 365; $i++) {
+		$previous = 0;
+		for ($i = 0; $i <= 1095; $i++) {
 			$timestamp_min = $timestamp_max;
 			$timestamp_max = strtotime('+1 day', $timestamp_max);
-			$values[] = $this->show_balance_between($timestamp_min, $timestamp_max);
+			$values[] = $previous + $this->show_balance_between($timestamp_min, $timestamp_max);
+			$previous = $previous + $this->show_balance_between($timestamp_min, $timestamp_max);
 		}
 		return $values;
 	}
