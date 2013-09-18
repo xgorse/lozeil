@@ -20,7 +20,7 @@ window.onload = function () {
 			.attr("class", "horizon_positive")
 			.call(context.horizon()
 			.height(50)
-			.colors(["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
+			.colors(["#ff0000", "#ff4040", "#ff8080", "#ffbfbf", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
 		);
 	});
 
