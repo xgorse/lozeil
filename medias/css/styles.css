@@ -398,9 +398,7 @@ tr.modified {
 /* --- Menu --- */
 
 .menu {
-	position: absolute;
-	left: 50px;
-	right: 50px;;
+	position: relative;
 }
 
 .menu_header, .menu_handle, .menu_actions {

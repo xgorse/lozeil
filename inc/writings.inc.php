@@ -75,7 +75,6 @@ class Writings extends Collector {
 		return $query_where;
 	}
 	
-	
 	function get_order() {
 		$this->add_order("amount_inc_vat DESC");
 	}
@@ -361,5 +360,25 @@ class Writings extends Collector {
 		foreach ($this as $instance) {
 			$instance->delete();
 		}
+	}
+	
+	function navigation($timestamp) {
+		$grid = array();
+		$start = strtotime("-2 month", $timestamp);
+		$stop = strtotime("+10 month", $timestamp);
+		while ($start <= $stop) {
+			$class = "navigation";
+			if ($start == $stop) {
+				$class = "encours";
+			} 
+			$next_month = determine_first_day_of_next_month($start);
+			
+			$grid['leaves'][$start]['value'] = Html_Tag::a(link_content("content=writings.php&timestamp=".$start),
+					utf8_ucfirst($GLOBALS['array_month'][date("n",$start)])."<br />".
+					date("Y", $start));
+			$start = $next_month;
+		}
+		$list = new Html_List($grid);
+		return "<div id=\"heading_timeline\">".$list->show()."</div>";
 	}
 }
