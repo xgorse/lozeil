@@ -75,10 +75,6 @@ class Writings extends Collector {
 		return $query_where;
 	}
 	
-	function get_order() {
-		$this->add_order("amount_inc_vat DESC");
-	}
-	
 	function grid_header() {
 		$grid = array(
 			'header' => array(

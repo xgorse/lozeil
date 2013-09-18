@@ -268,15 +268,13 @@ class Collector implements iterator, countable, arrayAccess {
 
 	protected function get_group_by() {
 		$group_by = "";
-
 		if ($this->group_by !== null) {
 			$group_by = " GROUP BY ".$this->group_by;
 		}
-
 		return $group_by;
 	}
 	
 	protected function get_order() {
-		return array();
+		return $this->order;
 	}
 }
