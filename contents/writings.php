@@ -93,11 +93,9 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 }
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
-
 $heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['timestamp']), $writings->form_filter($writings_filter_value).$writings->form_cancel_last_operation());
 echo $heading->show();
 echo $writings->navigation($_SESSION['timestamp']);
-
 
 echo $writings->display();
 

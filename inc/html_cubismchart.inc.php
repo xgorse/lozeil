@@ -4,6 +4,7 @@
 class Html_Cubismchart {
 	public $data = array();
 	public $width = 1095;
+	public $height = 55;
 	
 	function prepare_data() {
 		$data = "<ul class=\"cubism_data\">";
@@ -11,7 +12,10 @@ class Html_Cubismchart {
 			$data .="<li>".$value."</li>";
 		}
 		$data .= "</ul>";
-		$data .= "<ul class=\"cubism_width\"><li>".$this->width."</li></ul>";
+		$data .= "<ul class=\"cubism_option\">
+					<li id=\"cubism_width\">".$this->width."</li>
+					<li id=\"cubism_height\">".$this->height."</li>
+				  </ul>";
 		return $data;
 	}
 	

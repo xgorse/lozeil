@@ -301,6 +301,17 @@ class Writings extends Collector {
 		return round($amount, 2);
 	}
 	
+	
+	function show_balance_to($timestamp_max) {
+		$amount = 0;
+		foreach ($this->instances as $writing) {
+			if($writing->day < $timestamp_max) {
+				$amount += $writing->amount_inc_vat;
+			}
+		}
+		return round($amount, 2);
+	}
+	
 	function form_filter($value = "") {
 		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "filter");
@@ -332,11 +343,11 @@ class Writings extends Collector {
 	function balance_per_day_in_a_year_in_array($timestamp_max) {
 		$values = array();
 		$previous = 0;
-		for ($i = 0; $i <= 1095; $i++) {
-			$timestamp_min = $timestamp_max;
+		for ($i = 0; $i <= 365; $i++) {
 			$timestamp_max = strtotime('+1 day', $timestamp_max);
-			$values[] = $previous + $this->show_balance_between($timestamp_min, $timestamp_max);
-			$previous = $previous + $this->show_balance_between($timestamp_min, $timestamp_max);
+			$values[] = $previous + $this->show_balance_to($timestamp_max);
+			$values[] = $previous + $this->show_balance_to($timestamp_max + 8 * 3600);
+			$values[] = $previous + $this->show_balance_to($timestamp_max + 16 * 3600);
 		}
 		return $values;
 	}

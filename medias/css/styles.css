@@ -735,7 +735,7 @@ tr.modified {
 	margin-bottom: 15px;
 }
 
-.cubism_data, .cubism_width {
+.cubism_data, .cubism_width, .cubism_option {
 	display: none !important;
 }
 
