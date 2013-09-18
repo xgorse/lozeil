@@ -686,27 +686,29 @@ tr.modified {
   shape-rendering: crispEdges;
 }
 
-.horizon {
+.horizon_positive {
   border-bottom: solid 1px #000;
   overflow: hidden;
   position: relative;
 }
 
-.horizon {
+.horizon_positive {
   border-top: solid 1px #000;
   border-bottom: solid 1px #000;
 }
 
-.horizon + .horizon {
+.horizon_positive + .horizon_positive {
   border-top: none;
 }
 
-.horizon canvas {
+.horizon_positive canvas, .horizon_negative canvas {
   display: block;
 }
 
-.horizon .title,
-.horizon .value {
+.horizon_positive .title,
+.horizon_positive .value,
+.horizon_negative .title,
+.horizon_negative .value{
   bottom: 0;
   line-height: 30px;
   margin: 0 6px;
@@ -715,11 +717,13 @@ tr.modified {
   white-space: nowrap;
 }
 
-.horizon .title {
+.horizon_negative .title,
+.horizon_positive .title{
   left: 0;
 }
 
-.horizon .value {
+.horizon_negative .value,
+.horizon_positive .value{
   right: 0;
 }
 
@@ -735,4 +739,9 @@ tr.modified {
 
 .cubism_data, .cubism_width {
 	display: none !important;
+}
+
+canvas {
+	z-index: 0;
+	position: relative;
 }
