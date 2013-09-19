@@ -16,6 +16,7 @@ class Html_Cubismchart {
 	function prepare_data() {
 		$data = "<ul class=\"cubism_data\">";
 		$data .="<li class=\"cubism_data_title\">".$this->title."</li>";
+		$data .="<li class=\"cubism_data_average\">".(array_sum($this->data)/count($this->data))."</li>";
 		foreach ($this->data as $value) {
 			$data .="<li class=\"cubism_data_row\">".$value."</li>";
 		}

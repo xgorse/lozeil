@@ -158,6 +158,113 @@ class Bot {
 		}
 		$this->log(__("Finish updating application"));
 	}
+
+	function demo() {
+		$this->reinstall_database();
+		$this->log(__("Start building up demo"));
+		
+		$category = new Category();
+		$category->name = 'Opentime.fr';
+		$category->save();
+		$category = new Category();
+		$category->name = 'Opentime.info';
+		$category->save();
+		$category = new Category();
+		$category->name = 'Aberlaas';
+		$category->save();
+		$category = new Category();
+		$category->name = 'Alticcio';
+		$category->save();
+		$category = new Category();
+		$category->name = 'Salaires';
+		$category->save();
+		$category = new Category();
+		$category->name = 'Lozeil';
+		$category->save();
+		$category = new Category();
+		$category->name = 'Telecom';
+		$category->save();
+		
+		// Opentime.fr
+		for ($i = 0; $i < 24; $i++) {
+			for ($j = 0; $j < 3; $j++) {
+				$writing = new Writing();
+				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(15,25), date('Y', time()) - 1);
+				$writing->categories_id = 1;
+				$writing->amount_inc_vat = 500*(rand(90,120)/100);
+				$writing->save();
+			}
+		}
+		
+		// Opentime.info
+		for ($i = 0; $i < 24; $i = $i + 2) {
+			for ($j = 0; $j < 3; $j++) {
+				$writing = new Writing();
+				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(15,25), date('Y', time()) - 1);
+				$writing->categories_id = 2;
+				$writing->amount_inc_vat = 1000*(rand(90,120)/100);
+				$writing->save();
+			}
+		}
+		
+		// Aberlaas
+		for ($i = 0; $i < 24; $i++) {
+			$writing = new Writing();
+			$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(1,28), date('Y', time()) - 1);
+			$writing->categories_id = 3;
+			$writing->amount_inc_vat = 100*(rand(90,150)/100);
+			$writing->save();
+			$writing = new Writing();
+			$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(1,28), date('Y', time()) - 1);
+			$writing->categories_id = 3;
+			$writing->amount_inc_vat = -100*(rand(90,120)/100);
+			$writing->save();
+		}
+		
+		// Alticcio
+		for ($i = 0; $i < 24; $i++) {
+			for ($j = 0; $j < 2; $j++) {
+				$writing = new Writing();
+				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(1,28), date('Y', time()) - 1);
+				$writing->categories_id = 4;
+				$writing->amount_inc_vat = 500*(rand(90,150)/100);
+				$writing->save();
+			}
+		}
+		
+		// Salaires
+		for ($i = 0; $i < 24; $i++) {
+			for ($j = 0; $j < 4; $j++) {
+				$writing = new Writing();
+				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, 25, date('Y', time()) - 1);
+				$writing->categories_id = 5;
+				$writing->amount_inc_vat = -1000*(rand(90,120)/100);
+				$writing->save();
+			}
+		}
+		
+		// Telecom
+		for ($i = 0; $i < 24; $i++) {
+			for ($j = 0; $j < 2; $j++) {
+				$writing = new Writing();
+				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, 25, date('Y', time()) - 1);
+				$writing->categories_id = 7;
+				$writing->amount_inc_vat = -10*(rand(90,120)/100);
+				$writing->save();
+			}
+		}
+		
+		// Embauche
+		for ($i = 0; $i < 6; $i++) {
+			$writing = new Writing();
+			$writing->day = mktime(0, 0, 0, date('m', time()) + $i, 25, date('Y', time()));
+			$writing->categories_id = 5;
+			$writing->amount_inc_vat = -2000*(rand(90,120)/100);
+			$writing->save();
+		}
+		
+		$this->log(__("Stop building up demo"));
+	}
 	
 	function log($message) {
 		Message::log($message);

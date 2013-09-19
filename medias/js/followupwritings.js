@@ -4,7 +4,8 @@ function make_timeline() {
 	var start_year = $("#cubism_start_year").text();
 	var isleap_year = $("#cubism_isleap_year").text();
 	var titles = [],
-		link = []
+		link = [],
+		averages = []
 	
 	if (isleap_year.length == 0) {
 		isleap_year = 1;
@@ -14,6 +15,10 @@ function make_timeline() {
 	
 	$(".cubism_data_title").each(function() {
 		titles.push($(this).text());
+	})
+	
+	$(".cubism_data_average").each(function() {
+		averages.push($(this).text());
 	})
 	
 	 $(".cubism_link").each(function() {
@@ -38,15 +43,19 @@ function make_timeline() {
 		var i = 0;
 		$(".cubism_data").each(function () {
 			i++
+			if (averages[i-1] < 0) {
+				averages[i-1] = -averages[i-1];
+			}
 			var data = get_data("", i);
 			div.datum(data);
 			div.append("div")
 				.attr("class", "horizon")
 				.call(context.horizon()
 				.height(height)
-			.colors(["#B80000", "#D43333", "#F26F6F", "#FABEBE", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
+				.colors(["#B80000", "#D43333", "#F26F6F", "#FABEBE", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
 				.format(d3.format("r"))
 				.title(titles[i - 1])
+				.extent([-averages[i-1]*1.5, +averages[i-1]*1.5])
 			);
 		})
 	});

@@ -21,8 +21,8 @@ $queries = array(
 		  selected TINYINT(1) NOT NULL DEFAULT 0,
 		  PRIMARY KEY (`id`)
 		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-		"INSERT INTO ".$GLOBALS['dbconfig']['table_banks']." VALUES (1, 'cic', 0);",
-		"INSERT INTO ".$GLOBALS['dbconfig']['table_banks']." VALUES (2, 'coop', 0);",
+		"INSERT INTO ".$GLOBALS['dbconfig']['table_banks']." VALUES (1, 'cic', 1);",
+		"INSERT INTO ".$GLOBALS['dbconfig']['table_banks']." VALUES (2, 'coop', 1);",
 
 	'writings' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_writings']." (
 		  id int(21) NOT NULL AUTO_INCREMENT,

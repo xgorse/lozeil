@@ -3,7 +3,8 @@ function make_timeline() {
 	var height = $("#cubism_height").text();
 	var start_year = $("#cubism_start_year").text();
 	var isleap_year = $("#cubism_isleap_year").text();
-	var link = [];
+	var	averages = $(".cubism_data_average").text();
+	var link = []
 	
 	if (isleap_year.length == 0) {
 		isleap_year = 1;
@@ -14,6 +15,7 @@ function make_timeline() {
 	 $(".cubism_link").each(function() {
 		 link.push($(this).text());
 	 });
+	
 	var context = cubism.context()
 		.serverDelay(Date.now() - new Date(parseInt(start_year) + 1, 0, parseInt(isleap_year), 0,0 ,0 ,0))
 		.clientDelay(0)
@@ -34,7 +36,10 @@ function make_timeline() {
 				.orient("top")
 				.tickFormat(d3.time.format("%m/%Y"))
 			);
-				
+		if (averages < 0) {
+			averages = -averages;
+		}
+		
 		div.append("div")
 			.attr("class", "horizon")
 			.call(context.horizon()
