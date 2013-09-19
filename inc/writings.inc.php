@@ -271,7 +271,7 @@ class Writings extends Collector {
 		$writings->select_columns('amount_inc_vat', 'day');
 		$writings->select();
 		
-		$cubismchart = new Html_Cubismchart();
+		$cubismchart = new Html_Cubismchart("writings");
 		$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 0, date('Y',$writings->month)));
 		$cubismchart->start = $writings->month;
 		return $cubismchart->show();

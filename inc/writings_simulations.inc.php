@@ -2,7 +2,7 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Writings_Simulations extends Collector  {
-	
+	public $amounts = array();
 	public $filters = null;
 	
 	function __construct($class = null, $table = null, $db = null) {
@@ -19,32 +19,12 @@ class Writings_Simulations extends Collector  {
 	}
 	
 	function show_timeline_at($timestamp) {
-		$grid = array();
 		$this->month = determine_first_day_of_month($timestamp);
 		
-		$timeline_iterator = strtotime('-2 months', $this->month);
-		$writingssimulations = new Writings_Simulations();
-		while ($timeline_iterator <= strtotime('+10 months', $this->month)) {
-			$class = "navigation";
-			if ($timeline_iterator == $this->month) {
-				$class = "encours";
-			} 
-			$grid['leaves'][$timeline_iterator]['class'] = "heading_timeline_month_".$class;
-			$next_month = determine_first_day_of_next_month($timeline_iterator);
-			$balance = $writingssimulations->show_balance_at($next_month);
-			
-			$balance_class = $balance > 0 ? "positive_balance" : "negative_balance";
-			
-			$grid['leaves'][$timeline_iterator]['value'] = Html_Tag::a(link_content("content=writingssimulations.php&timestamp=".$timeline_iterator),
-					utf8_ucfirst($GLOBALS['array_month'][date("n",$timeline_iterator)])."<br />".
-					date("Y", $timeline_iterator))."<br /><br />
-					<span class=\"".$balance_class."\">".$balance."</span>";
-			$timeline_iterator = $next_month;
-		}
-		$list = new Html_List($grid);
-		$timeline = $list->show();
-
-		return $timeline;
+		$cubismchart = new Html_Cubismchart("writingssimulations");
+		$cubismchart->data = $this->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 0, date('Y',$this->month)));
+		$cubismchart->start = $this->month;
+		return $cubismchart->show();
 	}
 	
 	function display_timeline_at($timestamp) {
@@ -155,8 +135,8 @@ class Writings_Simulations extends Collector  {
 		$amounts = array();
 		foreach ($this as $writingssimulation) {
 			if ($writingssimulation->display == 1) {
-				$first = determine_first_day_of_month($writingssimulation->date_start);
-				$last = determine_first_day_of_month($writingssimulation->date_stop);
+				$first = $writingssimulation->date_start;
+				$last = $writingssimulation->date_stop;
 				$amount = $writingssimulation->amount_inc_vat;
 				$periodicity = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $writingssimulation->periodicity, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 				
@@ -202,23 +182,9 @@ class Writings_Simulations extends Collector  {
 		return $amounts;
 	}
 	
-	function show_balance_at($timestamp) {
-		$writings = new Writings();
-		$writings->filter_with(array('stop' => strtotime('+11 months', determine_first_day_of_month($timestamp))));
-		$writings->select_columns('amount_inc_vat', 'day');
-		$writings->select();
-		
-		$this->select();
-		$simulation_amounts = $this->get_amounts_in_array();
-		
+	function show_balance_to($timestamp) {
 		$amount = 0;
-		foreach ($writings->instances as $writing) {
-			if($writing->day < $timestamp) {
-				$amount += $writing->amount_inc_vat;
-			}
-		}
-		
-		foreach ($simulation_amounts as $month => $values) {
+		foreach ($this->amounts as $month => $values) {
 			if($month < $timestamp) {
 				foreach ($values as $value) {
 					$amount += $value;
@@ -226,5 +192,30 @@ class Writings_Simulations extends Collector  {
 			}
 		}
 		return round($amount, 2);
+	}
+	
+	function balance_per_day_in_a_year_in_array($timestamp_max) {
+		if (is_leap(date('Y',$timestamp_max) + 1)) {
+			$nb_day = 366;
+		} else {
+			$nb_day = 365;
+		}
+		
+		$writings = new Writings();
+		$writings->filter_with(array('stop' => strtotime('+11 months', determine_first_day_of_month($timestamp_max))));
+		$writings->select_columns('amount_inc_vat', 'day');
+		$writings->select();
+		$this->select();
+		$this->amounts = $this->get_amounts_in_array();
+		
+		$values = array();
+		$previous = 0;
+		for ($i = 0; $i <= $nb_day; $i++) {
+			$timestamp_max = strtotime('+1 day', $timestamp_max);
+			$values[] = $previous + $writings->show_balance_to($timestamp_max) + $this->show_balance_to($timestamp_max);
+			$values[] = $previous + $writings->show_balance_to($timestamp_max + 8 * 3600) + $this->show_balance_to($timestamp_max + 8 * 3600);
+			$values[] = $previous + $writings->show_balance_to($timestamp_max + 16 * 3600) + $this->show_balance_to($timestamp_max + 16 * 3600);
+		}
+		return $values;
 	}
 }

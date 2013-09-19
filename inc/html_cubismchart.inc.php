@@ -2,10 +2,15 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Cubismchart {
+	public $name = "";
 	public $data = array();
 	public $width = 1095;
 	public $height = 55;
 	public $start = 0;
+	
+	function __construct($name = "") {
+		$this->name = $name;
+	}
 	
 	function prepare_data() {
 		$data = "<ul>";
@@ -20,7 +25,7 @@ class Html_Cubismchart {
 					<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>";
 		$start = mktime(0, 0, 0, 1, 1, date ('Y',$this->start));
 		for ($i = 0; $i <12; $i++) {
-			$data .= "<li class=\"cubism_link\">".link_content("content=writings.php&amp;timestamp=").$start."</li>";
+			$data .= "<li class=\"cubism_link\">".link_content("content=".$this->name.".php&amp;timestamp=").$start."</li>";
 			$start = strtotime("+1 month", $start);
 		}
 			$data .= "</ul>";
@@ -30,8 +35,8 @@ class Html_Cubismchart {
 	function prepare_navigation() {
 		$previous_year = mktime(0, 0, 0, 1, 1, date ('Y',$this->start) - 1);
 		$next_year = mktime(0, 0, 0, 1, 1, date ('Y',$this->start) + 1);
-		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=writings.php&amp;timestamp=".$previous_year),"<<")."</span>
-			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=writings.php&amp;timestamp=".$next_year),">>")."</span>";
+		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;timestamp=".$previous_year),"<<")."</span>
+			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;timestamp=".$next_year),">>")."</span>";
 	}
 	
 	function show() {
