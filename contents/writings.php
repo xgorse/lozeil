@@ -86,6 +86,7 @@ echo $menu->show();
 
 $writings = new Writings();
 $writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
+$writings->add_order("amount_inc_vat DESC");
 $writings_filter_value = "";
 if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
 	$writings_filter_value = $_SESSION['filter_value_*'];
