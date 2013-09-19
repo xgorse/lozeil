@@ -44,7 +44,7 @@ function make_timeline() {
 				.attr("class", "horizon")
 				.call(context.horizon()
 				.height(height)
-				.colors(["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
+			.colors(["#B80000", "#D43333", "#F26F6F", "#FABEBE", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
 				.format(d3.format("r"))
 				.title(titles[i - 1])
 			);
