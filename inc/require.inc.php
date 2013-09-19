@@ -50,6 +50,7 @@ require $current_directory."/user_authentication.inc.php";
 require $current_directory."/writing.inc.php";
 require $current_directory."/writings.inc.php";
 require $current_directory."/writings_data_file.inc.php";
+require $current_directory."/writings_followup.inc.php";
 require $current_directory."/writings_simulation.inc.php";
 require $current_directory."/writings_simulations.inc.php";
 

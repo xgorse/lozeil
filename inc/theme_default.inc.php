@@ -52,16 +52,16 @@ class Theme_Default {
 		$js_files[] = "medias/js/common.jquery.js";
 		$js_files[] = "medias/js/d3.js";
 		$js_files[] = "medias/js/cubism.js";
-		$js_files[] = "medias/js/timeline.js";
 		if ($GLOBALS['content'] == "writings.php") {
 			$js_files[] = "medias/js/writings.jquery.js";
+			$js_files[] = "medias/js/timeline.js";
 		}
 		if ($GLOBALS['content'] == "followupwritings.php") {
-			$js_files[] = "medias/js/sparkline.jquery.min.js";
-			$js_files[] = "medias/js/sparkline.jquery.js";
+			$js_files[] = "medias/js/followupwritings.js";
 		}
 		if ($GLOBALS['content'] == "writingssimulations.php") {
 			$js_files[] = "medias/js/writingssimulations.jquery.js";
+			$js_files[] = "medias/js/timeline.js";
 		}
 		if ($GLOBALS['content'] == "login.php") {
 			$js_files[] = "medias/js/login.jquery.js";

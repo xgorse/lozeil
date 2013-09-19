@@ -752,3 +752,9 @@ canvas {
 #cubismtimeline_next {
 	float: right;
 }
+
+.timeseries {
+	display: block;
+	width: 1095px;
+	margin: 10px auto;
+}

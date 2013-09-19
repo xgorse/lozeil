@@ -7,15 +7,17 @@ class Html_Cubismchart {
 	public $width = 1095;
 	public $height = 55;
 	public $start = 0;
+	public $title = '';
 	
 	function __construct($name = "") {
 		$this->name = $name;
 	}
 	
 	function prepare_data() {
-		$data = "<ul>";
+		$data = "<ul class=\"cubism_data\">";
+		$data .="<li class=\"cubism_data_title\">".$this->title."</li>";
 		foreach ($this->data as $value) {
-			$data .="<li class=\"cubism_data\">".$value."</li>";
+			$data .="<li class=\"cubism_data_row\">".$value."</li>";
 		}
 		$data .= "</ul>";
 		$data .= "<ul class=\"cubism_option\">
@@ -42,5 +44,10 @@ class Html_Cubismchart {
 	function show() {
 		return "<div id=\"cubismtimeline\" style=\"width : ".$this->width."px\"></div>"
 				.$this->prepare_data().$this->prepare_navigation();
+	}
+	
+	function display() {
+		return "<div id=\"cubismtimeline\" style=\"width : ".$this->width."px\"></div>"
+				.$this->prepare_data();
 	}
 }

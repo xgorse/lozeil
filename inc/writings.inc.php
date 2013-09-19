@@ -296,7 +296,6 @@ class Writings extends Collector {
 		return round($amount, 2);
 	}
 	
-	
 	function show_balance_to($timestamp_max) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
