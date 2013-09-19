@@ -158,27 +158,6 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("banks");
 	}
 	
-	function test_show_timeline_at() {
-		$_SESSION['timestamp'] = 1375308000;
-		$writings = new Writings();
-		
-		$this->assertPattern("/".strtotime('-2 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('-1 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/1375308000/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+1 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+2 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+3 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+4 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+5 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+6 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+7 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+8 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+9 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/".strtotime('+10 months', 1375308000)."/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/timeline_month_encours/", $writings->show_timeline_at($_SESSION['timestamp']));
-		$this->assertPattern("/timeline_month_navigation/", $writings->show_timeline_at($_SESSION['timestamp']));
-	}
-	
 	function test_get_where() {
 		$_SESSION['timestamp'] = 1375308000;
 		list($start, $stop) = determine_month($_SESSION['timestamp']);

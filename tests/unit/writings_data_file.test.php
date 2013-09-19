@@ -104,7 +104,8 @@ class tests_Writings_Data_File extends TableTestCase {
 			fputcsv($handle, $data, ";");
 		}
 		
-		$data = new Writings_Data_File($name, 1);
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 1;
 		$data->prepare_csv_data();
 		$data->import_as_cic();
 		
@@ -152,7 +153,8 @@ class tests_Writings_Data_File extends TableTestCase {
 				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
 			)
 		);
-		$data = new Writings_Data_File($name, 1);
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 1;
 		$data->prepare_csv_data();
 		$data->import_as_cic();
 		
@@ -188,7 +190,8 @@ class tests_Writings_Data_File extends TableTestCase {
 			fputcsv($handle, $data, ";");
 		}
 		
-		$data = new Writings_Data_File($name, 2);
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 2;
 		$data->prepare_csv_data();
 		$data->import_as_coop();
 		
@@ -241,7 +244,8 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 				)
 		);
 		
-		$data = new Writings_Data_File($name, 2);
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 2;
 		$data->prepare_csv_data();
 		$data->import_as_coop();
 		fclose($handle);
