@@ -475,10 +475,13 @@ class Writing extends Record {
 			$this->day = strtotime('+'.$amount.' months', $this->day);
 			$this->save();
 		} else {
-			$split = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $amount, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+			$split = preg_split("/(q)|(y)|(a)|(t)|(m)|(d)|(j)/i", $amount, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 			if (count($split) == 2 and is_numeric($split[0])) {
 				if(preg_match("/(m)/i", $split[1])) {
 					$this->day = strtotime('+'.$split[0].' months', $this->day);
+					$this->save();
+				} elseif(preg_match("/(d)|(j)/i", $split[1])) {
+					$this->day = strtotime('+'.($split[0]).' days', $this->day);
 					$this->save();
 				} elseif(preg_match("/(q)|(t)/i", $split[1])) {
 					$this->day = strtotime('+'.($split[0] * 3).' months', $this->day);

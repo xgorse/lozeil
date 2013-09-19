@@ -849,5 +849,53 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2016), $writing->day);
 		
 		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 9, 19, 2013);
+		$writing->save();
+		$writing->forward("3j");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 9, 22, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 9, 19, 2013);
+		$writing->save();
+		$writing->forward("12J");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 10, 1, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 9, 19, 2013);
+		$writing->save();
+		$writing->forward("3d");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 9, 22, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(10, 0, 0, 9, 19, 2013);
+		$writing->save();
+		$writing->forward("12D");
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 1);
+		$writing->load(1);
+		$this->assertEqual(mktime(10, 0, 0, 10, 1, 2013), $writing->day);
+		
+		$this->truncateTable("writings");
 	}
 }
