@@ -16,7 +16,8 @@ class Html_Cubismchart {
 		$data .= "<ul class=\"cubism_option\">
 					<li id=\"cubism_width\">".$this->width."</li>
 					<li id=\"cubism_height\">".$this->height."</li>
-					<li id=\"cubism_start_year\">".date('Y', $this->start)."</li>";
+					<li id=\"cubism_start_year\">".date('Y', $this->start)."</li>
+					<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>";
 		$start = mktime(0, 0, 0, 1, 1, date ('Y',$this->start));
 		for ($i = 0; $i <12; $i++) {
 			$data .= "<li class=\"cubism_link\">".link_content("content=writings.php&amp;timestamp=").$start."</li>";

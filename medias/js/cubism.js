@@ -1240,7 +1240,7 @@ cubism_contextPrototype.axis = function() {
         } else {
           tick.style("display", null).attr("x", i).text(format(scale.invert(i)));
           var dx = tick.node().getComputedTextLength() + 6;
-          g.selectAll("text").style("fill-opacity", function(d) { return Math.abs(scale(d) - i +45) < dx ? 0 : 1; });
+          g.selectAll("text").style("fill-opacity", function(d) { return Math.abs(scale(d) - i + 45) < dx ? 0 : 1; });
         }
       }
     });
@@ -1345,6 +1345,6 @@ function cubism_ruleStyle(line) {
 }
 
 function cubism_ruleLeft(i) {
-  return (i + 79) + "px";
+  return (i) + "px";
 }
 })(this);

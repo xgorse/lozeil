@@ -331,3 +331,7 @@ function excel_span_format($span) {
 	
 	return $excel_formatted;
 }
+
+function is_leap($year=NULL) {
+    return checkdate(2, 29, ($year==NULL)? date('Y'):$year);
+}

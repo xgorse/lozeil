@@ -8,10 +8,9 @@ class Writings_Data_File {
 	public $csv_data = array();
 	public $unique_keys = array();
 	
-	function __construct($tmp_name ="", $banks_id = null, $file_name = "") {
+	function __construct($tmp_name ="", $file_name = "") {
 		$this->tmp_name = $tmp_name;
 		$this->file_name = $file_name;
-		$this->banks_id = $banks_id;
 		$this->csv_data = array();
 		
 		$writings = new Writings();

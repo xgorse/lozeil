@@ -2,13 +2,21 @@ window.onload = function () {
 	var width = $("#cubism_width").text();
 	var height = $("#cubism_height").text();
 	var start_year = $("#cubism_start_year").text();
+	var isleap_year = $("#cubism_isleap_year").text();
 	var link = [];
+	
+	if (isleap_year.length == 0) {
+		isleap_year = 1;
+	} else {
+		isleap_year = 0;
+	}
+	
 	
 	 $(".cubism_link").each(function() {
 		 link.push($(this).text());
 	 });
 	var context = cubism.context()
-		.serverDelay(Date.now() - new Date(parseInt(start_year) + 1, 0, 1, 0,0 ,0 ,0))
+		.serverDelay(Date.now() - new Date(parseInt(start_year) + 1, 0, parseInt(isleap_year), 0,0 ,0 ,0))
 		.clientDelay(0)
 		.step(1000*60*60*8)
 		.size(width)
@@ -31,11 +39,12 @@ window.onload = function () {
 			.call(context.horizon()
 			.height(height)
 			.colors(["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
+			.format(d3.format("r"))
 		);
 			
-		div.append("div")
-			.attr("class", "rule")
-			.call(context.rule());
+//		div.append("div")
+//			.attr("class", "rule")
+//			.call(context.rule());
 	});
 	
 	$("#cubismtimeline g .tick").on("click", function() {
