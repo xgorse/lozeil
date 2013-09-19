@@ -1,4 +1,4 @@
-window.onload = function () {
+function make_timeline() {
 	var width = $("#cubism_width").text();
 	var height = $("#cubism_height").text();
 	var start_year = $("#cubism_start_year").text();
@@ -26,6 +26,8 @@ window.onload = function () {
 	var scale = d3.scale.linear();
 	
 	d3.select("#cubismtimeline").call(function(div) {
+		$(".axis").remove();
+		$(".horizon").remove();
 		div.datum(data);
 		div.append("div")
 			.attr("class", "axis")
@@ -35,7 +37,7 @@ window.onload = function () {
 			);
 				
 		div.append("div")
-			.attr("class", "horizon_positive")
+			.attr("class", "horizon")
 			.call(context.horizon()
 			.height(height)
 			.colors(["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
@@ -73,3 +75,11 @@ window.onload = function () {
 		}, name);
 	}
 }
+
+window.onload = function() {
+	make_timeline();
+}
+
+$(document).ajaxStop(function() {
+	make_timeline();
+})

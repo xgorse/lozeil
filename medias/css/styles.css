@@ -684,29 +684,25 @@ tr.modified {
   shape-rendering: crispEdges;
 }
 
-.horizon_positive {
+.horizon {
   border-bottom: solid 1px #000;
   overflow: hidden;
   position: relative;
-}
-
-.horizon_positive {
   border-top: solid 1px #000;
   border-bottom: solid 1px #000;
 }
 
-.horizon_positive + .horizon_positive {
+
+.horizon + .horizon {
   border-top: none;
 }
 
-.horizon_positive canvas, .horizon_negative canvas {
+.horizon canvas {
   display: block;
 }
 
-.horizon_positive .title,
-.horizon_positive .value,
-.horizon_negative .title,
-.horizon_negative .value{
+.horizon .title,
+.horizon .value {
   bottom: 0;
   line-height: 30px;
   margin: 0 6px;
@@ -715,13 +711,11 @@ tr.modified {
   white-space: nowrap;
 }
 
-.horizon_negative .title,
-.horizon_positive .title{
+.horizon .title{
   left: 0;
 }
 
-.horizon_negative .value,
-.horizon_positive .value{
+.horizon .value{
   right: 0;
 }
 
