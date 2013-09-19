@@ -316,7 +316,7 @@ tr.modified {
 /* --- Heading --- */
 
 .heading {
-	padding-top: 35px;
+	padding-top: 15px;
 }
 
 .heading h2 {
@@ -341,8 +341,7 @@ tr.modified {
 #heading_timeline {
 	display: block;
     width: 1095px;
-    margin: 0 auto;
-	margin-top: 10px;
+    margin: 10px auto;
 }
 
 #heading_timeline li {
@@ -673,6 +672,12 @@ tr.modified {
 
 .axis text {
   -webkit-transition: fill-opacity 250ms linear;
+}
+.axis text:hover {
+	transition: font-size 0.2s;
+	-webkit-transition: font-size 0.2s;
+	font-weight: bold;
+	font-size: 110%;
 }
 
 .axis path {
