@@ -726,13 +726,11 @@ tr.modified {
 }
 
 .line {
+  top: 50px;
+  height: 75px;
   background: #000;
   opacity: 0.2;
   z-index: 2;
-}
-
-#cubismtimeline {
-	margin-bottom: 15px;
 }
 
 .cubism_data, .cubism_width, .cubism_option {
@@ -742,4 +740,16 @@ tr.modified {
 canvas {
 	z-index: 0;
 	position: relative;
+}
+
+#cubismtimeline g .tick {
+	cursor: pointer;
+}
+
+#cubismtimeline_back {
+	float: left;
+}
+
+#cubismtimeline_next {
+	float: right;
 }
