@@ -53,6 +53,14 @@ switch ($_REQUEST['action']) {
 		}
 		break;
 		
+	case 'duplicate':
+			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
+				$writing = new Writing();
+				$writing->load((int)$_POST['table_writings_duplicate_id']);
+				$writing->duplicate($_POST['table_writings_duplicate_amount']);
+			}
+			break;
+		
 	default :
 		break;
 		

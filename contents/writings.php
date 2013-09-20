@@ -15,16 +15,7 @@ if ($timestamp_selected > 0 and strlen($timestamp_selected) <= 12) {
 list($start, $stop) = determine_month($_SESSION['timestamp']);
 
 if (isset($_POST['action']) and count($_POST) > 0) {
-	switch ($_POST['action']) {
-		case 'edit':
-			if (isset($_POST['id']) and $_POST['id'] > 0) {
-				$writing = new Writing();
-				$writing->load($_POST['id']);
-				$writing->fill($_POST);
-				$writing->save();
-			}
-			break;
-			
+	switch ($_POST['action']) {			
 		case 'insert':
 			$writing = new Writing();
 			$writing->fill($_POST);
@@ -37,25 +28,14 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 				$writing->delete();
 			}
 			break;
-//			
-//		case 'split':
-//			if (isset($_POST['table_writings_split_amount'])) {
-//				$amount = str_replace(",", ".", $_POST['table_writings_split_amount']);
-//				if (is_numeric($amount)) {
-//					$writing = new Writing();
-//					$writing->load((int)$_POST['table_writings_split_id']);
-//					$writing->split($amount);
-//				}
+			
+//		case 'duplicate':
+//			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
+//				$writing = new Writing();
+//				$writing->load((int)$_POST['table_writings_duplicate_id']);
+//				$writing->duplicate($_POST['table_writings_duplicate_amount']);
 //			}
 //			break;
-			
-		case 'duplicate':
-			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
-				$writing = new Writing();
-				$writing->load((int)$_POST['table_writings_duplicate_id']);
-				$writing->duplicate($_POST['table_writings_duplicate_amount']);
-			}
-			break;
 			
 		case 'forward':
 			if (isset($_POST['table_writings_forward_id']) and isset($_POST['table_writings_forward_amount'])) {

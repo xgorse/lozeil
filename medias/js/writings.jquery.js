@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	make_drag_and_drop();
 	$("body")
-	//Edition des enregistrements
+		//Edition des enregistrements
 		.on("click", ".modify a", function() {
 			var row = $(this).parent().parent().parent();
 			var id = row.attr("id").substr(6);
@@ -39,6 +39,19 @@ $(document).ready(function() {
 					$("#table_edit_writings").slideUp(400, function() {
 						$('#table_writings table').html(data);
 					})
+				}
+			);
+			return false;
+		})
+		
+		//Duplicate enregistrements
+		.on("submit", "form[name=\"table_writings_duplicate\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					refresh_balance();
+					$('#table_writings table').html(data);
 				}
 			);
 			return false;
