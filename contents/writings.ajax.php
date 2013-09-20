@@ -81,6 +81,13 @@ switch ($_REQUEST['action']) {
 		exit(0);
 		break;
 	
+	case 'delete':
+		if (isset($_POST['table_writings_delete_id'])) {
+			$writing = new Writing($_POST['table_writings_delete_id']);
+			$writing->delete();
+		}
+		break;
+	
 	default :
 		break;
 		

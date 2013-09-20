@@ -70,6 +70,19 @@ $(document).ready(function() {
 			return false;
 		})
 		
+		//Forward enregistrements
+		.on("submit", "form[name=\"table_writings_delete\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					refresh_balance();
+					$('#table_writings table').html(data);
+				}
+			);
+			return false;
+		})
+		
 		//Insert enregistrements
 		.on("submit", "form[name=\"insert_writings_form\"]", function() {
 			$.post(
