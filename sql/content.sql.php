@@ -37,7 +37,7 @@ $queries = array(
 		  search_index TEXT NOT NULL,
 		  sources_id INT(11),
 		  simulations_id int(11),
-		  number INT(20),
+		  number VARCHAR(100),
 		  unique_key TEXT,
 		  vat DECIMAL(5,2),
 		  timestamp INT(10),
