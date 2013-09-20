@@ -169,15 +169,18 @@ class Writing extends Record {
 	}
 	
 	function form() {
-		$form = "<div id=\"edit_writings\">
-			<span class=\"button\" id=\"edit_writings_show\">".utf8_ucfirst(__('show form'))."</span>
-			<span class=\"button\" id=\"edit_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
-			<span class=\"button\" id=\"edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
-			<div class=\"edit_writings_form\">
-			<form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
+		return "<div id=\"insert_writings\">".$this->display()."</div>";
+	}
+	
+	function display() {
+		$form = "<span class=\"button\" id=\"insert_writings_show\">".utf8_ucfirst(__('show form'))."</span>
+			<span class=\"button\" id=\"insert_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
+			<span class=\"button\" id=\"insert_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
+			<div class=\"insert_writings_form\">
+			<form method=\"post\" name=\"insert_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		if ($this->id) {
-			$input_hidden = new Html_Input("action", "edit", "submit");
+			$input_hidden = new Html_Input("action", "insert", "submit");
 			$input_hidden->id = $this->id;
 		} else {
 			$input_hidden = new Html_Input("action", "insert");
@@ -260,7 +263,7 @@ class Writing extends Record {
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
-		$form .= "</form></div></div>";
+		$form .= "</form></div>";
 
 		return $form;
 	}

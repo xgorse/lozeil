@@ -15,13 +15,7 @@ if ($timestamp_selected > 0 and strlen($timestamp_selected) <= 12) {
 list($start, $stop) = determine_month($_SESSION['timestamp']);
 
 if (isset($_POST['action']) and count($_POST) > 0) {
-	switch ($_POST['action']) {			
-		case 'insert':
-			$writing = new Writing();
-			$writing->fill($_POST);
-			$writing->save();
-			break;
-		
+	switch ($_POST['action']) {	
 		case 'delete':
 			if (isset($_POST['table_writings_delete_id'])) {
 				$writing = new Writing($_POST['table_writings_delete_id']);

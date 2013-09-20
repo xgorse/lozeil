@@ -7,8 +7,8 @@ $(document).ready(function() {
 			var id = row.attr("id").substr(6);
 			if (row.next().hasClass("table_writings_form_modify")) {
 				$("#table_edit_writings").slideUp(400, function() {
-				$(".table_writings_form_modify").remove();
-			})
+					$(".table_writings_form_modify").remove();
+				})
 			} else {
 				$.post(
 					"index.php?content=writings.ajax.php",
@@ -64,6 +64,20 @@ $(document).ready(function() {
 				$(this).serialize(),
 				function(data) {
 					refresh_balance();
+					$('#table_writings table').html(data);
+				}
+			);
+			return false;
+		})
+		
+		//Insert enregistrements
+		.on("submit", "form[name=\"insert_writings_form\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					refresh_balance();
+					reload_insert_form();
 					$('#table_writings table').html(data);
 				}
 			);
@@ -213,3 +227,16 @@ function make_drag_and_drop() {
 $(document).ajaxStop(function() {
 	make_drag_and_drop();
 })
+
+
+function reload_insert_form() {
+	$.ajax({
+		type: "POST",
+		url : "index.php?content=writings.ajax.php",
+		data : {action: "reload_insert_form"}
+	}).done(function (data) {
+		$(".insert_writings_form").slideUp(400, function() {
+			$("#insert_writings").html(data);
+		})
+	});
+}

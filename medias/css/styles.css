@@ -276,31 +276,31 @@ input[type="submit"]:hover {
 	cursor: pointer;
 }
 
-#edit_writings_cancel,
+#insert_writings_cancel,
 #edit_writingssimulation_cancel {
 	margin-left: 20px;
 	display: none;
 }
 
-#table_edit_writings_cancel,
+#table_insert_writings_cancel,
 #table_edit_writingssimulation_cancel {
 	display: inline-block;
 	margin-top: 5px;
 	margin-left: 120px;
 }
 
-#edit_writings_hide,
+#insert_writings_hide,
 #edit_writingssimulation_hide{
 	display: none;
 }
 
-.edit_writings_form,
+.insert_writings_form,
 .edit_writingssimulation_form{
 	margin-top: 20px;
 	display: none;
 }
 
-#edit_writings,
+#insert_writings,
 #edit_writingssimulation{
 	padding: 15px;
 	margin: 0 50px;

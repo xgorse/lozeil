@@ -68,7 +68,19 @@ switch ($_REQUEST['action']) {
 			$writing->forward($_POST['table_writings_forward_amount']);
 		}
 		break;
-			
+		
+	case 'insert':
+		$writing = new Writing();
+		$writing->fill($_POST);
+		$writing->save();
+		break;
+	
+	case 'reload_insert_form':
+		$writing = new Writing();
+		echo $writing->display();
+		exit(0);
+		break;
+	
 	default :
 		break;
 		
