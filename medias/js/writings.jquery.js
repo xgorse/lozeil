@@ -12,11 +12,12 @@ $(document).ready(function() {
 			} else {
 				$.post(
 					"index.php?content=writings.ajax.php",
-					{action: "edit", id: id},
+					{action: "form_edit", id: id},
 					function(data) {
 						$(".table_writings_form_modify").remove();
 						$(data).insertAfter(row);
 						$("#table_edit_writings").slideDown();
+						$("html, body").animate({ scrollTop: $("#table_"+id).offset().top }, "slow");
 					}
 				);
 			}
@@ -26,6 +27,19 @@ $(document).ready(function() {
 			$("#table_edit_writings").slideUp(400, function() {
 				$(".table_writings_form_modify").remove();
 			})
+			return false;
+		})
+		
+		.on("submit", "form[name=\"table_edit_writings_form\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					$("#table_edit_writings").slideUp(400, function() {
+						$('#table_writings table').html(data);
+					})
+				}
+			);
 			return false;
 		})
 		//Toggle informations supplémentaires

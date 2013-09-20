@@ -14,7 +14,16 @@ switch ($_REQUEST['action']) {
 		$writing_into->merge_from($writing_from);
 		break;
 	
-	case "edit":
+	case 'edit':
+		if (isset($_POST['id']) and $_POST['id'] > 0) {
+			$writing = new Writing();
+			$writing->load($_POST['id']);
+			$writing->fill($_POST);
+			$writing->save();
+		}
+		break;
+			
+	case "form_edit":
 		$writing = new Writing();
 		$writing->load((int)$_REQUEST['id']);
 		echo $writing->form_in_table();
@@ -52,6 +61,7 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 	$writings->filter_with(array('*' => $_SESSION['filter_value_*']));
 }
 $writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
+$writings->add_order("amount_inc_vat DESC");
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
 echo $writings->show();
