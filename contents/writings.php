@@ -29,22 +29,6 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 			}
 			break;
 			
-//		case 'duplicate':
-//			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
-//				$writing = new Writing();
-//				$writing->load((int)$_POST['table_writings_duplicate_id']);
-//				$writing->duplicate($_POST['table_writings_duplicate_amount']);
-//			}
-//			break;
-			
-		case 'forward':
-			if (isset($_POST['table_writings_forward_id']) and isset($_POST['table_writings_forward_amount'])) {
-				$writing = new Writing();
-				$writing->load((int)$_POST['table_writings_forward_id']);
-				$writing->forward($_POST['table_writings_forward_amount']);
-			}
-			break;
-			
 		case 'cancel':
 			$writings = new Writings();
 			$writings->cancel_last_operation();

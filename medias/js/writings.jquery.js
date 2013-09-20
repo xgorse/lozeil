@@ -56,6 +56,19 @@ $(document).ready(function() {
 			);
 			return false;
 		})
+		
+		//Forward enregistrements
+		.on("submit", "form[name=\"table_writings_forward\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					refresh_balance();
+					$('#table_writings table').html(data);
+				}
+			);
+			return false;
+		})
 		//Toggle informations supplémentaires
 		.on("click", ".table_writings_comment", function() {
 			$(".table_writings_comment_further_information").slideUp();

@@ -60,7 +60,15 @@ switch ($_REQUEST['action']) {
 				$writing->duplicate($_POST['table_writings_duplicate_amount']);
 			}
 			break;
-		
+					
+	case 'forward':
+		if (isset($_POST['table_writings_forward_id']) and isset($_POST['table_writings_forward_amount'])) {
+			$writing = new Writing();
+			$writing->load((int)$_POST['table_writings_forward_id']);
+			$writing->forward($_POST['table_writings_forward_amount']);
+		}
+		break;
+			
 	default :
 		break;
 		
