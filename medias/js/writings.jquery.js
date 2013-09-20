@@ -53,7 +53,7 @@ $(document).ready(function() {
 		})
 		//Sort lines
 		.on("click", ".sort", function() {
-			order_col_name = $(this).attr('id');
+			var order_col_name = $(this).attr('id');
 			$.post(
 				"index.php?content=writings.ajax.php",
 				{action: "sort", order_col_name: order_col_name},
@@ -61,6 +61,20 @@ $(document).ready(function() {
 					$('#table_writings table').html(data);
 				}
 			)
+		})
+		// Split lines
+		.on("submit", "form[name=\"table_writings_split\"]", function() {
+			var row = $(this).parent().parent().parent();
+			var id = row.attr("id").substr(6);
+			var amount = $(this).find("#table_writings_split_amount").val();
+			$.post(
+				"index.php?content=writings.ajax.php",
+				{action: "split", table_writings_split_id: id, table_writings_split_amount: amount},
+				function(data) {
+					$('#table_writings table').html(data);
+				}
+			)
+		return false;
 		})
 		//Filter input
 		.on("change", "input#amount_excl_vat", function() {

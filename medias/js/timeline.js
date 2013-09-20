@@ -7,8 +7,6 @@ function make_timeline() {
 		negative_average = $(".cubism_data_negative_average").text(),
 		link = []
 		
-		console.log(negative_average, positive_average);
-		
 	if (isleap_year.length == 0) {
 		isleap_year = 1;
 	} else {

@@ -352,6 +352,7 @@ tr.modified {
 	display: block;
     width: 1095px;
     margin: 0 50px 0 50px;
+	height: 90px;
 }
 
 #heading_timeline li {

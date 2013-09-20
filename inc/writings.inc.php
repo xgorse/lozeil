@@ -237,7 +237,7 @@ class Writings extends Collector {
 	}
 	
 	function display() {
-		return "<div id=\"table_writings\"><form method=\"post\" name=\"edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".$this->show()."</form></div>";
+		return "<div id=\"table_writings\">".$this->show()."</div>";
 	}
 	
 	function amount_per_month() {

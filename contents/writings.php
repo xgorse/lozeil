@@ -38,17 +38,17 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 				$writing->delete();
 			}
 			break;
-			
-		case 'split':
-			if (isset($_POST['table_writings_split_amount'])) {
-				$amount = str_replace(",", ".", $_POST['table_writings_split_amount']);
-				if (is_numeric($amount)) {
-					$writing = new Writing();
-					$writing->load((int)$_POST['table_writings_split_id']);
-					$writing->split($amount);
-				}
-			}
-			break;
+//			
+//		case 'split':
+//			if (isset($_POST['table_writings_split_amount'])) {
+//				$amount = str_replace(",", ".", $_POST['table_writings_split_amount']);
+//				if (is_numeric($amount)) {
+//					$writing = new Writing();
+//					$writing->load((int)$_POST['table_writings_split_id']);
+//					$writing->split($amount);
+//				}
+//			}
+//			break;
 			
 		case 'duplicate':
 			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
