@@ -202,12 +202,6 @@ $(document).ready(function() {
 			})
 			$(".extra_filter_writings_days").toggle();
 		})
-		
-		.find(".modified").delay('6000').queue(function(next){
-			$(this).removeClass('modified');
-		})
-		
-		
 });
 
 function make_drag_and_drop() {
@@ -248,6 +242,9 @@ function make_drag_and_drop() {
 
 $(document).ajaxStop(function() {
 	make_drag_and_drop();
+	$(this).find(".modified").delay('6000').queue(function(next){
+		$(this).removeClass('modified');
+	})
 })
 
 
