@@ -114,7 +114,7 @@ class tests_Writings extends TableTestCase {
 		
 		$table = $writings->show();
 		$this->assertPattern("/<td>19.60<\/td>/", $table);
-		$this->assertPattern("/<td>190.5<\/td>/", $table);
+		$this->assertPattern("/<td>209.03<\/td>/", $table);
 		$this->assertPattern("/Bank 1/", $table);
 		$this->assertPattern("/Source 1/", $table);
 		$this->assertPattern("/Category 1/", $table);

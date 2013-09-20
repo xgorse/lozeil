@@ -179,12 +179,9 @@ class Writing extends Record {
 			<div class=\"insert_writings_form\">
 			<form method=\"post\" name=\"insert_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
-		if ($this->id) {
-			$input_hidden = new Html_Input("action", "insert", "submit");
-			$input_hidden->id = $this->id;
-		} else {
-			$input_hidden = new Html_Input("action", "insert");
-		}
+		
+		$input_hidden = new Html_Input("action", "insert");
+		
 		$form .= $input_hidden->input_hidden();
 		
 		$input_hidden_id = new Html_Input("id", $this->id);

@@ -17,7 +17,7 @@ class tests_Writing extends TableTestCase {
 	function test_save_load() {
 		$writing = new Writing();
 		$writing->categories_id = 1;
-		$writing->amount_excl_vat = 190.50;
+		$writing->amount_excl_vat = 209.030100;
 		$writing->amount_inc_vat = 250;
 		$writing->banks_id = 2;
 		$writing->comment = "Ceci est un test";
@@ -460,29 +460,15 @@ class tests_Writing extends TableTestCase {
 		$source = new Source();
 		$source->name = "Source 1";
 		$source->save();
-		$writing = new Writing();
-		$writing->categories_id = 1;
-		$writing->amount_excl_vat = 167.22;
-		$writing->amount_inc_vat = 200;
-		$writing->banks_id = 1;
-		$writing->comment = "Ceci est un commentaire";
-		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
-		$writing->sources_id = 1;
-		$writing->vat = 19.6;
-		$writing->save();
-		$writing->load(1);
 		$form = $writing->form();
-		$this->assertPattern("/".date('m', mktime(10, 0, 0, 7, 31, 2013))."/", $form);
-		$this->assertPattern("/".date('Y', mktime(10, 0, 0, 7, 31, 2013))."/", $form);
-		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Source 1<\/option>/", $form);
-		$this->assertNoPattern("/<option value=\"1\" selected=\"selected\">Bank 1<\/option>/", $form);
-		$this->assertPattern("/<option value=\"1\" selected=\"selected\">Category 1<\/option>/", $form);
-		$this->assertPattern("/value=\"167.220000\"/", $form);
-		$this->assertPattern("/value=\"200.000000\"/", $form);
-		$this->assertPattern("/value=\"19.60\"/", $form);
-		$this->assertPattern("/Ceci est un commentaire/", $form);
-		$this->assertNoPattern("/value=\"insert\"/", $form);
-		$this->assertPattern("/value=\"edit\"/", $form);
+		$this->assertPattern("/".date('d', time())."/", $form);
+		$this->assertPattern("/".date('m', time())."/", $form);
+		$this->assertPattern("/".date('Y', time())."/", $form);
+		$this->assertPattern("/<option value=\"1\">Source 1<\/option>/", $form);
+		$this->assertNoPattern("/<option value=\"1\">Bank 1<\/option>/", $form);
+		$this->assertPattern("/<option value=\"1\">Category 1<\/option>/", $form);
+		$this->assertPattern("/value=\"insert\"/", $form);
+		$this->assertNoPattern("/value=\"edit\"/", $form);
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
