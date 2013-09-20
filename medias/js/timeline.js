@@ -1,11 +1,14 @@
 function make_timeline() {
-	var width = $("#cubism_width").text();
-	var height = $("#cubism_height").text();
-	var start_year = $("#cubism_start_year").text();
-	var isleap_year = $("#cubism_isleap_year").text();
-	var	averages = $(".cubism_data_average").text();
-	var link = []
-	
+	var width = $("#cubism_width").text(),
+		height = $("#cubism_height").text(),
+		start_year = $("#cubism_start_year").text(),
+		isleap_year = $("#cubism_isleap_year").text(),
+		positive_average = $(".cubism_data_positive_average").text(),
+		negative_average = $(".cubism_data_negative_average").text(),
+		link = []
+		
+		console.log(negative_average, positive_average);
+		
 	if (isleap_year.length == 0) {
 		isleap_year = 1;
 	} else {
@@ -36,9 +39,6 @@ function make_timeline() {
 				.orient("top")
 				.tickFormat(d3.time.format("%m/%Y"))
 			);
-		if (averages < 0) {
-			averages = -averages;
-		}
 		
 		div.append("div")
 			.attr("class", "horizon")
@@ -46,6 +46,7 @@ function make_timeline() {
 			.height(height)
 			.colors(["#B80000", "#D43333", "#F26F6F", "#FABEBE", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
 			.format(d3.format("r"))
+			.extent([negative_average*1.5, positive_average*1.5])
 		);
 			
 //		div.append("div")

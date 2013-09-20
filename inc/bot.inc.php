@@ -162,36 +162,59 @@ class Bot {
 	function demo() {
 		$this->reinstall_database();
 		$this->log(__("Start building up demo"));
-		
+		$this->db->query("INSERT INTO ".$GLOBALS['dbconfig']['table_users']." (id, username, password) VALUES (1, 'admin', password('admin'));");
 		$category = new Category();
 		$category->name = 'Opentime.fr';
+		$category->vat = 19.6;
 		$category->save();
 		$category = new Category();
 		$category->name = 'Opentime.info';
+		$category->vat = 19.6;
 		$category->save();
 		$category = new Category();
 		$category->name = 'Aberlaas';
+		$category->vat = 5.5;
 		$category->save();
 		$category = new Category();
 		$category->name = 'Alticcio';
+		$category->vat = 19.6;
 		$category->save();
 		$category = new Category();
 		$category->name = 'Salaires';
+		$category->vat = 0;
 		$category->save();
 		$category = new Category();
 		$category->name = 'Lozeil';
+		$category->vat = 19.6;
 		$category->save();
 		$category = new Category();
 		$category->name = 'Telecom';
+		$category->vat = 5.5;
 		$category->save();
+		
+		// Investissement de départ
+		$writing = new Writing();
+		$category = new Category();
+		$category->load(1);
+		$writing->day = mktime(0, 0, 0, date('m', time()), 1, date('Y', time()) - 1);
+		$writing->number = rand(52, 52445621);
+		$writing->vat = $category->vat;
+		$writing->amount_inc_vat = -5251.52;
+		$writing->banks_id = 2;
+		$writing->save();
 		
 		// Opentime.fr
 		for ($i = 0; $i < 24; $i++) {
 			for ($j = 0; $j < 3; $j++) {
 				$writing = new Writing();
+				$category = new Category();
+				$category->load(1);
 				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(15,25), date('Y', time()) - 1);
 				$writing->categories_id = 1;
-				$writing->amount_inc_vat = 500*(rand(90,120)/100);
+				$writing->number = rand(52, 52445621);
+				$writing->vat = $category->vat;
+				$writing->amount_inc_vat = 925.52*(rand(92,95)/100);
+				$writing->banks_id = 2;
 				$writing->save();
 			}
 		}
@@ -200,9 +223,14 @@ class Bot {
 		for ($i = 0; $i < 24; $i = $i + 2) {
 			for ($j = 0; $j < 3; $j++) {
 				$writing = new Writing();
+				$category = new Category();
+				$category->load(2);
 				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(15,25), date('Y', time()) - 1);
 				$writing->categories_id = 2;
-				$writing->amount_inc_vat = 1000*(rand(90,120)/100);
+				$writing->number = rand(52, 52445621);
+				$writing->vat = $category->vat;
+				$writing->amount_inc_vat = 1256.25*(rand(92,95)/100);
+				$writing->banks_id = 2;
 				$writing->save();
 			}
 		}
@@ -210,14 +238,24 @@ class Bot {
 		// Aberlaas
 		for ($i = 0; $i < 24; $i++) {
 			$writing = new Writing();
+			$category = new Category();
+			$category->load(3);
+			$writing->vat = $category->vat;
 			$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(1,28), date('Y', time()) - 1);
 			$writing->categories_id = 3;
-			$writing->amount_inc_vat = 100*(rand(90,150)/100);
+			$writing->number = rand(52, 52445621);
+			$writing->amount_inc_vat = 112.23*(rand(92,95)/100);
+			$writing->banks_id = 1;
 			$writing->save();
 			$writing = new Writing();
+			$category = new Category();
+			$category->load(3);
 			$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(1,28), date('Y', time()) - 1);
 			$writing->categories_id = 3;
-			$writing->amount_inc_vat = -100*(rand(90,120)/100);
+			$writing->number = rand(52, 52445621);
+			$writing->vat = $category->vat;
+			$writing->amount_inc_vat = -112.23*(rand(92,95)/100);
+			$writing->banks_id = 1;
 			$writing->save();
 		}
 		
@@ -225,9 +263,14 @@ class Bot {
 		for ($i = 0; $i < 24; $i++) {
 			for ($j = 0; $j < 2; $j++) {
 				$writing = new Writing();
+				$category = new Category();
+				$category->load(4);
+				$writing->vat = $category->vat;
+				$writing->number = rand(52, 52445621);
 				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(1,28), date('Y', time()) - 1);
 				$writing->categories_id = 4;
-				$writing->amount_inc_vat = 500*(rand(90,150)/100);
+				$writing->amount_inc_vat = 505.62*(rand(92,95)/100);
+				$writing->banks_id = 2;
 				$writing->save();
 			}
 		}
@@ -236,9 +279,14 @@ class Bot {
 		for ($i = 0; $i < 24; $i++) {
 			for ($j = 0; $j < 4; $j++) {
 				$writing = new Writing();
+				$category = new Category();
+				$category->load(5);
+				$writing->vat = $category->vat;
 				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, 25, date('Y', time()) - 1);
 				$writing->categories_id = 5;
-				$writing->amount_inc_vat = -1000*(rand(90,120)/100);
+				$writing->number = rand(52, 52445621);
+				$writing->amount_inc_vat = -1205.25*(rand(92,95)/100);
+				$writing->banks_id = 2;
 				$writing->save();
 			}
 		}
@@ -247,9 +295,14 @@ class Bot {
 		for ($i = 0; $i < 24; $i++) {
 			for ($j = 0; $j < 2; $j++) {
 				$writing = new Writing();
+				$category = new Category();
+				$category->load(7);
+				$writing->vat = $category->vat;
 				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, 25, date('Y', time()) - 1);
 				$writing->categories_id = 7;
-				$writing->amount_inc_vat = -10*(rand(90,120)/100);
+				$writing->number = rand(52, 52445621);
+				$writing->amount_inc_vat = -9.95*(rand(92,95)/100);
+				$writing->banks_id = 1;
 				$writing->save();
 			}
 		}
@@ -257,9 +310,14 @@ class Bot {
 		// Embauche
 		for ($i = 0; $i < 6; $i++) {
 			$writing = new Writing();
+			$category = new Category();
+			$category->load(5);
+			$writing->vat = $category->vat;
 			$writing->day = mktime(0, 0, 0, date('m', time()) + $i, 25, date('Y', time()));
 			$writing->categories_id = 5;
-			$writing->amount_inc_vat = -2000*(rand(90,120)/100);
+			$writing->number = rand(52, 52445621);
+			$writing->amount_inc_vat = -3052.21*(rand(92,95)/100);
+			$writing->banks_id = 2;
 			$writing->save();
 		}
 		

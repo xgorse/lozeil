@@ -16,7 +16,8 @@ class Html_Cubismchart {
 	function prepare_data() {
 		$data = "<ul class=\"cubism_data\">";
 		$data .="<li class=\"cubism_data_title\">".$this->title."</li>";
-		$data .="<li class=\"cubism_data_average\">".(array_sum($this->data)/count($this->data))."</li>";
+		$data .="<li class=\"cubism_data_positive_average\">".$this->average_of_positive_values()."</li>";
+		$data .="<li class=\"cubism_data_negative_average\">".$this->average_of_negative_values()."</li>";
 		foreach ($this->data as $value) {
 			$data .="<li class=\"cubism_data_row\">".$value."</li>";
 		}
@@ -50,5 +51,35 @@ class Html_Cubismchart {
 	function display() {
 		return "<div id=\"cubismtimeline\" style=\"width : ".$this->width."px\"></div>"
 				.$this->prepare_data();
+	}
+	
+	function average_of_positive_values() {
+		$sum = 0;
+		$nb = 0;
+		foreach ($this->data as $value) {
+			if ($value > 0) {
+				$sum = $sum + $value;
+				$nb++;
+			}
+		}
+		if ($nb == 0) {
+			return 0;
+		}
+		return $sum/$nb;
+	}
+	
+	function average_of_negative_values() {
+		$sum = 0;
+		$nb = 0;
+		foreach ($this->data as $value) {
+			if ($value < 0) {
+				$sum = $sum + $value;
+				$nb++;
+			}
+		}
+		if ($nb == 0) {
+			return 0;
+		}
+		return $sum/$nb;
 	}
 }

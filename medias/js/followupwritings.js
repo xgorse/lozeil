@@ -1,11 +1,12 @@
 function make_timeline() {
-	var width = $("#cubism_width").text();
-	var height = $("#cubism_height").text();
-	var start_year = $("#cubism_start_year").text();
-	var isleap_year = $("#cubism_isleap_year").text();
-	var titles = [],
-		link = [],
-		averages = []
+	var width = $("#cubism_width").text(),
+		height = $("#cubism_height").text(),
+		start_year = $("#cubism_start_year").text(),
+		isleap_year = $("#cubism_isleap_year").text(),
+		positive_average = [],
+		negative_average = [],
+		titles = [],
+		link = []
 	
 	if (isleap_year.length == 0) {
 		isleap_year = 1;
@@ -17,8 +18,12 @@ function make_timeline() {
 		titles.push($(this).text());
 	})
 	
-	$(".cubism_data_average").each(function() {
-		averages.push($(this).text());
+	$(".cubism_data_positive_average").each(function() {
+		positive_average.push($(this).text());
+	})
+	
+	$(".cubism_data_negative_average").each(function() {
+		negative_average.push($(this).text());
 	})
 	
 	 $(".cubism_link").each(function() {
@@ -43,9 +48,6 @@ function make_timeline() {
 		var i = 0;
 		$(".cubism_data").each(function () {
 			i++
-			if (averages[i-1] < 0) {
-				averages[i-1] = -averages[i-1];
-			}
 			var data = get_data("", i);
 			div.datum(data);
 			div.append("div")
@@ -55,7 +57,7 @@ function make_timeline() {
 				.colors(["#B80000", "#D43333", "#F26F6F", "#FABEBE", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
 				.format(d3.format("r"))
 				.title(titles[i - 1])
-				.extent([-averages[i-1]*1.5, +averages[i-1]*1.5])
+				.extent([negative_average[i-1]*1.5, positive_average[i-1]*1.5])
 			);
 		})
 	});
