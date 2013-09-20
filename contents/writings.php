@@ -5,14 +5,15 @@ if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction']))
 	$_SESSION['order_direction'] = 'ASC';
 }
 
-$timestamp_selected = determine_integer_from_post_get_session(null, "timestamp");
+$start = determine_integer_from_post_get_session(null, "start");
+$stop = determine_integer_from_post_get_session(null, "stop");
 
-if ($timestamp_selected > 0 and strlen($timestamp_selected) <= 12) {
-	$_SESSION['timestamp'] = $timestamp_selected;
+if (($start > 0 and strlen($start) <= 12) and ($stop > 0 and strlen($stop) <= 12)) {
+	$_SESSION['start'] = $start;
+	$_SESSION['stop'] = $stop;
 } else {
-	$_SESSION['timestamp'] = mktime(0, 0, 0, date("m"), 1, date("Y"));
+	list($_SESSION['start'], $_SESSION['stop']) = determine_month(mktime(0, 0, 0, date("m"), 1, date("Y")));
 }
-list($start, $stop) = determine_month($_SESSION['timestamp']);
 
 if (isset($_POST['action']) and count($_POST) > 0) {
 	switch ($_POST['action']) {
@@ -43,9 +44,9 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 	$writings_filter_value = $_SESSION['filter_value_*'];
 	$writings->filter_with(array('*' => $writings_filter_value));
 }
-$writings->filter_with(array('start' => $start, 'stop' => $stop));
+$writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
 $writings->select();
-$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['timestamp']), $writings->form_filter($writings_filter_value).$writings->form_cancel_last_operation());
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['start']), $writings->form_filter($writings_filter_value).$writings->form_cancel_last_operation());
 echo $heading->show();
 echo $writings->display();
 

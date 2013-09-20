@@ -9,13 +9,13 @@ class Writings_Followup  {
 		$charts = "";
 		$categories = new Categories();
 		$categories->select();
+		$writings = new Writings();
+		$cubismchart = new Html_Cubismchart("followupwritings");
 		foreach ($categories as $category) {
-			$writings = new Writings();
 			$writings->month = determine_first_day_of_month($timestamp);
 			$writings->select_columns('amount_inc_vat', 'day');
 			$writings->filter_with(array("categories_id" => $category->id));
 			$writings->select();
-			$cubismchart = new Html_Cubismchart("followupwritings");
 			if ($writings->count() > 0) {
 				$cubismchart->start = $writings->month;
 				$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 0, date('Y',$writings->month)));

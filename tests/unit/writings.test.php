@@ -34,8 +34,8 @@ class tests_Writings extends TableTestCase {
 	}
 	
 	function test_show() {
-		$_SESSION['timestamp'] = mktime(0, 0, 0, 7, 1, 2013);
-		list($start, $stop) = determine_month($_SESSION['timestamp']);
+		$_SESSION['start'] = mktime(0, 0, 0, 7, 1, 2013);
+		list($start, $stop) = determine_month($_SESSION['start']);
 		$category = new Category();
 		$category->name = "Category 1";
 		$category->save();
@@ -159,8 +159,8 @@ class tests_Writings extends TableTestCase {
 	}
 	
 	function test_get_where() {
-		$_SESSION['timestamp'] = 1375308000;
-		list($start, $stop) = determine_month($_SESSION['timestamp']);
+		$_SESSION['start'] = 1375308000;
+		list($start, $stop) = determine_month($_SESSION['start']);
 		$writings = new Writings();
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$get_where = $writings->get_where();

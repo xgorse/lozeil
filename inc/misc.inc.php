@@ -335,3 +335,18 @@ function excel_span_format($span) {
 function is_leap($year=NULL) {
     return checkdate(2, 29, ($year==NULL)? date('Y'):$year);
 }
+
+function is_filter_timestamps_valid($start, $stop) {
+	switch (true) {
+		case empty($start['d']) :
+		case empty($start['m']) :
+		case empty($start['Y']) :
+		case empty($stop['d']) :
+		case empty($stop['m']) :
+		case empty($stop['Y']) :
+			return false;
+		default:
+			return true;
+	}
+	var_dump($start, $stop);
+}

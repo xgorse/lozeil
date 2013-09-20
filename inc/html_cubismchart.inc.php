@@ -27,20 +27,19 @@ class Html_Cubismchart {
 					<li id=\"cubism_height\">".$this->height."</li>
 					<li id=\"cubism_start_year\">".date('Y', $this->start)."</li>
 					<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>";
-		$start = mktime(0, 0, 0, 1, 1, date ('Y',$this->start));
 		for ($i = 0; $i <12; $i++) {
-			$data .= "<li class=\"cubism_link\">".link_content("content=".$this->name.".php&amp;timestamp=").$start."</li>";
-			$start = strtotime("+1 month", $start);
+			list($start, $stop) = determine_month(mktime(0, 0, 0, $i + 1, 1, date ('Y',$this->start)));
+			$data .= "<li class=\"cubism_link\">".link_content("content=".$this->name.".php&amp;start=".$start."&amp;stop=".$stop)."</li>";
 		}
 			$data .= "</ul>";
 		return $data;
 	}
 	
 	function prepare_navigation() {
-		$previous_year = mktime(0, 0, 0, 1, 1, date ('Y',$this->start) - 1);
-		$next_year = mktime(0, 0, 0, 1, 1, date ('Y',$this->start) + 1);
-		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;timestamp=".$previous_year),"<<")."</span>
-			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;timestamp=".$next_year),">>")."</span>";
+		list($previous_year_start, $previous_year_stop) = determine_month(mktime(0, 0, 0, 1, 1, date ('Y',$this->start) - 1));
+		list($next_year_start, $next_year_stop) = determine_month(mktime(0, 0, 0, 1, 1, date ('Y',$this->start) + 1));
+		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$previous_year_start."&amp;stop=".$previous_year_stop),"<<")."</span>
+			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$next_year_start."&amp;stop=".$next_year_stop),">>")."</span>";
 	}
 	
 	function show() {

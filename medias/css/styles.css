@@ -19,6 +19,10 @@ a:hover {
 	text-decoration:underline;
 }
 
+nobr {
+	display: inline-block;
+}
+
 body {
 	color: #000;
 	font-size: 14px;
@@ -397,6 +401,14 @@ tr.modified {
 
 .extra_cancel_writings input{
 	border: none;
+}
+
+.extra_filter_writings_days {
+	display: none;
+}
+
+#extra_filter_writings_toggle {
+	cursor: pointer;
 }
 
 /*Extra*/

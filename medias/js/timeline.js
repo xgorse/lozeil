@@ -66,7 +66,7 @@ function make_timeline() {
 
 	function get_data(name) {
 		var values = []
-		$(".cubism_data li").each(function () {
+		$(".cubism_data li.cubism_data_row").each(function () {
 			var val = $(this).text();
 			if (val === "0") {
 				val = null;

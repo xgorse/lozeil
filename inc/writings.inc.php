@@ -1,12 +1,5 @@
 <?php
-/*
-	lozeil
-	$Author: adrien $
-	$URL: $
-	$Revision:  $
-
-	Copyright (C) No Parking 2013 - 2013
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Writings extends Collector {
 	public $filters = null;
@@ -281,9 +274,9 @@ class Writings extends Collector {
 		return "<div id=\"heading_timeline\">".$this->show_timeline_at($timestamp)."</div>";
 	}
 	
-	
 	function show_balance_on_current_date() {
-		return Html_Tag::a(link_content("content=writings.php&timestamp=".determine_first_day_of_month(time())),utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€"));
+		list($start, $stop) = determine_month(time());
+		return Html_Tag::a(link_content("content=writings.php&start=".$start."&stop=".$stop),utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€"));
 	}
 	
 	function show_balance_between($timestamp_min, $timestamp_max) {
@@ -309,8 +302,10 @@ class Writings extends Collector {
 	function form_filter($value = "") {
 		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "filter");
+		$date_start = new Html_Input_Date("filter_day_start");
+		$date_stop = new Html_Input_Date("filter_day_stop");
 		$input = new Html_Input("extra_filter_writings_value",$value);
-		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "));
+		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span><span class=\"extra_filter_writings_days\">".$date_start->input().$date_stop->input()."</span>";
 		$form .= "</form></div>";
 		return $form;
 	}

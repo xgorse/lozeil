@@ -163,10 +163,10 @@ $(document).ready(function() {
 			$("input#amount_excl_vat").val(amount_excl_vat);
 		})
 
-		.on("keyup", "#extra_filter_writings_value", function() {
+		.on("keyup", "form[name=\"extra_filter_writings_form\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
-				{ method: "json", action: "filter", value: $(this).val() },
+				$(this).serialize(),
 				function(data){
 					$('#table_writings table').html(data);
 				}
@@ -192,6 +192,15 @@ $(document).ready(function() {
 					form.parent().parent().parent().find("#vat").val(data).change();
 				}
 			);
+		})
+		
+		//Toggle dates pour le filtre
+		.on("click", "#extra_filter_writings_toggle", function() {
+			$(".extra_filter_writings_days input").each(function() {
+				$(this).val('');
+				$(this).keyup();
+			})
+			$(".extra_filter_writings_days").toggle();
 		})
 		
 		.find(".modified").delay('6000').queue(function(next){

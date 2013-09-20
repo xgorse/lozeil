@@ -2,7 +2,7 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 $writings = new Writings();
-list($start, $stop) = determine_month($_SESSION['timestamp']);
+list($start, $stop) = determine_month($_SESSION['start']);
 
 switch ($_REQUEST['action']) {
 	
@@ -31,7 +31,12 @@ switch ($_REQUEST['action']) {
 		break;
 	
 	case "filter":
-		$_SESSION['filter_value_*'] = $_REQUEST['value'];
+		$_SESSION['filter_value_*'] = $_POST['extra_filter_writings_value'];
+		if (is_filter_timestamps_valid($_POST['filter_day_start'],$_POST['filter_day_stop'])) {
+			$start = mktime(0, 0, 0, $_POST['filter_day_start']['m'], $_POST['filter_day_start']['d'], $_POST['filter_day_start']['Y']);
+			$stop = mktime(0, 0, 0, $_POST['filter_day_stop']['m'], $_POST['filter_day_stop']['d'], $_POST['filter_day_stop']['Y']);
+		}
+		$writings->set_limit(75);
 		break;
 	
 	case "sort":

@@ -175,7 +175,7 @@ class Writing extends Record {
 	function display() {
 		$form = "<span class=\"button\" id=\"insert_writings_show\">".utf8_ucfirst(__('show form'))."</span>
 			<span class=\"button\" id=\"insert_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
-			<span class=\"button\" id=\"insert_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
+			<span class=\"button\" id=\"insert_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['start']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"insert_writings_form\">
 			<form method=\"post\" name=\"insert_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
@@ -190,7 +190,7 @@ class Writing extends Record {
 		if ($this->day > 0) {
 			$date = (int)$this->day;
 		} else {
-			$date = (int)$_SESSION['timestamp'];
+			$date = (int)$_SESSION['start'];
 		}
 		
 		$categories = new Categories();
@@ -267,7 +267,7 @@ class Writing extends Record {
 	
 	function form_in_table() {
 		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"10\" ><div id=\"table_edit_writings\">
-			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']),utf8_ucfirst(__('cancel record')))."</span>
+			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['start']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"table_edit_writings_form\">
 			<form method=\"post\" name=\"table_edit_writings_form\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">";
 		
@@ -285,7 +285,7 @@ class Writing extends Record {
 		if ($this->day > 0) {
 			$date = (int)$this->day;
 		} else {
-			$date = (int)$_SESSION['timestamp'];
+			$date = (int)$_SESSION['start'];
 		}
 		
 		$categories = new Categories();
@@ -414,7 +414,7 @@ class Writing extends Record {
 	
 	function form_modify() {
 		return "<div class=\"modify\">".
-			Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['timestamp']."&writings_id=".$this->id)," ").
+			Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['start']."&writings_id=".$this->id)," ").
 			"</div>";
 	}
 	

@@ -443,7 +443,7 @@ class tests_Writing extends TableTestCase {
 	}
 	
 	function test_form() {
-		$_SESSION['timestamp'] = time();
+		$_SESSION['start'] = time();
 		$writing = new Writing();
 		$form = $writing->form();
 		$this->assertPattern("/".date('m')."/", $form);

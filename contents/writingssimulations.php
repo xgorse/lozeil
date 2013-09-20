@@ -41,7 +41,7 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 	}
 }
 $writings_simulation = new Writings_Simulations();
-$timestamp_selected = determine_integer_from_post_get_session(null, "timestamp");
+$timestamp_selected = determine_integer_from_post_get_session(null, "start");
 
 $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
