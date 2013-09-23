@@ -27,16 +27,16 @@ switch ($_REQUEST['action']) {
 		$writing = new Writing();
 		$writing->load((int)$_REQUEST['id']);
 		echo $writing->form_in_table();
+		
 		exit(0);
 		break;
 	
 	case "filter":
 		$_SESSION['filter_value_*'] = $_POST['extra_filter_writings_value'];
 		if (is_filter_timestamps_valid($_POST['filter_day_start'],$_POST['filter_day_stop'])) {
-			$start = mktime(0, 0, 0, $_POST['filter_day_start']['m'], $_POST['filter_day_start']['d'], $_POST['filter_day_start']['Y']);
-			$stop = mktime(0, 0, 0, $_POST['filter_day_stop']['m'], $_POST['filter_day_stop']['d'], $_POST['filter_day_stop']['Y']);
+			list($start, $stop) = determine_start_stop($_POST['filter_day_start'], $_POST['filter_day_stop']);
 		}
-		$writings->set_limit(75);
+		$writings->set_limit($GLOBALS['param']['nb_max_writings']);
 		break;
 	
 	case "sort":
@@ -59,12 +59,12 @@ switch ($_REQUEST['action']) {
 		break;
 		
 	case 'duplicate':
-			if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
-				$writing = new Writing();
-				$writing->load((int)$_POST['table_writings_duplicate_id']);
-				$writing->duplicate($_POST['table_writings_duplicate_amount']);
-			}
-			break;
+		if (isset($_POST['table_writings_duplicate_id']) and isset($_POST['table_writings_duplicate_amount'])) {
+			$writing = new Writing();
+			$writing->load((int)$_POST['table_writings_duplicate_id']);
+			$writing->duplicate($_POST['table_writings_duplicate_amount']);
+		}
+		break;
 					
 	case 'forward':
 		if (isset($_POST['table_writings_forward_id']) and isset($_POST['table_writings_forward_amount'])) {
@@ -83,6 +83,7 @@ switch ($_REQUEST['action']) {
 	case 'reload_insert_form':
 		$writing = new Writing();
 		echo $writing->display();
+		
 		exit(0);
 		break;
 	
@@ -92,17 +93,24 @@ switch ($_REQUEST['action']) {
 			$writing->delete();
 		}
 		break;
+		
+	case 'cancel':
+		$writings->cancel_last_operation();
+		break;
 	
 	default :
 		break;
 		
 }
+
 if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
 	$writings->filter_with(array('*' => $_SESSION['filter_value_*']));
 }
+
 $writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
 $writings->add_order("amount_inc_vat DESC");
 $writings->filter_with(array('start' => $start, 'stop' => $stop));
 $writings->select();
+
 echo $writings->show();
 exit(0);

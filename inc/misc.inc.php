@@ -348,5 +348,11 @@ function is_filter_timestamps_valid($start, $stop) {
 		default:
 			return true;
 	}
-	var_dump($start, $stop);
+}
+
+function determine_start_stop($start, $stop) {
+	$starttime = mktime(0, 0, 0, $start['m'], $start['d'], $start['Y']);
+	$stoptime = mktime(0, 0, 0, $stop['m'], $stop['d'], $stop['Y']);
+
+	return array($starttime, $stoptime);
 }

@@ -144,6 +144,18 @@ $(document).ready(function() {
 			)
 		return false;
 		})
+		// Cancel last operation
+		.on("submit", "form[name=\"extra_cancel_writings_form\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					refresh_balance();
+					$('#table_writings table').html(data);
+				}
+			)
+		return false;
+		})
 		//Filter input
 		.on("change", "input#amount_excl_vat", function() {
 			$(this).val($(this).val().replace(",", "."));

@@ -3,4 +3,4 @@
 
 session_destroy();
 header ("Location: ".link_content("content=login.php"));
-exit();
+exit(0);

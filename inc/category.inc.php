@@ -32,11 +32,9 @@ class Category extends Record {
 	function save() {
 		if (is_numeric($this->id) and $this->id != 0) {
 			$this->id = $this->update();
-
 		} else {
 			$this->id = $this->insert();
 		}
-
 		return $this->id;
 	}
 	
@@ -53,10 +51,10 @@ class Category extends Record {
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_categories'].
-			" SET name = ".$this->db->quote($this->name).", 
-			vat = ".(float)$this->vat."
-			WHERE id = ".(int)$this->id
+		$result = $this->db->query("UPDATE ".$this->db->config['table_categories']." 
+			SET name = ".$this->db->quote($this->name).", 
+				vat = ".(float)$this->vat."
+				WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('category'));
 

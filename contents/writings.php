@@ -1,5 +1,6 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+
 if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction'])) {
 	$_SESSION['order_col_name'] = 'day';
 	$_SESSION['order_direction'] = 'ASC';
@@ -15,23 +16,6 @@ if (($start > 0 and strlen($start) <= 12) and ($stop > 0 and strlen($stop) <= 12
 	list($_SESSION['start'], $_SESSION['stop']) = determine_month(mktime(0, 0, 0, date("m"), 1, date("Y")));
 }
 
-if (isset($_POST['action']) and count($_POST) > 0) {
-	switch ($_POST['action']) {
-		
-		case 'cancel':
-			$writings = new Writings();
-			$writings->cancel_last_operation();
-			break;
-			
-		default:
-			break;
-	}
-}
-
-if (isset($_POST['submit_sparklines'])) {
-	$_SESSION['filter_value_*'] = $_POST['submit_sparklines'];
-}
-
 $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
@@ -39,6 +23,7 @@ echo $menu->show();
 $writings = new Writings();
 $writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
 $writings->add_order("amount_inc_vat DESC");
+
 $writings_filter_value = "";
 if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
 	$writings_filter_value = $_SESSION['filter_value_*'];
@@ -46,8 +31,10 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 }
 $writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
 $writings->select();
+
 $heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['start']), $writings->form_filter($start, $stop, $writings_filter_value).$writings->form_cancel_last_operation());
 echo $heading->show();
+
 echo $writings->display();
 
 $writing = new Writing();

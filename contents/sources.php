@@ -2,17 +2,16 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 if (isset($_POST['submit'])) {
-	$sources = $_POST;
-	unset($sources['submit']);
+	unset($_POST['submit']);
 	
-	if(!empty($sources['name_new'])) {
+	if(!empty($_POST['name_new'])) {
 		$source = new Source();
-		$source->name = $sources['name_new'];
+		$source->name = $_POST['name_new'];
 		$source->save();
 	}
-	unset($sources['name_new']);
+	unset($_POST['name_new']);
 	
-	foreach ($sources as $id => $name) {
+	foreach ($_POST as $id => $name) {
 		$source = new Source();
 		$source->load($id);
 		if ($source->name != $name and !empty($name)) {

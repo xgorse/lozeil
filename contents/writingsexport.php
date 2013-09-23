@@ -47,4 +47,3 @@ if ($result_export[1] > 0) {
 
 header("Location: ".link_content("content=writings.php"));
 exit;
-

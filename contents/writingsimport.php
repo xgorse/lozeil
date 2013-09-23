@@ -6,4 +6,4 @@ if (isset($_FILES) and $_FILES['menu_actions_import_file']['error'] == 0) {
 	$data->import();
 }
 header("Location: ".link_content("content=writings.php"));
-exit;
+exit(0);

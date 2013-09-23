@@ -22,7 +22,7 @@ class Theme_Default {
 	
 	function css_files() {
 		$css_files[] = "medias/css/styles.css";
-		$css_files[] = "http://fonts.googleapis.com/css?family=Bitter:400,700";
+		//$css_files[] = "http://fonts.googleapis.com/css?family=Bitter:400,700";
 		
 		$html = "";
 

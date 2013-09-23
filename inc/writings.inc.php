@@ -356,10 +356,11 @@ class Writings extends Collector {
 	}
 	
 	function cancel_last_operation() {
-		$max = $this->db->Value("SELECT MAX(timestamp) FROM ".$this->db->config['table_writings']);
-		$this->filter_with(array('timestamp_start' => ($max - 1), 'timestamp_stop' => ($max)));
-		$this->select();
-		foreach ($this as $instance) {
+		$writings = new Writings();
+		$max = $writings->db->Value("SELECT MAX(timestamp) FROM ".$this->db->config['table_writings']);
+		$writings->filter_with(array('timestamp_start' => ($max - 1), 'timestamp_stop' => ($max)));
+		$writings->select();
+		foreach ($writings as $instance) {
 			$instance->delete();
 		}
 	}

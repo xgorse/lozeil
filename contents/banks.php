@@ -4,6 +4,7 @@
 if (isset($_POST['submit'])) {
 	unset($_POST['submit']);
 	$keys = array_keys($_POST);
+	
 	$banks = new Banks();
 	$banks->select();
 	foreach ($banks as $bank) {

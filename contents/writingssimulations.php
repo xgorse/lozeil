@@ -1,5 +1,6 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+
 if (isset($_POST['action']) and count($_POST) > 0) {
 	switch ($_POST['action']) {
 		
@@ -39,13 +40,14 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 			break;
 	}
 }
-$writings_simulation = new Writings_Simulations();
-$timestamp_selected = determine_integer_from_post_get_session(null, "start");
+
 
 $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
+$writings_simulation = new Writings_Simulations();
+$timestamp_selected = determine_integer_from_post_get_session(null, "start");
 $heading = new Heading_Area(utf8_ucfirst(__('make a simulation')), $writings_simulation->display_timeline_at($timestamp_selected));
 echo $heading->show();
 

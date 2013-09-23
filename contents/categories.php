@@ -2,20 +2,17 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 if (isset($_POST['submit'])) {
-	$categories = $_POST;
-	
-	if(!empty($categories['name_new'])) {
+	if(!empty($_POST['name_new'])) {
 		$category = new Category();
-		$category->name = $categories['name_new'];
-		if(isset($categories['vat_new'])) {
-			$categories['vat_new'] = str_replace(",", ".", $categories['vat_new']);
-			$category->vat = $categories['vat_new'];
+		$category->name = $_POST['name_new'];
+		if(isset($_POST['vat_new'])) {
+			$category->vat = str_replace(",", ".", $_POST['vat_new']);
 		}
 		$category->save();
 	}
 	
-	if (isset($categories['category'])) {
-		foreach ($categories['category'] as $id => $values) {
+	if (isset($_POST['category'])) {
+		foreach ($_POST['category'] as $id => $values) {
 			$category = new Category();
 			$category->load($id);
 			if (!empty($values['name'])) {

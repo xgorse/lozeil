@@ -100,6 +100,6 @@ class Categories extends Collector  {
 	
 	function show_form() {
 		return "<div id=\"edit_categories\"><form method=\"post\" name=\"categories_id\" action=\"\" enctype=\"multipart/form-data\">".
-				$this->show()."</form></div>";
+			$this->show()."</form></div>";
 	}
 }

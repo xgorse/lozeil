@@ -32,11 +32,9 @@ class Bank extends Record {
 	function save() {
 		if (is_numeric($this->id) and $this->id != 0) {
 			$this->id = $this->update();
-
 		} else {
 			$this->id = $this->insert();
 		}
-
 		return $this->id;
 	}
 	
@@ -62,7 +60,6 @@ class Bank extends Record {
 
 		return $this->id;
 	}
-
 
 	function delete() {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_banks'].
