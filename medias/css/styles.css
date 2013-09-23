@@ -327,6 +327,12 @@ tr.modified {
 	display: none;
 }
 
+#evolution_periodical {
+	display: none;
+	margin-left: 10px;
+	width: 40px;
+}
+
 /* --- Heading --- */
 
 .heading {

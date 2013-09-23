@@ -15,6 +15,10 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_13() {
+		$this->db->query("ALTER TABLE `writingssimulations` ADD `evolution` VARCHAR(100);");
+	}
+	
 	function to_12() {
 		$this->db->query("ALTER TABLE `writings` CHANGE `number` `number` VARCHAR(100);");
 	}

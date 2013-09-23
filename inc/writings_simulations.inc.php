@@ -45,6 +45,10 @@ class Writings_Simulations extends Collector  {
 					),
 					array(
 						'type' => "th",
+						'value' => utf8_ucfirst(__("evolution")),
+					),
+					array(
+						'type' => "th",
 						'value' => utf8_ucfirst(__("start date")),
 					),
 					array(
@@ -73,6 +77,12 @@ class Writings_Simulations extends Collector  {
 		$grid = array();
 		foreach ($this as $simulation) {
 			
+			$evolution = explode(":", $simulation->evolution);
+			$evolution_to_display = __($evolution[0]);
+			if (isset($evolution[1])) {
+				$evolution_to_display .= " : ".$evolution[1];
+			}
+			
 			if ($simulation->is_recently_modified()) {
 				$class = "modified";
 			} else {
@@ -90,6 +100,10 @@ class Writings_Simulations extends Collector  {
 					array(
 						'type' => "td",
 						'value' => round($simulation->amount_inc_vat, 2),
+					),
+					array(
+						'type' => "td",
+						'value' => $evolution_to_display,
 					),
 					array(
 						'type' => "td",
@@ -139,7 +153,7 @@ class Writings_Simulations extends Collector  {
 				$last = $writingssimulation->date_stop;
 				$amount = $writingssimulation->amount_inc_vat;
 				$periodicity = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $writingssimulation->periodicity, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-				
+				$evolution = explode(":", $writingssimulation->evolution);
 				if ($first == $last) {
 					$amounts[$first][] = $amount;
 				} elseif (count($periodicity) == 1 and !is_numeric($periodicity[0])) {
@@ -147,6 +161,9 @@ class Writings_Simulations extends Collector  {
 						while ($first < $last) {
 							$first = strtotime('+1 months', $first);
 							$amounts[$first][] = $amount;
+							if ($evolution[0] == "linear") {
+								$amount = $amount + $evolution[1];
+							}
 						}
 					} elseif(preg_match("/(t)|(q)/i", $periodicity[0])) {
 						while ($first < $last) {

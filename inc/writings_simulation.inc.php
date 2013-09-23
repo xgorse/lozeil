@@ -9,10 +9,18 @@ class Writings_Simulation extends Record {
 	public $date_stop = 0;
 	public $display = 0;
 	public $timestamp = 0;
+	public $evolution = "";
+	
+	private $evolutions = array();
 	
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
 		$this->id = $id;
+		
+		$this->evolutions = array(
+			"none" => __('none'),
+			"linear" => __('linear')
+		);
 	}
 
 	function db($db) {
@@ -61,7 +69,8 @@ class Writings_Simulation extends Record {
 			date_start = ".(int)$this->date_start.",
 			date_stop = ".(int)$this->date_stop.",
 			display = ".(int)$this->display.",
-			timestamp = ".time()."
+			timestamp = ".time().",
+			evolution = ".$this->db->quote($this->evolution)."
 			WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('writings simulations'));
@@ -77,7 +86,8 @@ class Writings_Simulation extends Record {
 			date_start = ".(int)$this->date_start.",
 			date_stop = ".(int)$this->date_stop.",
 			display = ".(int)$this->display.",
-			timestamp = ".time()
+			timestamp = ".time().",
+			evolution = ".$this->db->quote($this->evolution)
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "u", __('writings simulations'));
@@ -87,6 +97,26 @@ class Writings_Simulation extends Record {
 	
 	function fill($hash) {
 		$writingssimulation = parent::fill($hash);
+		
+		switch ($hash['evolution']) {
+			case 'none':
+				$writingssimulation->evolution = "";
+				break;
+			case 'linear':
+				if (!empty($hash['evolution_periodical'])) {
+					$hash['evolution_periodical'] = str_replace(",", ".", $hash['evolution_periodical']);
+					if (is_numeric($hash['evolution_periodical'])) {
+						$writingssimulation->evolution = "linear".":".$hash['evolution_periodical'];
+					} else {
+						$writingssimulation->evolution = "";
+					}
+				} else {
+					$writingssimulation->evolution = "";
+				}
+				break;
+			default:
+				break;
+		}
 		
 		if (isset($hash['amount_inc_vat'])) {
 			$writingssimulation->amount_inc_vat = str_replace(",", ".", $hash['amount_inc_vat']);
@@ -101,7 +131,7 @@ class Writings_Simulation extends Record {
 		return $writingssimulation;
 	}
 	
-	function form() {
+	function form($start_timestamp = "") {
 		$form = "<div id=\"edit_writingssimulation\">
 			<span class=\"button\" id=\"edit_writingssimulation_show\">".utf8_ucfirst(__('show form'))."</span>
 			<span class=\"button\" id=\"edit_writingssimulation_hide\">".utf8_ucfirst(__('hide form'))."</span>
@@ -114,10 +144,12 @@ class Writings_Simulation extends Record {
 
 		$name = new Html_Input("name", $this->name);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
-		$date_start = new Html_Input_Date("date_start");
-		$date_stop = new Html_Input_Date("date_stop");
+		$evolution = new Html_Select("evolution", $this->evolutions);
+		$evolution_periodical = new Html_Input("evolution_periodical");
+		$date_start = new Html_Input_Date("date_start", $start_timestamp);
+		$date_stop = new Html_Input_Date("date_stop", $start_timestamp);
 		$periodicity = new Html_Input("periodicity", $this->periodicity);
-		$display = new Html_Checkbox("display", "display");
+		$display = new Html_Checkbox("display", "display", 1);
 		$submit = new Html_Input("submit", "", "submit");
 		$submit->value =__('save');
 		
@@ -129,6 +161,9 @@ class Writings_Simulation extends Record {
 				),
 				'amount_inc_vat' => array(
 					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'evolution' => array(
+					'value' => $evolution->item(__('evolution')).$evolution_periodical->input(),
 				),
 				'date_start' => array(
 					'value' => $date_start->item(__('start date')),
@@ -161,14 +196,17 @@ class Writings_Simulation extends Record {
 			<div class=\"table_edit_writingssimulation_form\">
 			<form method=\"post\" name=\"table_edit_writingssimulation_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
+		$evolution_selected = explode(":", $this->evolution);
+		$evolution_value = (isset($evolution_selected[1]) and is_numeric($evolution_selected[1])) ? $evolution_selected[1] : "";
+		
 		$input_hidden = new Html_Input("action", "edit");
 		$form .= $input_hidden->input_hidden();
-		
 		$input_hidden_id = new Html_Input("id", $this->id);
 		$form .= $input_hidden_id->input_hidden();
-
 		$name = new Html_Input("name", $this->name);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
+		$evolution = new Html_Select("evolution", $this->evolutions, $evolution_selected[0]);
+		$evolution_periodical = new Html_Input("evolution_periodical", $evolution_value);
 		$date_start = new Html_Input_Date("date_start", $this->date_start);
 		$date_stop = new Html_Input_Date("date_stop", $this->date_stop);
 		$periodicity = new Html_Input("periodicity", $this->periodicity);
@@ -184,6 +222,9 @@ class Writings_Simulation extends Record {
 				),
 				'amount_inc_vat' => array(
 					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'evolution' => array(
+					'value' => $evolution->item(__('evolution')).$evolution_periodical->input(),
 				),
 				'date_start' => array(
 					'value' => $date_start->item(__('start date')),

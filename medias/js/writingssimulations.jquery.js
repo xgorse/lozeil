@@ -28,6 +28,9 @@ $(document).ready(function() {
 						$(".table_writingssimulation_form_modify").remove();
 						$(data).insertAfter(row);
 						$("#table_edit_writingssimulation").slideDown();
+						if($("#evolution").val() == "linear") {
+							$("#evolution_periodical").show();
+						}
 					}
 				);
 			}
@@ -61,6 +64,15 @@ $(document).ready(function() {
 				}
 			$("input#table_writingssimulation_duplicate_submit").next().attr("type", "hidden");
 					$(this).next().attr("type", next);
+			}
+		})
+		
+		// Toggle de l'input pour l'évolution
+		.on("change", "#evolution", function() {
+			if($(this).val() == "linear") {
+				$("#evolution_periodical").show();
+			} else {
+				$("#evolution_periodical").hide();
 			}
 		})
 });

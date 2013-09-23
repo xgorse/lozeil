@@ -1,6 +1,5 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
-
 if (isset($_POST['action']) and count($_POST) > 0) {
 	switch ($_POST['action']) {
 		
@@ -55,4 +54,4 @@ $simulations->select();
 echo $simulations->display();
 
 $simulation = new Writings_Simulation();
-echo $simulation->form();
+echo $simulation->form($timestamp_selected);

@@ -64,6 +64,7 @@ $queries = array(
 		`date_stop` int(10) NOT NULL,
 		`display` tinyint(1) NOT NULL,
 		`timestamp` INT(10),
+		`evolution` varchar(100),
 		PRIMARY KEY (`id`)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );
