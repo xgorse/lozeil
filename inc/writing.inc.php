@@ -79,7 +79,7 @@ class Writing extends Record {
 			amount_inc_vat = ".(float)$this->amount_inc_vat.",
 			number  = ".$this->db->quote($this->number).",
 			vat = ".(float)$this->vat.",
-			amount_excl_vat = ".(float)round($this->amount_inc_vat/(($this->vat/100) + 1), 6).",
+			amount_excl_vat = ".$this->calculate_amount_excl_vat().",
 			comment = ".$this->db->quote($this->comment).",
 			information = ".$this->db->quote($this->information).",
 			paid = ".(int)$this->paid.",
@@ -103,7 +103,7 @@ class Writing extends Record {
 			amount_inc_vat = ".(float)$this->amount_inc_vat.",
 			number  = ".$this->db->quote($this->number).",
 			vat = ".(float)$this->vat.",
-			amount_excl_vat = ".(float)round($this->amount_inc_vat/(($this->vat/100) + 1), 6).",
+			amount_excl_vat = ".$this->calculate_amount_excl_vat().",
 			comment = ".$this->db->quote($this->comment).",
 			information = ".$this->db->quote($this->information).",
 			day = ".(int)$this->day.",
@@ -117,6 +117,12 @@ class Writing extends Record {
 
 		return $this->id;
 	}
+	function calculate_amount_excl_vat() {
+		if ($this->vat != -100) {
+			return (float)round($this->amount_inc_vat/(($this->vat/100) + 1), 6);
+		}
+		return 0;
+	}
 	
 	function merge_from(Writing $to_merge) {
 		if ($this->banks_id == 0 or $to_merge->banks_id == 0) {
@@ -125,7 +131,7 @@ class Writing extends Record {
 				$this->banks_id = $this->banks_id > 0 ? (int)$this->banks_id : $to_merge->banks_id;
 				$this->sources_id = $this->sources_id > 0 ? (int)$this->sources_id : $to_merge->sources_id;
 				$this->vat = $to_merge->vat > 0 ? $to_merge->vat : $this->vat;
-				$this->amount_excl_vat =  round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
+				$this->amount_excl_vat =  $this->calculate_amount_excl_vat();
 				$this->comment = !empty($this->comment) ? $this->comment : $to_merge->comment;
 				$this->information = !empty($this->information) ? $this->information : $to_merge->information;
 				$this->number = !empty($this->number) ? $this->number : $to_merge->number;
@@ -138,7 +144,7 @@ class Writing extends Record {
 				$this->sources_id = $to_merge->sources_id > 0 ? (int)$to_merge->sources_id : $this->sources_id;
 				$this->vat = $to_merge->vat > 0 ? $to_merge->vat : $this->vat;
 				$this->amount_inc_vat = $to_merge->amount_inc_vat;
-				$this->amount_excl_vat =  round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
+				$this->amount_excl_vat = $this->calculate_amount_excl_vat();
 				$this->comment = !empty($to_merge->comment) ? $to_merge->comment : $this->comment;
 				$this->day = $to_merge->day;
 				$this->information = !empty($to_merge->information) ? $to_merge->information : $this->information;
@@ -156,14 +162,14 @@ class Writing extends Record {
 	
 	function split($amount = 0) {
 		$this->amount_inc_vat = ($this->amount_inc_vat - $amount);
-		$this->amount_excl_vat = round(($this->amount_inc_vat/(($this->vat/100) + 1)), 6);
+		$this->amount_excl_vat = $this->calculate_amount_excl_vat();
 		$this->search_index = $this->search_index();
 		$this->save();
 		$writing = new Writing();
 		$writing->load($this->id);
 		$writing->id = 0;
 		$writing->amount_inc_vat = $amount;
-		$writing->amount_excl_vat = round($amount/(($this->vat/100) + 1), 6);
+		$writing->amount_excl_vat = $writing->calculate_amount_excl_vat();
 		$writing->search_index = $this->search_index();
 		return $writing->save();
 	}
@@ -424,7 +430,7 @@ class Writing extends Record {
 			$writing->day = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
 		}
 		if($writing->banks_id > 0) {
-			$writing->amount_excl_vat = round(($writing->amount_inc_vat/(($writing->vat/100) + 1)), 6);
+			$writing->amount_excl_vat = $writing->calculate_amount_excl_vat();
 		}
 		return $writing;
 	}

@@ -70,7 +70,7 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		//Forward enregistrements
+		//Delete enregistrements
 		.on("submit", "form[name=\"table_writings_delete\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",

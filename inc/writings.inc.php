@@ -81,6 +81,12 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "th",
+						'class' => $this->determine_table_header_class("number"),
+						'id' => "number",
+						'value' => utf8_ucfirst(__('piece nb')),
+					),
+					array(
+						'type' => "th",
 						'class' => $this->determine_table_header_class("category_name"),
 						'id' => "category_name",
 						'value' => utf8_ucfirst(__("category")),
@@ -90,30 +96,12 @@ class Writings extends Collector {
 						'class' => $this->determine_table_header_class("source_name"),
 						'id' => "source_name",
 						'value' => utf8_ucfirst(__("source")),
-						),
-					array(
-						'type' => "th",
-						'class' => $this->determine_table_header_class("number"),
-						'id' => "number",
-						'value' => utf8_ucfirst(__('piece nb')),
 					),
 					array(
 						'type' => "th",
-						'class' => $this->determine_table_header_class("amount_excl_vat"),
-						'id' => "amount_excl_vat",
-						'value' => utf8_ucfirst(__("amount excluding vat")),
-					),
-					array(
-						'type' => "th",
-						'class' => $this->determine_table_header_class("vat"),
-						'id' => "vat",
-						'value' => __("VAT"),
-					),
-					array(
-						'type' => "th",
-						'class' => $this->determine_table_header_class("amount_inc_vat"),
-						'id' => "amount_inc_vat",
-						'value' => utf8_ucfirst(__("amount including vat")),
+						'class' => $this->determine_table_header_class("bank_name"),
+						'id' => "bank_name",
+						'value' => utf8_ucfirst(__("bank")),
 					),
 					array(
 						'type' => "th",
@@ -123,9 +111,21 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "th",
-						'class' => $this->determine_table_header_class("bank_name"),
-						'id' => "bank_name",
-						'value' => utf8_ucfirst(__("bank")),
+						'class' => $this->determine_table_header_class("amount_excl_vat"),
+						'id' => "amount_excl_vat",
+						'value' => utf8_ucfirst(__("amount excluding vat")." (".__("VAT").")"),
+					),
+					array(
+						'type' => "th",
+						'class' => $this->determine_table_header_class("amount_inc_vat"),
+						'id' => "amount_inc_vat",
+						'value' => utf8_ucfirst(__("debit")),
+					),
+					array(
+						'type' => "th",
+						'class' => "sort",
+						'id' => "amount_inc_vat",
+						'value' => utf8_ucfirst(__("credit")),
 					),
 					array(
 						'type' => "th",
@@ -168,6 +168,20 @@ class Writings extends Collector {
 			$class_comment = empty($informations) ? "" : "table_writings_comment";
 			$class = $writing->is_recently_modified() ? "draggable modified" : "draggable";
 			
+			if ($writing->amount_inc_vat > 0) {
+				$credit = round($writing->amount_inc_vat, 2);
+				$debit = "";
+			} else {
+				$debit = round($writing->amount_inc_vat, 2);
+				$credit = "";
+			}
+			
+			if ($writing->vat != 0) {
+				$vat = "&nbsp;(".$writing->vat.")";
+			} else {
+				$vat = "";
+			}
+			
 			$grid[] =  array(
 				'class' => $class,
 				'id' => "table_".$writing->id,
@@ -175,6 +189,10 @@ class Writings extends Collector {
 					array(
 						'type' => "td",
 						'value' => date("d/m/Y", $writing->day),
+					),
+					array(
+						'type' => "td",
+						'value' => $writing->number,
 					),
 					array(
 						'type' => "td",
@@ -186,19 +204,7 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "td",
-						'value' => $writing->number,
-					),
-					array(
-						'type' => "td",
-						'value' => round($writing->amount_excl_vat, 2),
-					),
-					array(
-						'type' => "td",
-						'value' => $writing->vat,
-					),
-					array(
-						'type' => "td",
-						'value' => round($writing->amount_inc_vat, 2),
+						'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
 					),
 					array(
 						'type' => "td",
@@ -207,7 +213,15 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "td",
-						'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
+						'value' => round($writing->amount_excl_vat, 2).$vat,
+					),
+					array(
+						'type' => "td",
+						'value' => $debit,
+					),
+					array(
+						'type' => "td",
+						'value' => $credit,
 					),
 					array(
 						'type' => "td",
