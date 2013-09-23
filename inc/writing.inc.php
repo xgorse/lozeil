@@ -117,6 +117,7 @@ class Writing extends Record {
 
 		return $this->id;
 	}
+	
 	function calculate_amount_excl_vat() {
 		if ($this->vat != -100) {
 			return (float)round($this->amount_inc_vat/(($this->vat/100) + 1), 6);
@@ -219,12 +220,6 @@ class Writing extends Record {
 		$submit = new Html_Input("submit", "", "submit");
 		$submit->value =__('save');
 		
-		if($this->banks_id > 0) {
-			$datepicker->properties['disabled'] = "disabled";
-			$amount_excl_vat->properties['disabled'] = "disabled";
-			$amount_inc_vat->properties['disabled'] = "disabled";
-			$paid->properties['disabled'] = "disabled";
-		}
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
@@ -314,12 +309,6 @@ class Writing extends Record {
 		$submit = new Html_Input("submit", "", "submit");
 		$submit->value =__('save');
 		
-		if($this->banks_id > 0) {
-			$datepicker->properties['disabled'] = "disabled";
-			$amount_excl_vat->properties['disabled'] = "disabled";
-			$amount_inc_vat->properties['disabled'] = "disabled";
-			$paid->properties['disabled'] = "disabled";
-		}
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
