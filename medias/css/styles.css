@@ -759,9 +759,19 @@ tr.modified {
   right: 0;
 }
 
-.line {
-  top: 50px;
+.rule, .rule_stat {
+	position: relative;
+}
+
+.rule .line {
+  top: -9px !important;
   height: 75px;
+  background: #000;
+  opacity: 0.2;
+  z-index: 2;
+}
+
+.rule_stat .line {
   background: #000;
   opacity: 0.2;
   z-index: 2;

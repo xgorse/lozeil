@@ -5,8 +5,7 @@ function make_timeline() {
 		isleap_year = $("#cubism_isleap_year").text(),
 		positive_average = [],
 		negative_average = [],
-		titles = [],
-		link = []
+		titles = []
 	
 	if (isleap_year.length == 0) {
 		isleap_year = 1;
@@ -25,10 +24,6 @@ function make_timeline() {
 	$(".cubism_data_negative_average").each(function() {
 		negative_average.push($(this).text());
 	})
-	
-	 $(".cubism_link").each(function() {
-		 link.push($(this).text());
-	 });
 	var context = cubism.context()
 		.serverDelay(Date.now() - new Date(parseInt(start_year) + 1, 0, parseInt(isleap_year), 0,0 ,0 ,0))
 		.clientDelay(0)
@@ -37,7 +32,9 @@ function make_timeline() {
 		.stop();
 	
 	d3.select("#cubismtimeline").call(function(div) {
+		
 		$(".axis").remove();
+		
 		$(".horizon").remove();
 		div.append("div")
 			.attr("class", "axis")
@@ -45,6 +42,7 @@ function make_timeline() {
 				.orient("top")
 				.tickFormat(d3.time.format("%m/%Y"))
 			);
+			
 		var i = 0;
 		$(".cubism_data").each(function () {
 			i++
@@ -60,10 +58,14 @@ function make_timeline() {
 				.extent([negative_average[i-1]*1.5, positive_average[i-1]*1.5])
 			);
 		})
-	});
-	
-	$("#cubismtimeline g .tick").on("click", function() {
-		window.location = link[$(this).index("#cubismtimeline g .tick")];
+		
+		div.append("div")
+			.attr("class", "rule_stat")
+			.call(context.rule());
+			
+		$(".rule_stat .line")
+		.css("top", (-$(".timeseries").height() + 21) + "px")
+		.css("height", $(".timeseries").height() + "px");
 	});
 	
 	$("text").each(function() {

@@ -30,13 +30,19 @@ function make_timeline() {
 	d3.select("#cubismtimeline").call(function(div) {
 		$(".axis").remove();
 		$(".horizon").remove();
+		
 		div.datum(data);
+		
 		div.append("div")
 			.attr("class", "axis")
 			.call(context.axis()
 				.orient("top")
 				.tickFormat(d3.time.format("%m/%Y"))
 			);
+				
+		div.append("div")
+			.attr("class", "rule")
+			.call(context.rule());
 		
 		div.append("div")
 			.attr("class", "horizon")
@@ -47,9 +53,6 @@ function make_timeline() {
 			.extent([negative_average*1.5, positive_average*1.5])
 		);
 			
-//		div.append("div")
-//			.attr("class", "rule")
-//			.call(context.rule());
 	});
 	
 	$("#cubismtimeline g .tick").on("click", function() {
