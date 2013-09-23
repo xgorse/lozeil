@@ -165,25 +165,8 @@ class Writings extends Collector {
 		foreach ($this as $writing) {
 			$informations = $writing->show_further_information();
 			
-			$class_comment = empty($informations) ? "" : "table_writings_comment";
-			$class = $writing->is_recently_modified() ? "draggable modified" : "draggable";
-			
-			if ($writing->amount_inc_vat > 0) {
-				$credit = round($writing->amount_inc_vat, 2);
-				$debit = "";
-			} else {
-				$debit = round($writing->amount_inc_vat, 2);
-				$credit = "";
-			}
-			
-			if ($writing->vat != 0) {
-				$vat = "&nbsp;(".$writing->vat.")";
-			} else {
-				$vat = "";
-			}
-			
 			$grid[] =  array(
-				'class' => $class,
+				'class' => $writing->is_recently_modified() ? "draggable modified" : "draggable",
 				'id' => "table_".$writing->id,
 				'cells' => array(
 					array(
@@ -208,20 +191,20 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "td",
-						'class' => $class_comment,
+						'class' => empty($informations) ? "" : "table_writings_comment",
 						'value' => $writing->comment.$informations,
 					),
 					array(
 						'type' => "td",
-						'value' => round($writing->amount_excl_vat, 2).$vat,
+						'value' => round($writing->amount_excl_vat, 2).(($writing->vat != 0) ? "&nbsp;(".$writing->vat.")" : ""),
 					),
 					array(
 						'type' => "td",
-						'value' => $debit,
+						'value' => $writing->amount_inc_vat < 0 ? round($writing->amount_inc_vat, 2) : "",
 					),
 					array(
 						'type' => "td",
-						'value' => $credit,
+						'value' => $writing->amount_inc_vat >= 0 ? round($writing->amount_inc_vat, 2) : "",
 					),
 					array(
 						'type' => "td",
