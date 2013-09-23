@@ -46,7 +46,7 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 }
 $writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
 $writings->select();
-$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['start']), $writings->form_filter($writings_filter_value).$writings->form_cancel_last_operation());
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['start']), $writings->form_filter($start, $stop, $writings_filter_value).$writings->form_cancel_last_operation());
 echo $heading->show();
 echo $writings->display();
 

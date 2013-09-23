@@ -197,7 +197,6 @@ $(document).ready(function() {
 		//Toggle dates pour le filtre
 		.on("click", "#extra_filter_writings_toggle", function() {
 			$(".extra_filter_writings_days input").each(function() {
-				$(this).val('');
 				$(this).keyup();
 			})
 			$(".extra_filter_writings_days").toggle();
@@ -246,7 +245,6 @@ $(document).ajaxStop(function() {
 		$(this).removeClass('modified');
 	})
 })
-
 
 function reload_insert_form() {
 	$.ajax({

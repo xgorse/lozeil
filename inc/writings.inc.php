@@ -299,11 +299,11 @@ class Writings extends Collector {
 		return round($amount, 2);
 	}
 	
-	function form_filter($value = "") {
+	function form_filter($start, $stop, $value = "") {
 		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "filter");
-		$date_start = new Html_Input_Date("filter_day_start");
-		$date_stop = new Html_Input_Date("filter_day_stop");
+		$date_start = new Html_Input_Date("filter_day_start", $start);
+		$date_stop = new Html_Input_Date("filter_day_stop", $stop);
 		$input = new Html_Input("extra_filter_writings_value",$value);
 		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span><span class=\"extra_filter_writings_days\">".$date_start->input().$date_stop->input()."</span>";
 		$form .= "</form></div>";
