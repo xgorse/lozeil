@@ -12,7 +12,6 @@ class tests_Theme_default extends TableTestCase {
 		$this->assertPattern("/medias\/css\/styles.css/", $theme->css_files());
 		$GLOBALS['config']['layout_mediaserver'] = "autre/chemin/";
 		$this->assertPattern("/autre\/chemin\//", $theme->css_files());
-		$this->assertPattern("/http:\/\//", $theme->css_files());
 		$this->assertPattern("/\?v=".$GLOBALS['config']['version']."/", $theme->css_files());
 	}
 	

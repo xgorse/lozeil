@@ -124,6 +124,7 @@ $__['validate'] = "validation";
 $__['VAT'] = "TVA";
 $__['without category'] = "sans catégorie";
 $__['writing'] = "écriture";
+$__['writings imported'] = "enregistrements importés";
 $__['writings simulations'] = "simulations d'enregistrements";
 $__['yes'] = "oui";
 

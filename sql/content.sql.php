@@ -38,7 +38,6 @@ $queries = array(
 		  sources_id INT(11),
 		  simulations_id int(11),
 		  number VARCHAR(100),
-		  unique_key TEXT,
 		  vat DECIMAL(5,2),
 		  timestamp INT(10),
 		  PRIMARY KEY (`id`),
@@ -65,6 +64,14 @@ $queries = array(
 		`display` tinyint(1) NOT NULL,
 		`timestamp` INT(10),
 		`evolution` varchar(100),
+		PRIMARY KEY (`id`)
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	
+	'writingsimported' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_writingsimported']." (
+		`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+		`hash` varchar(100),
+		`banks_id` int(11),
+		`sources_id` int(11),
 		PRIMARY KEY (`id`)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );

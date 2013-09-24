@@ -3,7 +3,7 @@
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "13";
+$config['version'] = "14";
 
 $config['layout_mediaserver'] = "";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;
@@ -20,6 +20,7 @@ $dbconfig['new'] = "0";		// forcer la création d'une nouvelle connexion
 $dbconfig['table_sources'] = "sources";
 $dbconfig['table_types'] = "types";
 $dbconfig['table_writings'] = "writings";
+$dbconfig['table_writingsimported'] = "writingsimported";
 $dbconfig['table_writingssimulations'] = "writingssimulations";
 $dbconfig['table_banks'] = "banks";
 $dbconfig['table_categories'] = "categories";

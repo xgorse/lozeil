@@ -8,16 +8,17 @@ class tests_Writings_Data_File extends TableTestCase {
 		parent::__construct();
 		$this->initializeTables(
 			"writings",
-			"banks"
+			"banks",
+			"writingsimported"
 		);
 	}
 	
 	function test_is_line_cic() {
 		$import = new Writings_Data_File();
-		$mydata =array("01/07/2013", "01/07/2013", "", "152,20", "test de libellé", "123456");
-		$mydata2 =array("01/07/2013", "01/07/2013", "-251", "152,20", "test de libellé", "123456");
-		$mydata3 =array("01/07/2013", "01/07/2013", "", "", "test de libellé", "123456");
-		$mydata4 =array("01/07/2013", "01/07/2013", "-25", "", "test de libellé", "123456");
+		$mydata = array("01/07/2013", "01/07/2013", "", "152,20", "test de libellé", "123456");
+		$mydata2 = array("01/07/2013", "01/07/2013", "-251", "152,20", "test de libellé", "123456");
+		$mydata3 = array("01/07/2013", "01/07/2013", "", "", "test de libellé", "123456");
+		$mydata4 = array("01/07/2013", "01/07/2013", "-25", "", "test de libellé", "123456");
 		$this->assertTrue($import->is_line_cic($mydata));
 		$this->assertFalse($import->is_line_cic($mydata2));
 		$this->assertFalse($import->is_line_cic($mydata3));
@@ -116,8 +117,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "152.2000000",
 				'banks_id' => 1,
 				'comment' => "test de libellé",
-				'day' => mktime(0, 0, 0, 7, 1, 2013),
-				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 1, 2013)."test de libellé"."1"."152.2")
+				'day' => mktime(0, 0, 0, 7, 1, 2013)
 			)
 		);
 		$this->assertRecordExists(
@@ -127,8 +127,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "-120.5000000",
 				'banks_id' => 1,
 				'comment' => "test de libellé 2",
-				'day' => mktime(0, 0, 0, 7, 4, 2013),
-				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."test de libellé 2"."1"."-120.5")
+				'day' => mktime(0, 0, 0, 7, 4, 2013)
 			)
 		);
 		$this->assertRecordExists(
@@ -138,8 +137,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "-120.5000000",
 				'banks_id' => 1,
 				'comment' => "",
-				'day' => mktime(0, 0, 0, 7, 4, 2013),
-				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
+				'day' => mktime(0, 0, 0, 7, 4, 2013)
 			)
 		);
 		$this->assertRecordExists(
@@ -149,8 +147,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				'amount_inc_vat' => "-120.5000000",
 				'banks_id' => 1,
 				'comment' => "",
-				'day' => mktime(0, 0, 0, 7, 4, 2013),
-				'unique_key' => hash('md5', mktime(0, 0, 0, 7, 4, 2013)."1"."-120.5")
+				'day' => mktime(0, 0, 0, 7, 4, 2013)
 			)
 		);
 		$data = new Writings_Data_File($name);
@@ -163,6 +160,7 @@ class tests_Writings_Data_File extends TableTestCase {
 		$writing = new Writing();
 		$this->assertFalse($writing->load(5));
 		$this->truncateTable("writings");
+		$this->truncateTable("writingsimported");
 	}
 	
 	
@@ -253,6 +251,7 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		$writing = new Writing();
 		$this->assertFalse($writing->load(4));
 		$this->truncateTable("writings");
+		$this->truncateTable("writingsimported");
 	}
 	
 	function test_form_import() {

@@ -48,9 +48,11 @@ require $current_directory."/theme_default.inc.php";
 require $current_directory."/update.inc.php";
 require $current_directory."/user_authentication.inc.php";
 require $current_directory."/writing.inc.php";
+require $current_directory."/writing_imported.inc.php";
 require $current_directory."/writings.inc.php";
 require $current_directory."/writings_data_file.inc.php";
 require $current_directory."/writings_followup.inc.php";
+require $current_directory."/writings_imported.inc.php";
 require $current_directory."/writings_simulation.inc.php";
 require $current_directory."/writings_simulations.inc.php";
 

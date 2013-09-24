@@ -66,7 +66,6 @@ class tests_Writings extends TableTestCase {
 		$writing->paid = 0;
 		$writing->sources_id = 1;
 		$writing->number = 1;
-		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		
@@ -81,7 +80,6 @@ class tests_Writings extends TableTestCase {
 		$writing2->paid = 1;
 		$writing2->sources_id = 2;
 		$writing2->number = 2;
-		$writing2->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing2->vat = 5.5;
 		$writing2->save();
 		
@@ -113,8 +111,7 @@ class tests_Writings extends TableTestCase {
 		$writings->select();
 		
 		$table = $writings->show();
-		$this->assertPattern("/<td>19.60<\/td>/", $table);
-		$this->assertPattern("/<td>209.03<\/td>/", $table);
+		$this->assertPattern("/209.03&nbsp;/", $table);
 		$this->assertPattern("/Bank 1/", $table);
 		$this->assertPattern("/Source 1/", $table);
 		$this->assertPattern("/Category 1/", $table);

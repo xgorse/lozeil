@@ -14,7 +14,6 @@ class Writing extends Record {
 	public $search_index = "";
 	public $sources_id = 0;
 	public $number = "";
-	public $unique_key = "";
 	public $vat = 0;
 	public $timestamp = 0;
 	
@@ -83,8 +82,7 @@ class Writing extends Record {
 			comment = ".$this->db->quote($this->comment).",
 			information = ".$this->db->quote($this->information).",
 			paid = ".(int)$this->paid.",
-			day = ".(int)$this->day.",
-			unique_key = ".$this->db->quote($this->unique_key).",	
+			day = ".(int)$this->day.",	
 			search_index = ".$this->db->quote($this->search_index()).",
 			timestamp = ".time()."
 			WHERE id = ".(int)$this->id
@@ -108,7 +106,6 @@ class Writing extends Record {
 			information = ".$this->db->quote($this->information).",
 			day = ".(int)$this->day.",
 			search_index = ".$this->db->quote($this->search_index()).",
-			unique_key = ".$this->db->quote($this->unique_key).",
 			paid = ".(int)$this->paid.",
 			timestamp = ".time()
 		);
@@ -152,7 +149,6 @@ class Writing extends Record {
 				$this->number = !empty($to_merge->number) ? $to_merge->number : $this->number;
 				$this->paid = $to_merge->paid;
 				$this->search_index = $this->search_index();
-				$this->unique_key = $to_merge->unique_key;
 				$this->save();
 				$to_merge->delete();
 			}

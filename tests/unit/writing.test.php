@@ -26,7 +26,6 @@ class tests_Writing extends TableTestCase {
 		$writing->paid = 0;
 		$writing->sources_id = 2;
 		$writing->number = 132;
-		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
@@ -43,7 +42,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->paid, $writing->paid);
 		$this->assertEqual($writing_loaded->sources_id, $writing->sources_id);
 		$this->assertEqual($writing_loaded->number, $writing->number);
-		$this->assertEqual($writing_loaded->unique_key, $writing->unique_key);
 		$this->assertEqual($writing_loaded->vat, $writing->vat);
 		$this->truncateTable("writings");
 	}
@@ -60,7 +58,6 @@ class tests_Writing extends TableTestCase {
 		$writing->paid = 0;
 		$writing->sources_id = 2;
 		$writing->number = 132;
-		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
@@ -89,7 +86,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->paid, 1);
 		$this->assertEqual($writing_loaded->sources_id, 1);
 		$this->assertEqual($writing_loaded->number, 2);
-		$this->assertEqual($writing_loaded->unique_key, "e50b79ffaccc6b50d018aad432711418");
 		$this->assertEqual($writing_loaded->vat, 5.5);
 		$this->truncateTable("writings");
 		
@@ -104,7 +100,6 @@ class tests_Writing extends TableTestCase {
 		$writing->paid = 0;
 		$writing->sources_id = 2;
 		$writing->number = 132;
-		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
@@ -133,7 +128,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->paid, 1);
 		$this->assertEqual($writing_loaded->sources_id, 1);
 		$this->assertEqual($writing_loaded->number, 2);
-		$this->assertEqual($writing_loaded->unique_key, "e50b79ffaccc6b50d018aad432711418");
 		$this->assertEqual($writing_loaded->vat, 0);
 		$this->truncateTable("writings");
 	}
@@ -256,7 +250,6 @@ class tests_Writing extends TableTestCase {
 		$writing->paid = 0;
 		$writing->sources_id = 2;
 		$writing->number = 1;
-		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		
@@ -289,7 +282,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing2_loaded->paid, 0);
 		$this->assertEqual($writing2_loaded->sources_id, 2);
 		$this->assertEqual($writing2_loaded->number, 1);
-		$this->assertEqual($writing2_loaded->unique_key, "e50b79ffaccc6b50d018aad432711418");
 		$this->assertEqual($writing2_loaded->vat, 5.5);
 		
 		$this->truncateTable("writings");
@@ -342,7 +334,6 @@ class tests_Writing extends TableTestCase {
 		$writing->paid = 0;
 		$writing->sources_id = 2;
 		$writing->number = 1;
-		$writing->unique_key = "e50b79ffaccc6b50d018aad432711418";
 		$writing->vat = 19.6;
 		$writing->save();
 		
@@ -375,7 +366,6 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->paid, 0);
 		$this->assertEqual($writing_loaded->sources_id, 2);
 		$this->assertEqual($writing_loaded->number, 1);
-		$this->assertEqual($writing_loaded->unique_key, "e50b79ffaccc6b50d018aad432711418");
 		$this->assertEqual($writing_loaded->vat, 19.6);
 		
 		$this->truncateTable("writings");

@@ -15,6 +15,18 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_14() {
+		$this->db->query("ALTER TABLE `writings` DROP unique_key;");
+		$this->db->query("CREATE TABLE `writingsimported` (
+			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+			`hash` varchar(100),
+			`banks_id` int(11),
+			`sources_id` int(11),
+			PRIMARY KEY (`id`)
+		  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		);
+	}
+	
 	function to_13() {
 		$this->db->query("ALTER TABLE `writingssimulations` ADD `evolution` VARCHAR(100);");
 	}
