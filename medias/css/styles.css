@@ -5,6 +5,11 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 /* --- General --- */
 
+@font-face {
+	font-family: Bitter;
+	src: url(../fonts/bitter-Regular.ttf);
+}
+
 ul,li {
 	list-style:none;
 	margin: 0 20px;
@@ -26,7 +31,7 @@ nobr {
 body {
 	color: #000;
 	font-size: 14px;
-	font-family: 'Bitter', Helvetica, Arial, sans-serif;
+	font-family: Bitter, Helvetica, Arial, sans-serif;
 	text-align: left;
 	background: #efefef;
 }
