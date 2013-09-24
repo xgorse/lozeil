@@ -21,7 +21,16 @@ class Bot {
 		$dbpass = $this->input_hidden(__('password'));
 		
 		$config_file = new Config_File($this->directory_cfg."/config.inc.php");
-		if (!$config_file->exists()) {
+		if ($config_file->exists()) {
+			echo utf8_ucfirst(__('config file already exists, do you want to overwrite? (y/n)'))."\n";
+			while(empty($config_answer)) {
+				$config_answer = $this->input('');
+			};
+		} else {
+			$config_answer = "y";
+		}
+		
+		if ($config_answer == "y") {
 			$dist_config_file = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php.dist");
 			if (!$dist_config_file->exists()) {
 				die("Configuration file '".$dist_config_file."' does not exist");
@@ -45,7 +54,16 @@ class Bot {
 		));
 		
 		$param_file = new Param_File($this->directory_cfg."/param.inc.php");
-		if (!$param_file->exists()) {
+		if ($config_file->exists()) {
+			echo utf8_ucfirst(__('param file already exists, do you want to overwrite? (y/n)'))."\n";
+			while(empty($param_answer)) {
+				$param_answer = $this->input('');
+			};
+		} else {
+			$param_answer = "y";
+		}
+		
+		if ($param_answer == "y") {
 			$dist_param_file = new Param_File(dirname(__FILE__)."/../cfg/param.inc.php.dist");
 			if (!$dist_param_file->exists()) {
 				die("Parameters file '".$dist_param_file."' does not exist");
