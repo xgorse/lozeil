@@ -399,12 +399,11 @@ class Writings extends Collector {
 	function modify_options() {
 		$options = array(
 			"null" => "--",
-			"category" => __('change category to'),
-			"source" => __('change source to'),
-			"amount_inc_vat" => __('change amount including vat to'),
-			"add_amount_inc_vat" => __('add to amount including vat'),
-			"vat" => __('change vat to'),
-			"day" => __('change date to'),
+			"category" => __('change category to')." ...",
+			"source" => __('change source to')." ...",
+			"amount_inc_vat" => __('change amount including vat to')." ...",
+			"vat" => __('change vat to')." ...",
+			"day" => __('change date to')." ...",
 			"delete" => __('delete')
 		);
 		$select = new Html_Select("options_modify_writings", $options);
@@ -442,11 +441,6 @@ class Writings extends Collector {
 				break;
 			case 'amount_inc_vat':
 				$amount_inc_vat = new Html_Input("amount_inc_vat");
-				$form .= $amount_inc_vat->input();
-				$form .= $submit->input();
-				break;
-			case 'add_amount_inc_vat':
-				$amount_inc_vat = new Html_Input("add_amount_inc_vat");
 				$form .= $amount_inc_vat->input();
 				$form .= $submit->input();
 				break;
@@ -491,9 +485,6 @@ class Writings extends Collector {
 				break;
 			case 'amount_inc_vat':
 				$this->change_amount_inc_vat_to_from_ids($post['amount_inc_vat'], json_decode($post['ids']));
-				break;
-			case 'add_amount_inc_vat':
-				$this->add_amount_inc_vat_to_from_ids($post['add_amount_inc_vat'], json_decode($post['ids']));
 				break;
 			case 'day':
 				$this->change_day_to_from_ids($post['datepicker'], json_decode($post['ids']));
@@ -548,15 +539,6 @@ class Writings extends Collector {
 				$writing->day = $day;
 				$writing->save();
 			}
-		}
-	}
-	
-	function add_amount_inc_vat_to_from_ids($amount, $ids) {
-		foreach($ids as $id) {
-			$writing = new Writing();
-			$writing->load($id);
-			$writing->amount_inc_vat += $amount;
-			$writing->save();
 		}
 	}
 }
