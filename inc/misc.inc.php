@@ -336,14 +336,11 @@ function is_leap($year=NULL) {
     return checkdate(2, 29, ($year==NULL)? date('Y'):$year);
 }
 
-function is_filter_timestamps_valid($start, $stop) {
+function is_datepicker_valid($time) {
 	switch (true) {
-		case empty($start['d']) :
-		case empty($start['m']) :
-		case empty($start['Y']) :
-		case empty($stop['d']) :
-		case empty($stop['m']) :
-		case empty($stop['Y']) :
+		case empty($time['d']) :
+		case empty($time['m']) :
+		case empty($time['Y']) :
 			return false;
 		default:
 			return true;

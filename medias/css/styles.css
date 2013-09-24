@@ -194,6 +194,27 @@ input[type="submit"]:hover {
 	width: 600px;
 }
 
+/* --- form modify writings --- */
+
+.table_checkbox {
+	display: none;
+}
+
+#select_modify_writings {
+	display: none;
+	margin: 10px 50px 0 63px;
+}
+
+#form_modify_writings {
+	display: inline-block;
+	margin-left: 10px;
+}
+
+#submit_writings_modify_form {
+	position: absolute;
+	left: -9999px;
+}
+
 /* --- Tables writings & writingssimulations --- */
 #table_writings_split_amount {
 	display: inline-block;

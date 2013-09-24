@@ -36,6 +36,7 @@ $heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings
 echo $heading->show();
 
 echo $writings->display();
+echo $writings->modify_options();
 
 $writing = new Writing();
 echo $writing->form();

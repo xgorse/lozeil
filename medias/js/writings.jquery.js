@@ -213,6 +213,22 @@ $(document).ready(function() {
 			})
 			$(".extra_filter_writings_days").toggle();
 		})
+		
+		//Checkbox tableau
+		.on("click", "#checkbox_all", function() {
+			var $checkboxes = $("#table_writings").find('.table_checkbox:checkbox');
+			$checkboxes.show();
+			$("#select_modify_writings").show();
+			if (this.checked) {
+				$checkboxes.each(function() {
+					$(this)[0].checked = true
+				});
+			} else {
+				$checkboxes.each(function() {
+					$(this)[0].checked = false
+				});
+			}
+		})
 });
 
 function make_drag_and_drop() {
@@ -268,4 +284,63 @@ function reload_insert_form() {
 			$("#insert_writings").html(data);
 		})
 	});
+}
+
+function confirm_option(text) {
+	var select = $("#options_modify_writings");
+	
+	if (select.val() == 'delete') {
+		if(confirm(text)) {
+			var ids = get_checked_values();
+			$.post(
+				"index.php?content=writings.ajax.php",
+				{action: "form_options", option : $(select).val(), ids : ids},
+				function(data) {
+					refresh_balance();
+					$('#table_writings table').html(data);
+				}
+			);
+			return false;
+		} else {
+			return false;
+		}
+	}
+	
+	$.post(
+		"index.php?content=writings.ajax.php",
+		{action: "form_options", option : $(select).val()},
+		function(data) {
+			$('#form_modify_writings').html(data);
+		}
+	);
+	return false;
+}
+
+function get_checked_values() {
+	var $checkboxes = $("#table_writings").find('.table_checkbox:checkbox');
+	var ids = [];
+	$checkboxes.each(function() {
+		if ($(this)[0].checked) {
+			ids.push($(this).val());
+		}
+	});
+	return JSON.stringify(ids);
+}
+
+function confirm_modify(text) {
+	if(confirm(text)) {
+		var select = $("#options_modify_writings").val();
+		var ids = get_checked_values();
+		var serialized = $("form[name=\"writings_modify_form\"]").serialize();
+		serialized += "&action=writings_modify&ids=" + ids +"&modify=" + select;
+		$.post(
+			"index.php?content=writings.ajax.php",
+			serialized,
+			function(data) {
+				refresh_balance();
+				$('#table_writings table').html(data);
+			}
+		);
+	}
+	return false;
 }

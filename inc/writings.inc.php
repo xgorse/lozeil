@@ -69,10 +69,16 @@ class Writings extends Collector {
 	}
 	
 	function grid_header() {
+		$checkbox = new Html_Checkbox("checkbox_all", "check");
 		$grid = array(
 			'header' => array(
 				'class' => "table_header",
 				'cells' => array(
+					array(
+						'type' => "th",
+						'id' => "checkbox",
+						'value' => $checkbox->input()
+					),
 					array(
 						'type' => "th",
 						'class' => $this->determine_table_header_class("day"),
@@ -164,11 +170,16 @@ class Writings extends Collector {
 		$grid = array();
 		foreach ($this as $writing) {
 			$informations = $writing->show_further_information();
-			
+			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
+			$checkbox->properties = array("class" => "table_checkbox");
 			$grid[] =  array(
 				'class' => $writing->is_recently_modified() ? "draggable modified" : "draggable",
 				'id' => "table_".$writing->id,
 				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => $checkbox->input(),
+					),
 					array(
 						'type' => "td",
 						'value' => date("d/m/Y", $writing->day),
@@ -383,5 +394,168 @@ class Writings extends Collector {
 		}
 		$list = new Html_List($grid);
 		return "<div id=\"heading_timeline\">".$list->show()."</div>";
+	}
+	
+	function modify_options() {
+		$options = array(
+			"null" => "--",
+			"category" => __('change category to'),
+			"source" => __('change source to'),
+			"amount_inc_vat" => __('change amount including vat to'),
+			"add_amount_inc_vat" => __('add to amount including vat'),
+			"vat" => __('change vat to'),
+			"day" => __('change date to'),
+			"delete" => __('delete')
+		);
+		$select = new Html_Select("options_modify_writings", $options);
+		$select->properties = array(
+				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
+			);
+		$form = "<div id=\"select_modify_writings\">".$select->item("")."<div id=\"form_modify_writings\"></div></div>";
+		return $form;
+	}
+	
+	function determine_show_form_modify($target) {
+		$form = "<form method=\"post\" name=\"writings_modify_form\" action=\"\" enctype=\"multipart/form-data\" onsubmit=\"return confirm_modify('".utf8_ucfirst(__('are you sure?'))."')\">";
+		$submit = new Html_Input("submit_writings_modify_form", "", "submit");
+		switch($target) {
+			case 'category':
+				$categories = new Categories();
+				$categories->select();
+				$categories_name = $categories->names();
+				$category = new Html_Select("categories_id", $categories_name);
+				$category->properties = array(
+					'onchange' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
+				);
+				$form .= $category->item("");
+				break;
+			case 'source':
+				$sources = new Sources();
+				$sources->select();
+				$sources_name = $sources->names();
+				$source = new Html_Select("sources_id", $sources_name);
+				$source->properties = array(
+					'onchange' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
+				);
+				$form .= $source->item("");
+				break;
+			case 'amount_inc_vat':
+				$amount_inc_vat = new Html_Input("amount_inc_vat");
+				$form .= $amount_inc_vat->input();
+				$form .= $submit->input();
+				break;
+			case 'add_amount_inc_vat':
+				$amount_inc_vat = new Html_Input("add_amount_inc_vat");
+				$form .= $amount_inc_vat->input();
+				$form .= $submit->input();
+				break;
+			case 'vat':
+				$vat = new Html_Input("vat");
+				$form .= $vat->input();
+				$form .= $submit->input();
+				break;
+			case 'day':
+				$datepicker = new Html_Input_Date("datepicker");
+				$datepicker->properties = array(
+					'onsubmit' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
+				);
+				$form .= $datepicker->item("");
+				$form .= $submit->input();
+				break;
+			default :
+				break;
+		}
+		$form .= "</form>";
+		return $form;
+	}
+	
+	function delete_from_ids($ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->id = $id;
+			$writing->delete();
+		}
+	}
+	
+	function modify_from_form($post) {
+		switch ($post['modify']) {
+			case 'category':
+				$this->change_category_to_from_ids($post['categories_id'], json_decode($post['ids']));
+				break;
+			case 'source':
+				$this->change_source_to_from_ids($post['sources_id'], json_decode($post['ids']));
+				break;
+			case 'vat':
+				$this->change_vat_to_from_ids($post['vat'], json_decode($post['ids']));
+				break;
+			case 'amount_inc_vat':
+				$this->change_amount_inc_vat_to_from_ids($post['amount_inc_vat'], json_decode($post['ids']));
+				break;
+			case 'add_amount_inc_vat':
+				$this->add_amount_inc_vat_to_from_ids($post['add_amount_inc_vat'], json_decode($post['ids']));
+				break;
+			case 'day':
+				$this->change_day_to_from_ids($post['datepicker'], json_decode($post['ids']));
+				break;
+			default :
+				break;
+		}
+	}
+	
+	function change_category_to_from_ids($category_id, $ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->categories_id = $category_id;
+			$writing->save();
+		}
+	}
+	
+	function change_source_to_from_ids($source_id, $ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->sources_id = $source_id;
+			$writing->save();
+		}
+	}
+	
+	function change_vat_to_from_ids($vat, $ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->vat = $vat;
+			$writing->save();
+		}
+	}
+	
+	function change_amount_inc_vat_to_from_ids($amount_inc_vat, $ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->amount_inc_vat = $amount_inc_vat;
+			$writing->save();
+		}
+	}
+	
+	function change_day_to_from_ids($time, $ids) {
+		if(is_datepicker_valid($time)) {
+			$day = mktime(0, 0, 0, $time['m'], $time['d'], $time['Y']);
+			foreach($ids as $id) {
+				$writing = new Writing();
+				$writing->load($id);
+				$writing->day = $day;
+				$writing->save();
+			}
+		}
+	}
+	
+	function add_amount_inc_vat_to_from_ids($amount, $ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->amount_inc_vat += $amount;
+			$writing->save();
+		}
 	}
 }

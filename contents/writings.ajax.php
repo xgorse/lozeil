@@ -1,6 +1,5 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
-
 $writings = new Writings();
 list($start, $stop) = determine_month($_SESSION['start']);
 
@@ -33,7 +32,7 @@ switch ($_REQUEST['action']) {
 	
 	case "filter":
 		$_SESSION['filter_value_*'] = $_POST['extra_filter_writings_value'];
-		if (is_filter_timestamps_valid($_POST['filter_day_start'],$_POST['filter_day_stop'])) {
+		if (is_datepicker_valid($_POST['filter_day_start']) and is_datepicker_valid($_POST['filter_day_stop'])) {
 			list($start, $stop) = determine_start_stop($_POST['filter_day_start'], $_POST['filter_day_stop']);
 		}
 		$writings->set_limit($GLOBALS['param']['nb_max_writings']);
@@ -96,6 +95,19 @@ switch ($_REQUEST['action']) {
 		
 	case 'cancel':
 		$writings->cancel_last_operation();
+		break;
+	
+	case 'form_options' :
+		if ($_POST['option'] == 'delete') {
+			$writings->delete_from_ids(json_decode($_POST['ids']));
+		} else {
+			echo $writings->determine_show_form_modify($_POST['option']);
+			exit(0);
+		}
+		break;
+		
+	case 'writings_modify' :
+		$writings->modify_from_form($_POST);
 		break;
 	
 	default :
