@@ -105,7 +105,6 @@ $__['seems OK'] = "semble OK";
 $__['show form'] = "afficher le formulaire";
 $__['source'] = "source";
 $__['sources'] = "sources";
-$__['sparkline'] = "sparkline";
 $__['split'] = "séparer";
 $__['Start building up demo'] = "Debut de la mise en place de la démo";
 $__['start date'] = "date de début";

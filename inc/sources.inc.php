@@ -68,7 +68,6 @@ class Sources extends Collector  {
 	}
 	
 	function show_form() {
-		return "<div id=\"edit_sources\"><form method=\"post\" name=\"sources_id\" action=\"\" enctype=\"multipart/form-data\">".
-				$this->show()."</form></div>";
+		return "<div id=\"edit_sources\"><form method=\"post\" name=\"sources_id\" action=\"\" enctype=\"multipart/form-data\">".$this->show()."</form></div>";
 	}
 }

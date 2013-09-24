@@ -14,9 +14,9 @@ switch ($_REQUEST['action']) {
 		break;
 	
 	case 'edit':
-		if (isset($_POST['id']) and $_POST['id'] > 0) {
+		if (isset($_POST['writing_id']) and $_POST['writing_id'] > 0) {
 			$writing = new Writing();
-			$writing->load($_POST['id']);
+			$writing->load($_POST['writing_id']);
 			$writing->fill($_POST);
 			$writing->save();
 		}

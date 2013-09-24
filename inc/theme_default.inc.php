@@ -44,8 +44,8 @@ class Theme_Default {
 	}
 	
 	function js_files() {
-		$js_files[] = "medias/js/jquery-1.9.1.js";
-		$js_files[] = "medias/js/drag_and_drop.jquery.js";
+		$js_files[] = "medias/js/jquery.js";
+		$js_files[] = "medias/js/draganddrop.jquery.js";
 		$js_files[] = "medias/js/calendar.js";
 		$js_files[] = "medias/js/common.js";
 		$js_files[] = "medias/js/common.jquery.js";
@@ -53,14 +53,14 @@ class Theme_Default {
 		$js_files[] = "medias/js/cubism.js";
 		if ($GLOBALS['content'] == "writings.php") {
 			$js_files[] = "medias/js/writings.jquery.js";
-			$js_files[] = "medias/js/timeline.js";
+			$js_files[] = "medias/js/timeline.jquery.js";
 		}
 		if ($GLOBALS['content'] == "followupwritings.php") {
-			$js_files[] = "medias/js/followupwritings.js";
+			$js_files[] = "medias/js/followupwritings.jquery.js";
 		}
 		if ($GLOBALS['content'] == "writingssimulations.php") {
 			$js_files[] = "medias/js/writingssimulations.jquery.js";
-			$js_files[] = "medias/js/timeline.js";
+			$js_files[] = "medias/js/timeline.jquery.js";
 		}
 		if ($GLOBALS['content'] == "login.php") {
 			$js_files[] = "medias/js/login.jquery.js";

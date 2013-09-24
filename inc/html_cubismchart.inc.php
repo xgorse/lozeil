@@ -14,24 +14,28 @@ class Html_Cubismchart {
 	}
 	
 	function prepare_data() {
-		$data = "<ul class=\"cubism_data\">";
-		$data .="<li class=\"cubism_data_title\">".$this->title."</li>";
-		$data .="<li class=\"cubism_data_positive_average\">".$this->average_of_positive_values()."</li>";
-		$data .="<li class=\"cubism_data_negative_average\">".$this->average_of_negative_values()."</li>";
+		$data = "<ul class=\"cubism_data\">
+			<li class=\"cubism_data_title\">".$this->title."</li>
+			<li class=\"cubism_data_positive_average\">".$this->average_of_positive_values()."</li>
+			<li class=\"cubism_data_negative_average\">".$this->average_of_negative_values()."</li>";
+		
 		foreach ($this->data as $value) {
 			$data .="<li class=\"cubism_data_row\">".$value."</li>";
 		}
 		$data .= "</ul>";
+		
 		$data .= "<ul class=\"cubism_option\">
-					<li id=\"cubism_width\">".$this->width."</li>
-					<li id=\"cubism_height\">".$this->height."</li>
-					<li id=\"cubism_start_year\">".date('Y', $this->start)."</li>
-					<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>";
+			<li id=\"cubism_width\">".$this->width."</li>
+			<li id=\"cubism_height\">".$this->height."</li>
+			<li id=\"cubism_start_year\">".date('Y', $this->start)."</li>
+			<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>";
+		
 		for ($i = 0; $i <12; $i++) {
 			list($start, $stop) = determine_month(mktime(0, 0, 0, $i + 1, 1, date ('Y',$this->start)));
 			$data .= "<li class=\"cubism_link\">".link_content("content=".$this->name.".php&amp;start=".$start."&amp;stop=".$stop)."</li>";
 		}
 			$data .= "</ul>";
+			
 		return $data;
 	}
 	
@@ -43,13 +47,11 @@ class Html_Cubismchart {
 	}
 	
 	function show() {
-		return "<div id=\"cubismtimeline\" style=\"width : ".$this->width."px\"></div>"
-				.$this->prepare_data().$this->prepare_navigation();
+		return "<div id=\"cubismtimeline\" style=\"width : ".$this->width."px\"></div>".$this->prepare_data().$this->prepare_navigation();
 	}
 	
 	function display() {
-		return "<div id=\"cubismtimeline\" style=\"width : ".$this->width."px\"></div>"
-				.$this->prepare_data();
+		return "<div id=\"cubismtimeline\" style=\"width : ".$this->width."px\"></div>".$this->prepare_data();
 	}
 	
 	function average_of_positive_values() {

@@ -28,16 +28,6 @@ class Writing extends Record {
 		}
 	}
 	
-	function search_index() {
-		$bank = new Bank();
-		$bank->load($this->banks_id);
-		$source = new Source();
-		$source->load($this->sources_id);
-		$category = new Category();
-		$category->load($this->categories_id);
-		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name;
-	}
-	
 	function load($id = null) {
 		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
 			return false;
@@ -115,6 +105,17 @@ class Writing extends Record {
 		return $this->id;
 	}
 	
+	function search_index() {
+		$bank = new Bank();
+		$bank->load($this->banks_id);
+		$source = new Source();
+		$source->load($this->sources_id);
+		$category = new Category();
+		$category->load($this->categories_id);
+		
+		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name;
+	}
+	
 	function calculate_amount_excl_vat() {
 		if ($this->vat != -100) {
 			return (float)round($this->amount_inc_vat/(($this->vat/100) + 1), 6);
@@ -162,12 +163,14 @@ class Writing extends Record {
 		$this->amount_excl_vat = $this->calculate_amount_excl_vat();
 		$this->search_index = $this->search_index();
 		$this->save();
+		
 		$writing = new Writing();
 		$writing->load($this->id);
 		$writing->id = 0;
 		$writing->amount_inc_vat = $amount;
 		$writing->amount_excl_vat = $writing->calculate_amount_excl_vat();
 		$writing->search_index = $this->search_index();
+		
 		return $writing->save();
 	}
 	
@@ -182,19 +185,8 @@ class Writing extends Record {
 			<div class=\"insert_writings_form\">
 			<form method=\"post\" name=\"insert_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
-		
 		$input_hidden = new Html_Input("action", "insert");
-		
 		$form .= $input_hidden->input_hidden();
-		
-		$input_hidden_id = new Html_Input("id", $this->id);
-		$form .= $input_hidden_id->input_hidden();
-		
-		if ($this->day > 0) {
-			$date = (int)$this->day;
-		} else {
-			$date = (int)$_SESSION['start'];
-		}
 		
 		$categories = new Categories();
 		$categories->select();
@@ -203,18 +195,16 @@ class Writing extends Record {
 		$sources->select();
 		$sources_name = $sources->names();
 		
-		$datepicker = new Html_Input_Date("datepicker");
-		$datepicker->value = $date;
-		$category = new Html_Select("categories_id", $categories_name, $this->categories_id);
-		$source = new Html_Select("sources_id", $sources_name, $this->sources_id);
-		$number = new Html_Input("number", $this->number);
-		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
-		$vat = new Html_Input("vat", $this->vat);
-		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
-		$comment = new Html_Textarea("comment", $this->comment);
-		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
-		$submit = new Html_Input("submit", "", "submit");
-		$submit->value =__('save');
+		$datepicker = new Html_Input_Date("datepicker", $_SESSION['start']);
+		$category = new Html_Select("categories_id", $categories_name);
+		$source = new Html_Select("sources_id", $sources_name);
+		$number = new Html_Input("number");
+		$amount_excl_vat = new Html_Input("amount_excl_vat");
+		$vat = new Html_Input("vat");
+		$amount_inc_vat = new Html_Input("amount_inc_vat");
+		$comment = new Html_Textarea("comment");
+		$paid = new Html_Radio("paid", array(__("no"),__("yes")));
+		$submit = new Html_Input("submit", __('save'), "submit");
 		
 		$grid = array(
 			'class' => "itemsform",
@@ -248,10 +238,7 @@ class Writing extends Record {
 				),
 				'submit' => array(
 					'value' => $submit->item(""),
-				),
-				'category' => array(
-					'value' => $category->item(__('category')),
-				),
+				)
 			)
 		);				
 		$list = new Html_List($grid);
@@ -268,22 +255,11 @@ class Writing extends Record {
 			<div class=\"table_edit_writings_form\">
 			<form method=\"post\" name=\"table_edit_writings_form\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">";
 		
-		if ($this->id) {
-			$input_hidden = new Html_Input("action", "edit", "submit");
-			$input_hidden->id = $this->id;
-		} else {
-			$input_hidden = new Html_Input("action", "insert");
-		}
+		$input_hidden = new Html_Input("action", "edit", "submit");
 		$form .= $input_hidden->input_hidden();
 		
-		$input_hidden_id = new Html_Input("id", $this->id);
+		$input_hidden_id = new Html_Input("writing_id", $this->id);
 		$form .= $input_hidden_id->input_hidden();
-		
-		if ($this->day > 0) {
-			$date = (int)$this->day;
-		} else {
-			$date = (int)$_SESSION['start'];
-		}
 		
 		$categories = new Categories();
 		$categories->select();
@@ -292,8 +268,7 @@ class Writing extends Record {
 		$sources->select();
 		$sources_name = $sources->names();
 		
-		$datepicker = new Html_Input_Date("datepicker");
-		$datepicker->value = $date;
+		$datepicker = new Html_Input_Date("datepicker", $this->day);
 		$category = new Html_Select("categories_id", $categories_name, $this->categories_id);
 		$source = new Html_Select("sources_id", $sources_name, $this->sources_id);
 		$number = new Html_Input("number", $this->number);
@@ -302,8 +277,7 @@ class Writing extends Record {
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
 		$comment = new Html_Textarea("comment", $this->comment);
 		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
-		$submit = new Html_Input("submit", "", "submit");
-		$submit->value =__('save');
+		$submit = new Html_Input("submit", __('save'), "submit");
 		
 		$grid = array(
 			'class' => "itemsform",
@@ -337,10 +311,7 @@ class Writing extends Record {
 				),
 				'submit' => array(
 					'value' => $submit->item(""),
-				),
-				'category' => array(
-					'value' => $category->item(__('category')),
-				),
+				)
 			)
 		);				
 		$list = new Html_List($grid);
