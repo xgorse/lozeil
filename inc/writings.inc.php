@@ -69,7 +69,7 @@ class Writings extends Collector {
 	}
 	
 	function grid_header() {
-		$checkbox = new Html_Checkbox("checkbox_all", "check");
+		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
 		$grid = array(
 			'header' => array(
 				'class' => "table_header",
@@ -411,7 +411,8 @@ class Writings extends Collector {
 		$select->properties = array(
 				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
 			);
-		$form = "<div id=\"select_modify_writings\">".$select->item("")."<div id=\"form_modify_writings\"></div></div>";
+		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
+		$form = "<div id=\"select_modify_writings\">".$checkbox->input().$select->item("")."<div id=\"form_modify_writings\"></div></div>";
 		return $form;
 	}
 	

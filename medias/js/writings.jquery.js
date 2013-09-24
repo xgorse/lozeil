@@ -215,10 +215,8 @@ $(document).ready(function() {
 		})
 		
 		//Checkbox tableau
-		.on("click", "#checkbox_all", function() {
-			var $checkboxes = $("#table_writings").find('.table_checkbox:checkbox');
-			$checkboxes.show();
-			$("#select_modify_writings").show();
+		.on("click", "#checkbox_all_up, #checkbox_all_down", function() {
+			var $checkboxes = $("#table_writings, #select_modify_writings").find(':checkbox');
 			if (this.checked) {
 				$checkboxes.each(function() {
 					$(this)[0].checked = true

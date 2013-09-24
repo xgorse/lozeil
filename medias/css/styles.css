@@ -196,13 +196,8 @@ input[type="submit"]:hover {
 
 /* --- form modify writings --- */
 
-.table_checkbox {
-	display: none;
-}
-
 #select_modify_writings {
-	display: none;
-	margin: 10px 50px 0 63px;
+	margin: 10px 50px 0 60px;
 }
 
 #form_modify_writings {
@@ -213,6 +208,10 @@ input[type="submit"]:hover {
 #submit_writings_modify_form {
 	position: absolute;
 	left: -9999px;
+}
+
+#options_modify_writings {
+	margin-left: 10px;
 }
 
 /* --- Tables writings & writingssimulations --- */
