@@ -81,14 +81,17 @@ function make_timeline() {
 		var num = 0;
 		$(".cubism_data").each(function () {
 			num++;
+			if (typeof values[num] === 'undefined') {
+				values[num] = new Array();
+			}
+			values[num].push(null);
 			$(this).find("li.cubism_data_row").each(function () {
-				if (typeof values[num] === 'undefined') {
-					values[num] = new Array();
-				}
 				var val = $(this).text();
 				if (val === "0") {
 					val = null;
 				}
+				values[num].push(val);
+				values[num].push(val);
 				values[num].push(val);
 			})
 		})

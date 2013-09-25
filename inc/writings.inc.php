@@ -284,14 +284,12 @@ class Writings extends Collector {
 	}
 	
 	function balance_per_day_in_a_year_in_array($timestamp_max) {
-		$values[] = 0;
+		$values = array();
 		$nb_day = is_leap(date('Y',$timestamp_max) + 1) ? 366 : 365;
 		
 		for ($i = 0; $i <= $nb_day; $i++) {
 			$timestamp_max = strtotime('+1 day', $timestamp_max);
 			$value = $this->show_balance_at($timestamp_max);
-			$values[] = $value;
-			$values[] = $value;
 			$values[] = $value;
 		}
 		
