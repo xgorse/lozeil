@@ -344,6 +344,7 @@ class Writings extends Collector {
 			"amount_inc_vat" => __('change amount including vat to')." ...",
 			"vat" => __('change vat to')." ...",
 			"day" => __('change date to')." ...",
+			"duplicate" => __('duplicate over')." ...",
 			"delete" => __('delete')
 		);
 		$select = new Html_Select("options_modify_writings", $options);
@@ -396,6 +397,11 @@ class Writings extends Collector {
 				$form .= $datepicker->item("");
 				$form .= $submit->input();
 				break;
+			case 'duplicate':
+				$vat = new Html_Input("duplicate");
+				$form .= $vat->input();
+				$form .= $submit->input();
+				break;
 			default :
 				break;
 		}
@@ -420,6 +426,9 @@ class Writings extends Collector {
 				break;
 			case 'day':
 				$this->change_day_to_from_ids($post['datepicker'], json_decode($post['ids']));
+				break;
+			case 'duplicate':
+				$this->duplicate_over_from_ids($post['duplicate'], json_decode($post['ids']));
 				break;
 			default :
 				break;
@@ -479,6 +488,15 @@ class Writings extends Collector {
 				$writing->day = $day;
 				$writing->save();
 			}
+		}
+	}
+	
+	function duplicate_over_from_ids($amount, $ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->duplicate($amount);
+			$writing->save();
 		}
 	}
 }

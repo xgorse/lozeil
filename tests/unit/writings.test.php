@@ -198,6 +198,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertEqual($writings->filters['start'], 1362783600);
 		$this->assertEqual($writings->filters['stop'], 1362870000);
 		$this->assertEqual($writings->filters['*'], "fullsearch");
+		$this->truncateTable("writings");
 	}
 	
 	function test_cancel_last_operation() {
@@ -213,5 +214,30 @@ class tests_Writings extends TableTestCase {
 		$writings->cancel_last_operation();
 		$writings->select();
 		$this->assertTrue(count($writings) == 0);
+		$this->truncateTable("writings");
+	}
+	
+	function test_duplicate_over_from_ids() {
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->duplicate_over_from_ids("3m", array(1, 2));
+		$writings->select();
+		$this->assertTrue(count($writings) == 8);
+		
+		$writing->load(3);
+		$this->assertTrue($writing->day == mktime(0, 0, 0, 10, 25, 2013));
+		
+		$writing->load(4);
+		$this->assertTrue($writing->day == mktime(0, 0, 0, 11, 25, 2013));
+		
+		$writing->load(5);
+		$this->assertTrue($writing->day == mktime(0, 0, 0, 12, 25, 2013));
+		$this->truncateTable("writings");
 	}
 }

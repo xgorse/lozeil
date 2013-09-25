@@ -41,6 +41,7 @@ $__['deletion OK'] = "suppression OK";
 $__['deletions OK'] = "suppressions OK";
 $__['default VAT'] = "TVA par default";
 $__['display'] = "afficher";
+$__['duplicate over'] = "dupliquer sur";
 $__['end date'] = "date de fin";
 $__['error while creating'] = "erreur pendant la création";
 $__['error while deleting'] = "erreur pendant la suppression";
