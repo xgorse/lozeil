@@ -14,6 +14,24 @@ class Writings_Data_File {
 		$this->csv_data = array();
 	}
 	
+	function import() {
+		$banks = new Banks();
+		$this->prepare_csv_data();
+		if ($this->is_cic($this->csv_data)) {
+			$this->banks_id = $banks->get_id_from_name("cic");
+			if ($this->banks_id) {
+				$this->import_as_cic();
+			}
+		} elseif ($this->is_coop($this->csv_data)) {
+			$this->banks_id = $banks->get_id_from_name("coop");
+			if ($this->banks_id) {
+				$this->import_as_coop();
+			}
+		} else {
+			log_status(__(('file %s is not in supported format'),  $this->file_name));
+		}
+	}
+	
 	function prepare_csv_data() {
 		if ($file_opened = fopen( $this->tmp_name , 'r') ) {
 			$row = 0;
@@ -27,6 +45,27 @@ class Writings_Data_File {
 			fclose($file_opened);
 		} else {
 			log_status(__('can not open file')." : ".$this->file_name);
+		}
+	}
+	
+	function is_cic($data) {
+		switch (true) {
+			case $data[0][1] != "Date de valeur":
+			case $data[0][5] != "Solde":
+				return false;
+			default :
+				return true;
+		}
+	}
+	
+	function is_coop($data) {
+		switch (true) {
+			case $data[0][0] != "Date" :
+			case $data[0][3] != "Montant" :
+			case $data[0][4] != "Sens" :
+				return false;
+			default :
+				return true;
 		}
 	}
 	
@@ -50,10 +89,8 @@ class Writings_Data_File {
 				$writing->banks_id = $this->banks_id;
 				if (!empty($line[2])) {
 					$writing->amount_inc_vat = (float)str_replace(",", ".", $line[2]);
-					$writing->amount_excl_vat = (float)str_replace(",", ".", $line[2]);
 				} else {
 					$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
-					$writing->amount_excl_vat = (float)str_replace(",", ".", $line[3]);
 				}
 				$writing->paid = 1;
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
@@ -107,7 +144,6 @@ class Writings_Data_File {
 					$line[3] = "-".$line[3];
 				}
 				$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
-				$writing->amount_excl_vat = (float)str_replace(",", ".", $line[3]);
 				$writing->paid = 1;
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 				
@@ -126,6 +162,31 @@ class Writings_Data_File {
 			}
 		}
 		log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
+	}
+	
+	function is_line_cic($line) {
+		$time = explode("/", $line[1]);
+		
+		switch (true) {
+			case (!isset($time[1]) OR !isset($time[2])) :
+			case !(empty($line[2]) XOR empty($line[3])) :
+				return false;
+			default :
+				return true;
+		}
+	}
+	
+	function is_line_coop($line) {
+		$day = str_replace("/", "", $line[0]);
+		
+		switch (true) {
+		case strlen($day) != 8 :
+		case empty($line[3]) :
+		case ($line[4] != "DEBIT" AND $line[4] != "CREDIT") :
+			return false;
+		default :
+			return true;
+		}
 	}
 	
 	function form_import() {
@@ -147,68 +208,5 @@ class Writings_Data_File {
 		$form .= $date_picker_from->input().$date_picker_to->input().$submit->input();
 		$form .= "</form></div>";
 		return $form;
-	}
-	
-	function import() {
-		$banks = new Banks();
-		$this->prepare_csv_data();
-		if ($this->is_cic($this->csv_data)) {
-			$this->banks_id = $banks->get_id_from_name("cic");
-			if ($this->banks_id) {
-				$this->import_as_cic();
-			}
-		} elseif ($this->is_coop($this->csv_data)) {
-			$this->banks_id = $banks->get_id_from_name("coop");
-			if ($this->banks_id) {
-				$this->import_as_coop();
-			}
-		} else {
-			log_status(__(('file %s is not in supported format'),  $this->file_name));
-		}
-	}
-	
-	function is_cic($data) {
-		switch (true) {
-			case $data[0][1] != "Date de valeur":
-			case $data[0][5] != "Solde":
-				return false;
-			default :
-				return true;
-		}
-	}
-	
-	function is_coop($data) {
-		switch (true) {
-			case $data[0][0] != "Date" :
-			case $data[0][3] != "Montant" :
-			case $data[0][4] != "Sens" :
-				return false;
-			default :
-				return true;
-		}
-	}
-	
-	function is_line_cic($line) {
-		$time = explode("/", $line[1]);
-		
-		switch (true) {
-			case (!isset($time[1]) OR !isset($time[2])) :
-			case !(empty($line[2]) XOR empty($line[3])) :
-				return false;
-			default :
-				return true;
-		}
-	}
-	
-	function is_line_coop($line) {
-		$day = str_replace("/", "", $line[0]);
-		switch (true) {
-		case strlen($day) != 8 :
-		case empty($line[3]) :
-		case ($line[4] != "DEBIT" AND $line[4] != "CREDIT") :
-			return false;
-		default :
-			return true;
-		}
 	}
 }

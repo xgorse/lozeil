@@ -353,3 +353,7 @@ function determine_start_stop($start, $stop) {
 
 	return array($starttime, $stoptime);
 }
+
+function timestamp_from_datepicker($datepicker) {
+	return mktime(0, 0, 0, $datepicker['m'], $datepicker['d'], $datepicker['Y']);
+}

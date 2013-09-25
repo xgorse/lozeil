@@ -199,7 +199,7 @@ class Writings_Simulations extends Collector  {
 		return $amounts;
 	}
 	
-	function show_balance_to($timestamp) {
+	function show_balance_at($timestamp) {
 		$amount = 0;
 		foreach ($this->amounts as $month => $values) {
 			if($month < $timestamp) {
@@ -229,9 +229,9 @@ class Writings_Simulations extends Collector  {
 		$previous = 0;
 		for ($i = 0; $i <= $nb_day; $i++) {
 			$timestamp_max = strtotime('+1 day', $timestamp_max);
-			$values[] = $previous + $writings->show_balance_to($timestamp_max) + $this->show_balance_to($timestamp_max);
-			$values[] = $previous + $writings->show_balance_to($timestamp_max + 8 * 3600) + $this->show_balance_to($timestamp_max + 8 * 3600);
-			$values[] = $previous + $writings->show_balance_to($timestamp_max + 16 * 3600) + $this->show_balance_to($timestamp_max + 16 * 3600);
+			$values[] = $previous + $writings->show_balance_at($timestamp_max) + $this->show_balance_at($timestamp_max);
+			$values[] = $previous + $writings->show_balance_at($timestamp_max + 8 * 3600) + $this->show_balance_at($timestamp_max + 8 * 3600);
+			$values[] = $previous + $writings->show_balance_at($timestamp_max + 16 * 3600) + $this->show_balance_at($timestamp_max + 16 * 3600);
 		}
 		return $values;
 	}

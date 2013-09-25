@@ -18,7 +18,7 @@ function make_timeline() {
 	 });
 	
 	var context = cubism.context()
-		.serverDelay(Date.now() - new Date(parseInt(start_year) + 1, 0, parseInt(isleap_year), 0,0 ,0 ,0))
+		.serverDelay(Date.now() - new Date(parseInt(start_year) + 1, 0, parseInt(isleap_year), 0, 0, 0, 0))
 		.clientDelay(0)
 		.step(1000*60*60*8)
 		.size(width)

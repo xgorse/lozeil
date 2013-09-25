@@ -225,6 +225,7 @@ class Writings extends Collector {
 				),
 			);
 		}
+		
 		return $grid;
 	}
 
@@ -234,36 +235,12 @@ class Writings extends Collector {
 	
 	function show() {
 		$html_table = new Html_table(array('lines' => $this->grid()));
+		
 		return $html_table->show();
 	}
 	
 	function display() {
 		return "<div id=\"table_writings\">".$this->show()."</div>";
-	}
-	
-	function amount_per_month() {
-		$amounts = array();
-		foreach ($this as $writing) {
-			if (isset($amounts[determine_first_day_of_month($writing->day)])) {
-				$amounts[determine_first_day_of_month($writing->day)] += (float)$writing->amount_inc_vat;
-			} else {
-				$amounts[determine_first_day_of_month($writing->day)] = (float)$writing->amount_inc_vat;
-			}
-		}
-		$this->amounts = $amounts;
-	}
-	
-	function show_balance_at($timestamp) {
-		$amount = 0;
-		if (empty($this->amounts)) {
-			$this->amount_per_month();
-		}
-		foreach ($this->amounts as $month => $balance) {
-			if($month < $timestamp) {
-				$amount += $balance;
-			}
-		}
-		return round($amount, 2);
 	}
 	
 	function show_timeline_at($timestamp) {
@@ -273,8 +250,9 @@ class Writings extends Collector {
 		$writings->select();
 		
 		$cubismchart = new Html_Cubismchart("writings");
-		$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 0, date('Y',$writings->month)));
+		$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, date('Y',$writings->month)));
 		$cubismchart->start = $writings->month;
+		
 		return $cubismchart->show();
 	}
 	
@@ -282,29 +260,36 @@ class Writings extends Collector {
 		return "<div id=\"heading_timeline\">".$this->show_timeline_at($timestamp)."</div>";
 	}
 	
-	function show_balance_on_current_date() {
+	function display_balance_on_current_date() {
 		list($start, $stop) = determine_month(time());
+		
 		return Html_Tag::a(link_content("content=writings.php&start=".$start."&stop=".$stop),utf8_ucfirst(__("accounting on"))." ".get_time("d/m/Y")." : ".$this->show_balance_at(time())." ".__("€"));
 	}
 	
-	function show_balance_between($timestamp_min, $timestamp_max) {
-		$amount = 0;
-		foreach ($this->instances as $writing) {
-			if($writing->day >= $timestamp_min and $writing->day < $timestamp_max) {
-				$amount += $writing->amount_inc_vat;
-			}
-		}
-		return round($amount, 2);
-	}
-	
-	function show_balance_to($timestamp_max) {
+	function show_balance_at($timestamp_max) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
 			if($writing->day < $timestamp_max) {
 				$amount += $writing->amount_inc_vat;
 			}
 		}
+		
 		return round($amount, 2);
+	}
+	
+	function balance_per_day_in_a_year_in_array($timestamp_max) {
+		$values[] = 0;
+		$nb_day = is_leap(date('Y',$timestamp_max) + 1) ? 366 : 365;
+		
+		for ($i = 0; $i <= $nb_day; $i++) {
+			$timestamp_max = strtotime('+1 day', $timestamp_max);
+			$value = $this->show_balance_at($timestamp_max);
+			$values[] = $value;
+			$values[] = $value;
+			$values[] = $value;
+		}
+		
+		return $values;
 	}
 	
 	function form_filter($start, $stop, $value = "") {
@@ -315,6 +300,7 @@ class Writings extends Collector {
 		$input = new Html_Input("extra_filter_writings_value",$value);
 		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span><span class=\"extra_filter_writings_days\">".$date_start->input().$date_stop->input()."</span>";
 		$form .= "</form></div>";
+		
 		return $form;
 	}
 	
@@ -327,33 +313,6 @@ class Writings extends Collector {
 		}
 	}
 	
-	function balance_per_month_in_a_year_in_array($timestamp_max) {
-		$values = array();
-		for ($i = 0; $i < 12; $i++) {
-			$timestamp_min = $timestamp_max;
-			$timestamp_max = strtotime('+1 month', $timestamp_max);
-			$values[] = $this->show_balance_between($timestamp_min, $timestamp_max);
-		}
-		return $values;
-	}
-	
-	function balance_per_day_in_a_year_in_array($timestamp_max) {
-		if (is_leap(date('Y',$timestamp_max) + 1)) {
-			$nb_day = 366;
-		} else {
-			$nb_day = 365;
-		}
-		$values = array();
-		$previous = 0;
-		for ($i = 0; $i <= $nb_day; $i++) {
-			$timestamp_max = strtotime('+1 day', $timestamp_max);
-			$values[] = $previous + $this->show_balance_to($timestamp_max);
-			$values[] = $previous + $this->show_balance_to($timestamp_max + 8 * 3600);
-			$values[] = $previous + $this->show_balance_to($timestamp_max + 16 * 3600);
-		}
-		return $values;
-	}
-	
 	function form_cancel_last_operation() {
 		$form = "<div class=\"extra_cancel_writings\"><form method=\"post\" name=\"extra_cancel_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "cancel");
@@ -363,6 +322,7 @@ class Writings extends Collector {
 			);
 		$form .= $input_hidden_action->input_hidden().$submit->input();
 		$form .= "</form></div>";
+		
 		return $form;
 	}
 	
@@ -374,26 +334,6 @@ class Writings extends Collector {
 		foreach ($writings as $instance) {
 			$instance->delete();
 		}
-	}
-	
-	function navigation($timestamp) {
-		$grid = array();
-		$start = strtotime("-2 month", $timestamp);
-		$stop = strtotime("+10 month", $timestamp);
-		while ($start <= $stop) {
-			$class = "navigation";
-			if ($start == $stop) {
-				$class = "encours";
-			} 
-			$next_month = determine_first_day_of_next_month($start);
-			
-			$grid['leaves'][$start]['value'] = Html_Tag::a(link_content("content=writings.php&timestamp=".$start),
-					utf8_ucfirst($GLOBALS['array_month'][date("n",$start)])."<br />".
-					date("Y", $start));
-			$start = $next_month;
-		}
-		$list = new Html_List($grid);
-		return "<div id=\"heading_timeline\">".$list->show()."</div>";
 	}
 	
 	function modify_options() {
@@ -410,8 +350,9 @@ class Writings extends Collector {
 		$select->properties = array(
 				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
 			);
-		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
+		$checkbox = new Html_Checkbox("checkbox_all_down", "check");
 		$form = "<div id=\"select_modify_writings\">".$checkbox->input().$select->item("")."<div id=\"form_modify_writings\"></div></div>";
+		
 		return $form;
 	}
 	
@@ -422,8 +363,7 @@ class Writings extends Collector {
 			case 'category':
 				$categories = new Categories();
 				$categories->select();
-				$categories_name = $categories->names();
-				$category = new Html_Select("categories_id", $categories_name);
+				$category = new Html_Select("categories_id", $categories->names());
 				$category->properties = array(
 					'onchange' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
 				);
@@ -432,8 +372,7 @@ class Writings extends Collector {
 			case 'source':
 				$sources = new Sources();
 				$sources->select();
-				$sources_name = $sources->names();
-				$source = new Html_Select("sources_id", $sources_name);
+				$source = new Html_Select("sources_id", $sources->names());
 				$source->properties = array(
 					'onchange' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
 				);
@@ -461,15 +400,8 @@ class Writings extends Collector {
 				break;
 		}
 		$form .= "</form>";
+		
 		return $form;
-	}
-	
-	function delete_from_ids($ids) {
-		foreach($ids as $id) {
-			$writing = new Writing();
-			$writing->id = $id;
-			$writing->delete();
-		}
 	}
 	
 	function modify_from_form($post) {
@@ -491,6 +423,14 @@ class Writings extends Collector {
 				break;
 			default :
 				break;
+		}
+	}
+	
+	function delete_from_ids($ids) {
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->id = $id;
+			$writing->delete();
 		}
 	}
 	

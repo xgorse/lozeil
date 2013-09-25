@@ -18,7 +18,7 @@ class Writings_Followup  {
 			$writings->select();
 			if ($writings->count() > 0) {
 				$cubismchart->start = $writings->month;
-				$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 0, date('Y',$writings->month)));
+				$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, date('Y',$writings->month)));
 				$cubismchart->title = $category->name;
 				$charts .= $cubismchart->display();
 			}
@@ -27,7 +27,7 @@ class Writings_Followup  {
 		return "<div class=\"timeseries\">".$charts.$cubismchart->prepare_navigation()."</div>";
 	}
 	
-	function show_balance_to($timestamp_max) {
+	function show_balance_at($timestamp_max) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
 			if($writing->day < $timestamp_max) {
@@ -38,18 +38,14 @@ class Writings_Followup  {
 	}
 	
 	function balance_per_day_in_a_year_in_array($timestamp_max) {
-		if (is_leap(date('Y',$timestamp_max) + 1)) {
-			$nb_day = 366;
-		} else {
-			$nb_day = 365;
-		}
+		$nb_day = is_leap(date('Y',$timestamp_max) + 1) ? 366 : 365;
 		$values = array();
-		$previous = 0;
 		for ($i = 0; $i <= $nb_day; $i++) {
 			$timestamp_max = strtotime('+1 day', $timestamp_max);
-			$values[] = $previous + $this->show_balance_to($timestamp_max);
-			$values[] = $previous + $this->show_balance_to($timestamp_max + 8 * 3600);
-			$values[] = $previous + $this->show_balance_to($timestamp_max + 16 * 3600);
+			$value = $this->show_balance_at($timestamp_max);
+			$values[] = $value;
+			$values[] = $value;
+			$values[] = $value;
 		}
 		return $values;
 	}

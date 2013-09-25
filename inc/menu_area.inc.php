@@ -39,7 +39,7 @@ class Menu_Area {
 		$writings->filter_with(array('stop' => time()));
 		$writings->select_columns('amount_inc_vat');
 		$writings->select();
-		$this->header = $writings->show_balance_on_current_date();
+		$this->header = $writings->display_balance_on_current_date();
 
 		$data = new Writings_Data_File();
 		$grid = array(

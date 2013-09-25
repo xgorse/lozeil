@@ -1,8 +1,21 @@
 $(document).ready(function() {
 	make_drag_and_drop();
 	$("body")
-		//Edition des enregistrements
-		.on("click", ".modify a", function() {
+		.on("click", "#insert_writings_show", function() {
+			$(".insert_writings_form").slideDown(1, function() {
+				$("html, body").animate({ scrollTop: $(document).height() }, "slow");
+			});
+			$(this).hide();
+			$("#insert_writings_hide, #insert_writings_cancel").show();
+		})
+		
+		.on("click", "#insert_writings_hide", function() {
+			$(".insert_writings_form").slideUp();
+			$(this).hide();
+			$("#insert_writings_show").show();
+		})
+		
+		.on("click", "#table_writings .modify a", function() {
 			var row = $(this).parent().parent().parent();
 			var id = row.attr("id").substr(6);
 			if (row.next().hasClass("table_writings_form_modify")) {
@@ -44,7 +57,6 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		//Duplicate enregistrements
 		.on("submit", "form[name=\"table_writings_duplicate\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -57,7 +69,6 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		//Forward enregistrements
 		.on("submit", "form[name=\"table_writings_forward\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -70,7 +81,6 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		//Delete enregistrements
 		.on("submit", "form[name=\"table_writings_delete\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -83,7 +93,6 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		//Insert enregistrements
 		.on("submit", "form[name=\"insert_writings_form\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -96,8 +105,8 @@ $(document).ready(function() {
 			);
 			return false;
 		})
-		//Toggle informations supplémentaires
-		.on("click", ".table_writings_comment", function() {
+		
+		.on("click", "#table_writings .table_writings_comment", function() {
 			$(".table_writings_comment_further_information").slideUp();
 			var cell = $(this).find(".table_writings_comment_further_information");
 			if (cell.css("display") == "none") {
@@ -105,22 +114,21 @@ $(document).ready(function() {
 			}
 			return false;
 		})
-		//Toggle input split & duplicate
+		
 		.on("click", "input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit", function() {
-			var next = "";
 			if ($(this).next().val() == "") {
 				event.preventDefault();
 				if ($(this).next().attr("type") == "hidden") {
-					next = "text";
+					var next = "text";
 				} else {
-					next = "hidden";
+					var next = "hidden";
 				}
 			$("input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit").next().attr("type", "hidden");
 					$(this).next().attr("type", next);
 			}
 		})
-		//Sort lines
-		.on("click", ".sort", function() {
+		
+		.on("click", "#table_writings .sort", function() {
 			var order_col_name = $(this).attr('id');
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -130,7 +138,7 @@ $(document).ready(function() {
 				}
 			)
 		})
-		// Split lines
+		
 		.on("submit", "form[name=\"table_writings_split\"]", function() {
 			var row = $(this).parent().parent().parent();
 			var id = row.attr("id").substr(6);
@@ -144,7 +152,7 @@ $(document).ready(function() {
 			)
 		return false;
 		})
-		// Cancel last operation
+		
 		.on("submit", "form[name=\"extra_cancel_writings_form\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -156,7 +164,7 @@ $(document).ready(function() {
 			)
 		return false;
 		})
-		//Filter input
+		
 		.on("change", "input#amount_excl_vat", function() {
 			$(this).val($(this).val().replace(",", "."));
 			var amount_inc_vat = Math.round($(this).val() * (($("input#vat").val()/100 +1))*1000000)/1000000;
@@ -185,16 +193,14 @@ $(document).ready(function() {
 			);
 		})
 		
-		//Affichage des opérations
-		.on("mouseenter", "tr", function() {
+		.on("mouseenter", "#table_writings tr", function() {
 			$(this).find(".operations > div").css("display", "inline-block");
 		})
 		
-		.on("mouseleave", "tr", function() {
+		.on("mouseleave", "#table_writings tr", function() {
 			$(this).find(".operations > div").hide();
 		})
 		
-		//Chargement automatique de la TVA par default
 		.on("change", "select[name='categories_id']", function() {
 			var form = $(this);
 			$.post(
@@ -206,7 +212,6 @@ $(document).ready(function() {
 			);
 		})
 		
-		//Toggle dates pour le filtre
 		.on("click", "#extra_filter_writings_toggle", function() {
 			$(".extra_filter_writings_days input").each(function() {
 				$(this).keyup();
@@ -214,7 +219,6 @@ $(document).ready(function() {
 			$(".extra_filter_writings_days").toggle();
 		})
 		
-		//Checkbox tableau
 		.on("click", "#checkbox_all_up, #checkbox_all_down", function() {
 			var $checkboxes = $("#table_writings, #select_modify_writings").find(':checkbox');
 			if (this.checked) {
@@ -264,13 +268,6 @@ function make_drag_and_drop() {
 		}
 	});
 }
-
-$(document).ajaxStop(function() {
-	make_drag_and_drop();
-	$(this).find(".modified").delay('6000').queue(function(next){
-		$(this).removeClass('modified');
-	})
-})
 
 function reload_insert_form() {
 	$.ajax({
@@ -342,3 +339,10 @@ function confirm_modify(text) {
 	}
 	return false;
 }
+
+$(document).ajaxStop(function() {
+	make_drag_and_drop();
+	$(this).delay('6000').queue(function(next){
+		$("#table_writings").find("tr.modified").removeClass('modified');
+	})
+})

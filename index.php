@@ -1,8 +1,6 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-error_reporting(E_ALL);
-
 ob_start();
 require dirname(__FILE__)."/inc/require.inc.php";
 

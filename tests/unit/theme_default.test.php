@@ -19,7 +19,7 @@ class tests_Theme_default extends TableTestCase {
 		$theme = new Theme_Default();
 		$GLOBALS['config']['layout_mediaserver'] = "";
 		$this->assertPattern("/javascript/", $theme->js_files());
-		$this->assertPattern("/medias\/js\/jquery-1.9.1.js/", $theme->js_files());
+		$this->assertPattern("/medias\/js\/jquery.js/", $theme->js_files());
 		$GLOBALS['config']['layout_mediaserver'] = "autre/chemin/";
 		$this->assertPattern("/autre\/chemin\//", $theme->js_files());
 		$this->assertPattern("/\?v=".$GLOBALS['config']['version']."/", $theme->js_files());

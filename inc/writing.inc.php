@@ -2,20 +2,20 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Writing extends Record {
-	public $categories_id = 0;
+	public $id = 0;
 	public $amount_excl_vat = 0;
 	public $amount_inc_vat = 0;
 	public $banks_id = 0;
+	public $categories_id = 0;
 	public $comment = "";
 	public $day = 0;
-	public $id = 0;
 	public $information = "";
+	public $number = "";
 	public $paid = 0;
 	public $search_index = "";
 	public $sources_id = 0;
-	public $number = "";
-	public $vat = 0;
 	public $timestamp = 0;
+	public $vat = 0;
 	
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
@@ -190,14 +190,12 @@ class Writing extends Record {
 		
 		$categories = new Categories();
 		$categories->select();
-		$categories_name = $categories->names();
 		$sources = new Sources();
 		$sources->select();
-		$sources_name = $sources->names();
 		
 		$datepicker = new Html_Input_Date("datepicker", $_SESSION['start']);
-		$category = new Html_Select("categories_id", $categories_name);
-		$source = new Html_Select("sources_id", $sources_name);
+		$category = new Html_Select("categories_id", $categories->names());
+		$source = new Html_Select("sources_id", $sources->names());
 		$number = new Html_Input("number");
 		$amount_excl_vat = new Html_Input("amount_excl_vat");
 		$vat = new Html_Input("vat");
@@ -251,26 +249,22 @@ class Writing extends Record {
 	
 	function form_in_table() {
 		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"10\" ><div id=\"table_edit_writings\">
-			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['start']),utf8_ucfirst(__('cancel record')))."</span>
+			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['start']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"table_edit_writings_form\">
-			<form method=\"post\" name=\"table_edit_writings_form\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">";
+			<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		$input_hidden = new Html_Input("action", "edit", "submit");
-		$form .= $input_hidden->input_hidden();
-		
 		$input_hidden_id = new Html_Input("writing_id", $this->id);
-		$form .= $input_hidden_id->input_hidden();
+		$form .= $input_hidden->input_hidden().$input_hidden_id->input_hidden();
 		
 		$categories = new Categories();
 		$categories->select();
-		$categories_name = $categories->names();
 		$sources = new Sources();
 		$sources->select();
-		$sources_name = $sources->names();
 		
 		$datepicker = new Html_Input_Date("datepicker", $this->day);
-		$category = new Html_Select("categories_id", $categories_name, $this->categories_id);
-		$source = new Html_Select("sources_id", $sources_name, $this->sources_id);
+		$category = new Html_Select("categories_id", $categories->names(), $this->categories_id);
+		$source = new Html_Select("sources_id", $sources->names(), $this->sources_id);
 		$number = new Html_Input("number", $this->number);
 		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
 		$vat = new Html_Input("vat", $this->vat);
@@ -330,6 +324,7 @@ class Writing extends Record {
 		$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
 		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
 		$form .= "</form></div>";
+		
 		return $form;
 	}
 	
@@ -344,6 +339,7 @@ class Writing extends Record {
 			);
 			$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input();
 			$form .= "</form></div>";
+			
 			return $form;
 		}
 	}
@@ -375,19 +371,19 @@ class Writing extends Record {
 	}
 	
 	function form_modify() {
-		return "<div class=\"modify\">".
-			Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['start']."&writings_id=".$this->id)," ").
-			"</div>";
+		return "<div class=\"modify\">".Html_Tag::a(link_content("content=writings.php&startd=".$_SESSION['start']."&writings_id=".$this->id)," ")."</div>";
 	}
 	
 	function fill($hash) {
 		$writing = parent::fill($hash);
+		
 		if (isset($hash['datepicker'])) {
-			$writing->day = mktime(0, 0, 0, $hash['datepicker']['m'], $hash['datepicker']['d'], $hash['datepicker']['Y']);
+			$writing->day = timestamp_from_datepicker($hash['datepicker']);
 		}
 		if($writing->banks_id > 0) {
 			$writing->amount_excl_vat = $writing->calculate_amount_excl_vat();
 		}
+		
 		return $writing;
 	}
 	

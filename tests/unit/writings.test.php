@@ -178,7 +178,7 @@ class tests_Writings extends TableTestCase {
 		$writings = new Writings();
 		$writings->select();
 		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 29, 2013)), 150.56);
-		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 19, 2013)), 150.56);
+		$this->assertEqual($writings->show_balance_at(mktime(10, 0, 0, 7, 19, 2013)), 0);
 		
 		$writing2 = new Writing();
 		$writing2->amount_inc_vat = -2150.56;
@@ -213,38 +213,5 @@ class tests_Writings extends TableTestCase {
 		$writings->cancel_last_operation();
 		$writings->select();
 		$this->assertTrue(count($writings) == 0);
-	}
-	
-	function test_amount_per_month() {
-		$writing = new Writing();
-		$writing->amount_inc_vat = 100;
-		$writing->day = mktime(0, 0, 0, 7, 16, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 110;
-		$writing->day = mktime(0, 0, 0, 8, 16, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 1.56;
-		$writing->day = mktime(0, 0, 0, 8, 1, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 120;
-		$writing->day = mktime(0, 0, 0, 9, 16, 2013);
-		$writing->save();
-		$writing = new Writing();
-		$writing->amount_inc_vat = 80;
-		$writing->day = mktime(0, 0, 0, 9, 30, 2013);
-		$writing->save();
-		$writings = new Writings();
-		$writings->select();
-		$array_expected = array(
-			mktime(0, 0, 0, 7, 1, 2013) => 100.000000,
-			mktime(0, 0, 0, 8, 1, 2013) => 111.560000,
-			mktime(0, 0, 0, 9, 1, 2013) => 200.000000
-		);
-		$writings->amount_per_month();
-		$this->assertIdentical($writings->amounts, $array_expected);
-		$this->truncateTable("writings");
 	}
 }
