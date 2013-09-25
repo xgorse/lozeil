@@ -260,6 +260,32 @@ function determine_integer_from_post_get_session() {
 	return 0;
 }
 
+function array_2_list($array, $delimeter = "", $map = NULL) {
+	if ($map === null) {
+		if ($delimeter == "") {
+			$map = "intval";
+		} else if ($delimeter == "'") {
+			$map = "mysql_real_escape_string";
+		}
+	}
+
+	if (is_array($array)) {
+		$array = array_unique($array);
+		if (sizeof($array) == 0) {
+			$array = array(0);
+		}
+		if ($map) {
+			$array = array_map($map, $array);
+		}
+		$list = implode($delimeter.",".$delimeter, $array);
+		$list = $delimeter.$list.$delimeter;
+		$list = "(".$list.")";
+	} else {
+		$list = "(".$delimeter."0".$delimeter.")";
+	}
+	return $list;
+}
+
 function is_url($url) {
 	if (isset($GLOBALS['location'])) {
 		return (preg_match("/^[#|http|".$GLOBALS['location']."]/", $url));

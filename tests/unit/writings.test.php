@@ -217,6 +217,17 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
+	function test_change_amount_inc_vat() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 125.218;
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -3250.21;
+		$writing->save();
+		$this->truncateTable("writings");
+	}
+	
+	
 	function test_duplicate_over_from_ids() {
 		$writing = new Writing();
 		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
@@ -226,7 +237,9 @@ class tests_Writings extends TableTestCase {
 		$writing->save();
 		
 		$writings = new Writings();
-		$writings->duplicate_over_from_ids("3m", array(1, 2));
+		$writings->id = array(1, 2);
+		$writings->duplicate_over_from_ids("3m");
+		$writings->id = "";
 		$writings->select();
 		$this->assertTrue(count($writings) == 8);
 		

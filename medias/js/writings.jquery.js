@@ -327,7 +327,7 @@ function confirm_modify(text) {
 		var select = $("#options_modify_writings").val();
 		var ids = get_checked_values();
 		var serialized = $("form[name=\"writings_modify_form\"]").serialize();
-		serialized += "&action=writings_modify&ids=" + ids +"&modify=" + select;
+		serialized += "&action=writings_modify&ids=" + ids +"&operation=" + select;
 		$.post(
 			"index.php?content=writings.ajax.php",
 			serialized,
@@ -340,7 +340,7 @@ function confirm_modify(text) {
 	return false;
 }
 
-$(document).ajaxStop(function() {
+$(document).on("ajaxComplete", function() {
 	make_drag_and_drop();
 	$(this).delay('6000').queue(function(next){
 		$("#table_writings").find("tr.modified").removeClass('modified');

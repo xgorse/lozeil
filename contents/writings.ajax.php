@@ -107,7 +107,12 @@ switch ($_REQUEST['action']) {
 		break;
 		
 	case 'writings_modify' :
-		$writings->modify_from_form($_POST);
+		$writings_to_modify = new Writings();
+		$parameters = $writings_to_modify->clean_from_ajax($_POST);
+		if (isset($parameters['id'])) {
+			$writings_to_modify->id = $parameters['id'];
+			$writings_to_modify->apply($parameters['operation'], $parameters['value']);
+		}
 		break;
 	
 	default :

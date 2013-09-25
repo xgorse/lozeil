@@ -46,6 +46,12 @@ class Writings extends Collector {
 	function get_where() {
 		$query_where = parent::get_where();
 		
+		if (isset($this->id) and !empty($this->id)) {
+			if (!is_array($this->id)) {
+				$this->id = array((int)$this->id);
+			}
+			$query_where[] = $this->db->config['table_writings'].".id IN ".array_2_list($this->id);
+		}
 		if (isset($this->filters['timestamp_start'])) {
 			$query_where[] = $this->db->config['table_writings'].".timestamp >= ".(int)$this->filters['timestamp_start'];
 		}
@@ -339,11 +345,11 @@ class Writings extends Collector {
 	function modify_options() {
 		$options = array(
 			"null" => "--",
-			"category" => __('change category to')." ...",
-			"source" => __('change source to')." ...",
-			"amount_inc_vat" => __('change amount including vat to')." ...",
-			"vat" => __('change vat to')." ...",
-			"day" => __('change date to')." ...",
+			"change_category" => __('change category to')." ...",
+			"change_source" => __('change source to')." ...",
+			"change_amount_inc_vat" => __('change amount including vat to')." ...",
+			"change_vat" => __('change vat to')." ...",
+			"change_day" => __('change date to')." ...",
 			"duplicate" => __('duplicate over')." ...",
 			"delete" => __('delete')
 		);
@@ -361,7 +367,7 @@ class Writings extends Collector {
 		$form = "<form method=\"post\" name=\"writings_modify_form\" action=\"\" enctype=\"multipart/form-data\" onsubmit=\"return confirm_modify('".utf8_ucfirst(__('are you sure?'))."')\">";
 		$submit = new Html_Input("submit_writings_modify_form", "", "submit");
 		switch($target) {
-			case 'category':
+			case 'change_category':
 				$categories = new Categories();
 				$categories->select();
 				$category = new Html_Select("categories_id", $categories->names());
@@ -370,7 +376,7 @@ class Writings extends Collector {
 				);
 				$form .= $category->item("");
 				break;
-			case 'source':
+			case 'change_source':
 				$sources = new Sources();
 				$sources->select();
 				$source = new Html_Select("sources_id", $sources->names());
@@ -379,18 +385,18 @@ class Writings extends Collector {
 				);
 				$form .= $source->item("");
 				break;
-			case 'amount_inc_vat':
+			case 'change_amount_inc_vat':
 				$amount_inc_vat = new Html_Input("amount_inc_vat");
 				$form .= $amount_inc_vat->input();
 				$form .= $submit->input();
 				break;
-			case 'vat':
+			case 'change_vat':
 				$vat = new Html_Input("vat");
 				$form .= $vat->input();
 				$form .= $submit->input();
 				break;
-			case 'day':
-				$datepicker = new Html_Input_Date("datepicker");
+			case 'change_day':
+				$datepicker = new Html_Input_Date("day");
 				$datepicker->properties = array(
 					'onsubmit' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
 				);
@@ -410,29 +416,87 @@ class Writings extends Collector {
 		return $form;
 	}
 	
-	function modify_from_form($post) {
-		switch ($post['modify']) {
-			case 'category':
-				$this->change_category_to_from_ids($post['categories_id'], json_decode($post['ids']));
+	function clean_from_ajax($post) {
+		$parameters = array();
+		$parameters['operation'] = $post['operation'];
+		$ids = json_decode($post['ids']);
+		if (!empty($ids)) {
+			switch ($post['operation']) {
+				case 'change_category':
+					$parameters['value'] = $post['categories_id'];
+					if (!empty($parameters['value'])) {
+						$parameters['id'] = array_2_list(json_decode($post['ids']));
+					}
+					break;
+				case 'change_source':
+					$parameters['value'] = $post['sources_id'];
+					if (!empty($parameters['value'])) {
+						$parameters['id'] = array_2_list(json_decode($post['ids']));
+					}
+					break;
+				case 'change_vat':
+					$parameters['value'] = str_replace(",", ".", trim($post['vat']));
+					if (is_numeric($parameters['value'])) {
+						$parameters['id'] = json_decode($post['ids']);
+					}
+					break;
+				case 'change_amount_inc_vat':
+					$parameters['value'] = str_replace(",", ".", trim($post['amount_inc_vat']));
+					if (is_numeric($parameters['value'])) {
+						$parameters['id'] = json_decode($post['ids']);
+					}
+					break;
+				case 'change_day':
+					if(is_datepicker_valid($post['day'])) {
+						$parameters['value'] = mktime(0, 0, 0, $post['day']['m'], $post['day']['d'], $post['day']['Y']);
+						if (!empty($parameters['value'])) {
+							$parameters['id'] = array_2_list(json_decode($post['ids']));
+						}
+					}
+					break;
+				case 'duplicate':
+					$parameters['value'] = trim($post['duplicate']);
+					if (!empty($parameters['value'])) {
+						$parameters['id'] = json_decode($post['ids']);
+					}
+					break;
+				default :
+					break;
+			}
+		}
+		return $parameters;
+	}
+	
+	function apply($operation, $value) {
+		switch ($operation) {
+			case 'change_category':
+				$this->update('categories_id', $value);
 				break;
-			case 'source':
-				$this->change_source_to_from_ids($post['sources_id'], json_decode($post['ids']));
+			case 'change_source':
+				$this->update('sources_id', $value);
 				break;
-			case 'vat':
-				$this->change_vat_to_from_ids($post['vat'], json_decode($post['ids']));
+			case 'change_vat':
+				$this->change_vat($value);
 				break;
-			case 'amount_inc_vat':
-				$this->change_amount_inc_vat_to_from_ids($post['amount_inc_vat'], json_decode($post['ids']));
+			case 'change_amount_inc_vat':
+				$this->change_amount_inc_vat($value);
 				break;
-			case 'day':
-				$this->change_day_to_from_ids($post['datepicker'], json_decode($post['ids']));
+			case 'change_day':
+				$this->update('day', $value);
 				break;
 			case 'duplicate':
-				$this->duplicate_over_from_ids($post['duplicate'], json_decode($post['ids']));
+				$this->duplicate_over_from_ids($value);
 				break;
 			default :
 				break;
 		}
+	}
+	
+	function update($column, $value) {
+		$result = $this->db->query("UPDATE ".$this->db->config['table_writings']." 
+			SET ".$column." = ".$value.", timestamp = ".time()." WHERE id IN ".$this->id);
+		
+		$this->db->status($result[1], "u", __('writing'));
 	}
 	
 	function delete_from_ids($ids) {
@@ -442,60 +506,29 @@ class Writings extends Collector {
 			$writing->delete();
 		}
 	}
-	
-	function change_category_to_from_ids($category_id, $ids) {
-		foreach($ids as $id) {
-			$writing = new Writing();
-			$writing->load($id);
-			$writing->categories_id = $category_id;
-			$writing->save();
-		}
-	}
-	
-	function change_source_to_from_ids($source_id, $ids) {
-		foreach($ids as $id) {
-			$writing = new Writing();
-			$writing->load($id);
-			$writing->sources_id = $source_id;
-			$writing->save();
-		}
-	}
-	
-	function change_vat_to_from_ids($vat, $ids) {
-		foreach($ids as $id) {
-			$writing = new Writing();
-			$writing->load($id);
-			$writing->vat = $vat;
-			$writing->save();
-		}
-	}
-	
-	function change_amount_inc_vat_to_from_ids($amount_inc_vat, $ids) {
-		foreach($ids as $id) {
-			$writing = new Writing();
-			$writing->load($id);
-			$writing->amount_inc_vat = $amount_inc_vat;
-			$writing->save();
-		}
-	}
-	
-	function change_day_to_from_ids($time, $ids) {
-		if(is_datepicker_valid($time)) {
-			$day = mktime(0, 0, 0, $time['m'], $time['d'], $time['Y']);
-			foreach($ids as $id) {
-				$writing = new Writing();
-				$writing->load($id);
-				$writing->day = $day;
-				$writing->save();
-			}
-		}
-	}
-	
-	function duplicate_over_from_ids($amount, $ids) {
-		foreach($ids as $id) {
+
+	function duplicate_over_from_ids($amount) {
+		foreach($this->id as $id) {
 			$writing = new Writing();
 			$writing->load($id);
 			$writing->duplicate($amount);
+		}
+	}
+	
+	function change_amount_inc_vat($amount) {
+		foreach($this->id as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->amount_inc_vat = $amount;
+			$writing->save();
+		}
+	}
+	
+	function change_vat($amount) {
+		foreach($this->id as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->vat = $amount;
 			$writing->save();
 		}
 	}
