@@ -33,7 +33,9 @@ switch ($_REQUEST['action']) {
 	case "filter":
 		$_SESSION['filter_value_*'] = $_POST['extra_filter_writings_value'];
 		if (is_datepicker_valid($_POST['filter_day_start']) and is_datepicker_valid($_POST['filter_day_stop'])) {
-			list($start, $stop) = determine_start_stop($_POST['filter_day_start'], $_POST['filter_day_stop']);
+			list($_SESSION['start'], $_SESSION['stop']) = determine_start_stop($_POST['filter_day_start'], $_POST['filter_day_stop']);
+		} else {
+			list($_SESSION['start'], $_SESSION['stop']) = determine_month($_SESSION['start']);
 		}
 		$writings->set_limit($GLOBALS['param']['nb_max_writings']);
 		break;
@@ -112,6 +114,7 @@ switch ($_REQUEST['action']) {
 		if (isset($parameters['id'])) {
 			$writings_to_modify->id = $parameters['id'];
 			$writings_to_modify->apply($parameters['operation'], $parameters['value']);
+			$writings->selected = json_decode($_POST['ids']);
 		}
 		break;
 	
@@ -126,7 +129,7 @@ if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) 
 
 $writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
 $writings->add_order("amount_inc_vat DESC");
-$writings->filter_with(array('start' => $start, 'stop' => $stop));
+$writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
 $writings->select();
 
 echo $writings->show();
