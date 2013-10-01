@@ -113,8 +113,9 @@ switch ($_REQUEST['action']) {
 		$parameters = $writings_to_modify->clean_from_ajax($_POST);
 		if (isset($parameters['id'])) {
 			$writings_to_modify->id = $parameters['id'];
+			$writings_to_modify->select();
 			$writings_to_modify->apply($parameters['operation'], $parameters['value']);
-			$writings->selected = json_decode($_POST['ids']);
+			$writings->selected = $writings_to_modify->id;
 		}
 		break;
 	

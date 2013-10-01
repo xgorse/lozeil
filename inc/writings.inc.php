@@ -423,43 +423,43 @@ class Writings extends Collector {
 		$parameters['operation'] = $post['operation'];
 		$ids = json_decode($post['ids']);
 		if (!empty($ids)) {
-			switch ($post['operation']) {
+			switch ($parameters['operation']) {
 				case 'change_category':
 					$parameters['value'] = $post['categories_id'];
 					if (!empty($parameters['value']) or $parameters['value'] == 0) {
-						$parameters['id'] = array_2_list(json_decode($post['ids']));
+						$parameters['id'] = $ids;
 					}
 					break;
 				case 'change_source':
 					$parameters['value'] = (int)$post['sources_id'];
 					if (!empty($parameters['value']) or $parameters['value'] == 0) {
-						$parameters['id'] = array_2_list(json_decode($post['ids']));
+						$parameters['id'] = $ids;
 					}
 					break;
 				case 'change_vat':
 					$parameters['value'] = str_replace(",", ".", trim($post['vat']));
 					if (is_numeric($parameters['value'])) {
-						$parameters['id'] = json_decode($post['ids']);
+						$parameters['id'] = $ids;
 					}
 					break;
 				case 'change_amount_inc_vat':
 					$parameters['value'] = str_replace(",", ".", trim($post['amount_inc_vat']));
 					if (is_numeric($parameters['value'])) {
-						$parameters['id'] = json_decode($post['ids']);
+						$parameters['id'] = $ids;
 					}
 					break;
 				case 'change_day':
 					if(is_datepicker_valid($post['day'])) {
-						$parameters['value'] = mktime(0, 0, 0, $post['day']['m'], $post['day']['d'], $post['day']['Y']);
+						$parameters['value'] = timestamp_from_datepicker($post['day']);
 						if (!empty($parameters['value'])) {
-							$parameters['id'] = array_2_list(json_decode($post['ids']));
+							$parameters['id'] = $ids;
 						}
 					}
 					break;
 				case 'duplicate':
 					$parameters['value'] = trim($post['duplicate']);
 					if (!empty($parameters['value'])) {
-						$parameters['id'] = json_decode($post['ids']);
+						$parameters['id'] = $ids;
 					}
 					break;
 				default :
@@ -472,10 +472,10 @@ class Writings extends Collector {
 	function apply($operation, $value) {
 		switch ($operation) {
 			case 'change_category':
-				$this->update('categories_id', $value);
+				$this->change_category($value);
 				break;
 			case 'change_source':
-				$this->update('sources_id', $value);
+				$this->change_source($value);
 				break;
 			case 'change_vat':
 				$this->change_vat($value);
@@ -484,7 +484,7 @@ class Writings extends Collector {
 				$this->change_amount_inc_vat($value);
 				break;
 			case 'change_day':
-				$this->update('day', $value);
+				$this->change_day($value);
 				break;
 			case 'duplicate':
 				$this->duplicate_over_from_ids($value);
@@ -494,13 +494,6 @@ class Writings extends Collector {
 		}
 	}
 	
-	function update($column, $value) {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_writings']." 
-			SET ".$column." = ".$value.", timestamp = ".time()." WHERE id IN ".$this->id);
-		
-		$this->db->status($result[1], "u", __('writing'));
-	}
-	
 	function delete_from_ids($ids) {
 		foreach($ids as $id) {
 			$writing = new Writing();
@@ -508,30 +501,45 @@ class Writings extends Collector {
 			$writing->delete();
 		}
 	}
-
-	function duplicate_over_from_ids($amount) {
-		foreach($this->id as $id) {
-			$writing = new Writing();
-			$writing->load($id);
-			$writing->duplicate($amount);
+	
+	function change_category($value) {
+		foreach ($this as $writing) {
+			$writing->categories_id = $value;
+			$writing->update();
 		}
 	}
 	
-	function change_amount_inc_vat($amount) {
-		foreach($this->id as $id) {
-			$writing = new Writing();
-			$writing->load($id);
-			$writing->amount_inc_vat = $amount;
-			$writing->save();
+	function change_source($value) {
+		foreach ($this as $writing) {
+			$writing->sources_id = $value;
+			$writing->update();
 		}
 	}
 	
 	function change_vat($amount) {
-		foreach($this->id as $id) {
-			$writing = new Writing();
-			$writing->load($id);
+		foreach($this as $writing) {
 			$writing->vat = $amount;
-			$writing->save();
+			$writing->update();
+		}
+	}
+	
+	function change_amount_inc_vat($amount) {
+		foreach($this as $writing) {
+			$writing->amount_inc_vat = $amount;
+			$writing->update();
+		}
+	}
+	
+	function change_day($value) {
+		foreach ($this as $writing) {
+			$writing->day = $value;
+			$writing->update();
+		}
+	}
+
+	function duplicate_over_from_ids($amount) {
+		foreach($this as $writing) {
+			$writing->duplicate($amount);
 		}
 	}
 }
