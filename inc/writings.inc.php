@@ -426,13 +426,13 @@ class Writings extends Collector {
 			switch ($post['operation']) {
 				case 'change_category':
 					$parameters['value'] = $post['categories_id'];
-					if (!empty($parameters['value'])) {
+					if (!empty($parameters['value']) or $parameters['value'] == 0) {
 						$parameters['id'] = array_2_list(json_decode($post['ids']));
 					}
 					break;
 				case 'change_source':
-					$parameters['value'] = $post['sources_id'];
-					if (!empty($parameters['value'])) {
+					$parameters['value'] = (int)$post['sources_id'];
+					if (!empty($parameters['value']) or $parameters['value'] == 0) {
 						$parameters['id'] = array_2_list(json_decode($post['ids']));
 					}
 					break;
