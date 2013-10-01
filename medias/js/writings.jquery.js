@@ -234,7 +234,7 @@ $(document).ready(function() {
 });
 
 function make_drag_and_drop() {
-	$("tr.draggable").droppable({
+	$("#table_writings tr.draggable").droppable({
 		tolerance : "pointer",
 		over: function() {
 			$(this).removeClass('out').addClass('over');
@@ -258,7 +258,7 @@ function make_drag_and_drop() {
 	});
 
 	var table_header = $(".table_header").html();
-	$("tr.draggable").draggable({
+	$("#table_writings tr.draggable").draggable({
 		cursor: "pointer",
 		stack: "tr",
 		helper: function(event) {
@@ -340,7 +340,7 @@ function confirm_modify(text) {
 	return false;
 }
 
-$(document).on("ajaxComplete", function() {
+$(document).ajaxStop(function() {
 	make_drag_and_drop();
 	$(this).delay('6000').queue(function(next){
 		$("#table_writings").find("tr.modified").removeClass('modified');

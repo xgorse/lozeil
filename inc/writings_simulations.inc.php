@@ -226,12 +226,10 @@ class Writings_Simulations extends Collector  {
 		$this->amounts = $this->get_amounts_in_array();
 		
 		$values = array();
-		$previous = 0;
 		for ($i = 0; $i <= $nb_day; $i++) {
 			$timestamp_max = strtotime('+1 day', $timestamp_max);
-			$values[] = $previous + $writings->show_balance_at($timestamp_max) + $this->show_balance_at($timestamp_max);
-			$values[] = $previous + $writings->show_balance_at($timestamp_max + 8 * 3600) + $this->show_balance_at($timestamp_max + 8 * 3600);
-			$values[] = $previous + $writings->show_balance_at($timestamp_max + 16 * 3600) + $this->show_balance_at($timestamp_max + 16 * 3600);
+			$value = $writings->show_balance_at($timestamp_max) + $this->show_balance_at($timestamp_max);
+			$values[] = $value;
 		}
 		return $values;
 	}
