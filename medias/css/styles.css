@@ -190,6 +190,7 @@ input[type="submit"]:hover {
 
 .table_writings_comment {
 	background-image :  url(../images/more_comment.png);
+	background-size: 12px;
 	background-repeat: no-repeat;
 	background-position: right;
 	cursor: pointer;
@@ -492,6 +493,7 @@ tr.modified {
 }
 
 .menu_actions ul {
+	margin: 0 30px;
 	list-style: circle;
 }
 
