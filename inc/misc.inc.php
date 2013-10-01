@@ -374,8 +374,8 @@ function is_datepicker_valid($time) {
 }
 
 function determine_start_stop($start, $stop) {
-	$starttime = mktime(0, 0, 0, $start['m'], $start['d'], $start['Y']);
-	$stoptime = mktime(0, 0, 0, $stop['m'], $stop['d'], $stop['Y']);
+	$starttime = mktime(0, 0, 0, (int)$start['m'], (int)$start['d'], (int)$start['Y']);
+	$stoptime = mktime(0, 0, 0, (int)$stop['m'], (int)$stop['d'], (int)$stop['Y']);
 
 	return array($starttime, $stoptime);
 }
