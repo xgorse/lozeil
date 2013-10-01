@@ -31,7 +31,7 @@ $(document)
 	.keyup(function(e) {
 	  if (e.keyCode == 27) {
 		  if ($(".menu_handle").hasClass("show")) {
-				$(".more").addClass("hide").removeClass("show");
+				$(".menu_handle").addClass("hide").removeClass("show");
 				$(".menu_actions").slideUp(400, function() {
 					$("#menu_handle_show").hide();
 					$("#menu_handle_hide").show();
@@ -41,6 +41,9 @@ $(document)
 		$(".insert_writings_form, .table_writings_comment_further_information").slideUp();
 		$("#insert_writings_hide, #insert_writings_cancel").hide();
 		$("#insert_writings_show").show();
+		$(".extra_filter_writings_days").hide();
+		$(".extra_filter_writings_days input").val('');
+		$("#extra_filter_writings_value").val('').trigger("keyup");
 		$("#table_edit_writings").slideUp(400, function() {
 			$(".table_writings_form_modify").remove();
 		})
