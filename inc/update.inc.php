@@ -15,6 +15,10 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_15() {
+		$this->param->add("nb_max_writings", "100");
+	}
+	
 	function to_14() {
 		$this->db->query("ALTER TABLE `writings` DROP unique_key;");
 		$this->db->query("CREATE TABLE `writingsimported` (
