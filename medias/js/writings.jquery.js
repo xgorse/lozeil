@@ -341,8 +341,13 @@ function confirm_modify(text) {
 }
 
 $(document).ajaxStop(function() {
+	changeColorLine();
 	make_drag_and_drop();
-	$(this).delay('6000').queue(function(next){
-		$("#table_writings").find("tr.modified").removeClass('modified');
-	})
 })
+
+
+function changeColorLine(){
+	setTimeout(function(){
+		$('#table_writings tr.modified').removeClass('modified');
+	},6000);
+};
