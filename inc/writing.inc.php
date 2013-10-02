@@ -113,7 +113,7 @@ class Writing extends Record {
 		$category = new Category();
 		$category->load($this->categories_id);
 		
-		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$source->name." ".$category->name;
+		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$this->number." ".$source->name." ".$category->name;
 	}
 	
 	function calculate_amount_excl_vat() {
