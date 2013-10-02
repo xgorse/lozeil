@@ -3,17 +3,30 @@
 
 if (isset($_POST['submit'])) {
 	unset($_POST['submit']);
-	$keys = array_keys($_POST);
-	
-	$banks = new Banks();
-	$banks->select();
-	foreach ($banks as $bank) {
-		if (in_array($bank->id, $keys)) {
+		
+	if(!empty($_POST['name_new'])) {
+		$bank = new Bank();
+		$bank->name = $_POST['name_new'];
+		if(isset($_POST['selected_new'])) {
 			$bank->selected = 1;
-		} else {
-			$bank->selected = 0;
 		}
 		$bank->save();
+	}
+	
+	if (isset($_POST['bank'])) {
+		foreach ($_POST['bank'] as $id => $values) {
+			$bank = new Bank();
+			$bank->load($id);
+			if (!empty($values['name'])) {
+				$bank->name = $values['name'];
+				if (isset($values['selected'])) {
+					$bank->selected = 1;
+				}
+				$bank->save();
+			} elseif (empty($values['name']) and $bank->is_deletable()) {
+				$bank->delete();
+			}
+		}
 	}
 }
 

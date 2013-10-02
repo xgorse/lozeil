@@ -264,4 +264,154 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		
 		$this->truncateTable("banks");
 	}
+	
+	function test_import_as_ofx() {
+		$name = tempnam('/tmp', 'ofx');
+		
+		$content = "OFXHEADER:100
+					DATA:OFXSGML
+					VERSION:102
+					SECURITY:NONE
+					ENCODING:USASCII
+					CHARSET:1252
+					COMPRESSION:NONE
+					OLDFILEUID:NONE
+					NEWFILEUID:NONE
+					<OFX>
+						<SIGNONMSGSRSV1>
+							<SONRS>
+								<STATUS>
+									<CODE>0
+									<SEVERITY>INFO
+								</STATUS>
+								<DTSERVER>20131001151232
+								<LANGUAGE>FRA
+								<DTPROFUP>20131001151232
+								<DTACCTUP>20131001151232
+							</SONRS>
+						</SIGNONMSGSRSV1>
+					<BANKMSGSRSV1>
+						<STMTTRNRS>
+							<TRNUID>00
+							<STATUS>
+								<CODE>0
+								<SEVERITY>INFO
+							</STATUS>
+							<STMTRS>
+								<CURDEF>EUR
+								<BANKACCTFROM>
+									<BANKID>42
+									<BRANCHID>000203215
+									<ACCTID>33265666
+									<ACCTTYPE>CHECKING
+								</BANKACCTFROM>
+								<BANKTRANLIST>
+									<DTSTART>20130930010000
+									<DTEND>20130930010000
+									<STMTTRN>
+										<TRNTYPE>DEBIT
+										<DTPOSTED>20131004
+										<DTUSER>20131004
+										<TRNAMT>-35.00
+										<FITID>2013093000001
+										<NAME>CARTE TEST
+										<MEMO>MEMO TEST
+									</STMTTRN>
+									<STMTTRN>
+										<TRNTYPE>DEBIT
+										<DTPOSTED>20131204
+										<TRNAMT>-10.50
+										<FITID>2013093000002
+										<NAME>ABONNEMENT TEST
+									</STMTTRN>
+									<STMTTRN>
+										<TRNTYPE>CREDIT
+										<DTPOSTED>20131004
+										<TRNAMT>+7.50
+										<FITID>2013093000003
+									</STMTTRN>
+									<STMTTRN>
+										<TRNAMT>+5
+										<DTPOSTED>20131104
+									</STMTTRN>
+								</BANKTRANLIST>
+								<LEDGERBAL>
+									<BALAMT>+395.68
+									<DTASOF>20130930010000
+								</LEDGERBAL>
+								<AVAILBAL>
+									<BALAMT>+395.68
+									<DTASOF>20130930010000
+								</AVAILBAL>
+								</STMTRS>
+							</STMTTRNRS>
+						</BANKMSGSRSV1>
+					</OFX>";
+		$handle = fopen($name, 'w+');
+		fwrite($handle, $content);
+		fclose($handle);
+		
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 1;
+		$data->import_as_ofx();
+		
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 1,
+				'amount_inc_vat' => "-35.000000",
+				'amount_excl_vat' => "-35.000000",
+				'vat' => "0",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 10, 4, 2013),
+				'comment' => "CARTE TEST",
+				'information' => "MEMO TEST"
+				)
+		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 2,
+				'amount_inc_vat' => "-10.500000",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 12, 4, 2013),
+				'comment' => "ABONNEMENT TEST",
+				'information' => ""
+				)
+		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 3,
+				'amount_inc_vat' => "7.500000",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 10, 4, 2013),
+				'comment' => "",
+				'information' => ""
+				)
+		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 4,
+				'amount_inc_vat' => "5.00000",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 11, 4, 2013),
+				'comment' => "",
+				'information' => ""
+				)
+		);
+		$writing = new Writing();
+		$this->assertFalse($writing->load(5));
+		
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 1;
+		$data->import_as_ofx();
+		
+		$this->assertTrue($writing->load(4));
+		$this->assertFalse($writing->load(5));
+		
+		$this->truncateTable("writings");
+		$this->truncateTable("writingsimported");
+	}
 }

@@ -57,17 +57,34 @@ class Banks extends Collector  {
 	}
 	
 	function grid_body() {
+		$input = new Html_Input("name_new");
+		$checkbox = new Html_Checkbox("selected_new", "", true);
+		$grid[0] =  array(
+			'id' => 0,
+			'cells' => array(
+				array(
+					'type' => "td",
+					'value' => $input->item(""),
+				),
+				array(
+					'type' => "td",
+					'value' => $checkbox->item(""),
+				),
+			)
+		);
+		
 		foreach ($this as $bank) {
-			$input = new Html_Checkbox($bank->id, $bank->name, $bank->selected);
+			$input = new Html_Input("bank[".$bank->id."][name]", $bank->name);
+			$checkbox = new Html_Checkbox("bank[".$bank->id."][selected]", $bank->name, $bank->selected);
 			$grid[$bank->id] =  array(
 				'cells' => array(
 					array(
 						'type' => "td",
-						'value' => $bank->name,
+						'value' => $input->item(""),
 					),
 					array(
 						'type' => "td",
-						'value' => $input->item(""),
+						'value' => $checkbox->item(""),
 					),
 				)
 			);
