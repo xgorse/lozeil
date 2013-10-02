@@ -503,8 +503,13 @@ class Writings extends Collector {
 	}
 	
 	function change_category($value) {
+		$category = new Category();
+		$category->load($value);
 		foreach ($this as $writing) {
 			$writing->categories_id = $value;
+			if($writing->vat == 0) {
+				$writing->vat = $category->vat;
+			}
 			$writing->update();
 		}
 	}

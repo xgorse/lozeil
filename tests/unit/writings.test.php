@@ -227,7 +227,6 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
-	
 	function test_duplicate_over_from_ids() {
 		$writing = new Writing();
 		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
@@ -252,6 +251,113 @@ class tests_Writings extends TableTestCase {
 		
 		$writing->load(5);
 		$this->assertTrue($writing->day == mktime(0, 0, 0, 12, 25, 2013));
+		$this->truncateTable("writings");
+	}
+	
+	function test_delete_from_ids() {
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		
+		$this->assertTrue($writing->load(1));
+		$this->assertTrue($writing->load(2));
+		$writings = new Writings();
+		$writings->delete_from_ids(array(1, 2));
+		
+		$this->assertFalse($writing->load(1));
+		$this->assertFalse($writing->load(2));
+		$this->truncateTable("writings");
+	}
+	
+	function test_change_category() {
+		$category = new Category();
+		$category->vat = 5.5;
+		$category->save();
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->categories_id = 2;
+		$writing->vat = 19.6;
+		$writing->save();
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$writings->change_category(1);
+		
+		$writing->load(1);
+		$this->assertTrue($writing->categories_id == 1);
+		$this->assertTrue($writing->vat == 19.6);
+		$writing->load(2);
+		$this->assertTrue($writing->categories_id == 1);
+		$this->assertTrue($writing->vat == 5.5);
+		$this->truncateTable("writings");
+	}
+	
+	function test_change_source() {
+		$category = new Source();
+		$category->save();
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->sources_id = 2;
+		$writing->save();
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$writings->change_source(1);
+		
+		$writing->load(1);
+		$this->assertTrue($writing->sources_id == 1);
+		$writing->load(2);
+		$this->assertTrue($writing->sources_id == 1);
+		$this->truncateTable("writings");
+	}
+	
+	function test_change_vat() {
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->vat = 20;
+		$writing->save();
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$writings->change_vat(15.5);
+		
+		$writing->load(1);
+		$this->assertTrue($writing->vat == 15.5);
+		$writing->load(2);
+		$this->assertTrue($writing->vat == 15.5);
+		$this->truncateTable("writings");
+	}
+	
+	function test_day() {
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$writings->change_day(mktime(0, 0, 0, 10, 25, 2013));
+		
+		$writing->load(1);
+		$this->assertTrue($writing->day == mktime(0, 0, 0, 10, 25, 2013));
+		$writing->load(2);
+		$this->assertTrue($writing->day == mktime(0, 0, 0, 10, 25, 2013));
 		$this->truncateTable("writings");
 	}
 }
