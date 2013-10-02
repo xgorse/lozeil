@@ -126,7 +126,7 @@ class Writings extends Collector {
 						'type' => "th",
 						'class' => $this->determine_table_header_class("amount_excl_vat"),
 						'id' => "amount_excl_vat",
-						'value' => utf8_ucfirst(__("amount excluding vat")." (".__("VAT").")"),
+						'value' => __("VAT"),
 					),
 					array(
 						'type' => "th",
@@ -217,7 +217,7 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "td",
-						'value' => round($writing->amount_excl_vat, 2).(($writing->vat != 0) ? "&nbsp;(".$writing->vat.")" : ""),
+						'value' => ($writing->vat != 0) ? $writing->vat : "",
 					),
 					array(
 						'type' => "td",

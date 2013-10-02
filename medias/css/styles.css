@@ -7,7 +7,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 @font-face {
 	font-family: Bitter;
-	src: url(../fonts/bitter-Regular.ttf);
+	src: url(../fonts/Bitter-Regular.ttf);
 }
 
 ul,li {
@@ -48,7 +48,7 @@ img { border: none; }
 }
 
 td, th {
-	padding: 10px;
+	padding: 5px 10px;
 	border-bottom: 1px solid #efefef;
 	vertical-align: middle;
 }
@@ -226,7 +226,6 @@ input[type="submit"]:hover {
 	margin-left: 9px;
 }
 
-
 .split input[type="submit"], .split input[type="submit"]:hover {
 	border: 0;
 	cursor: pointer;
@@ -255,7 +254,7 @@ input[type="submit"]:hover {
 
 #table_writings td,
 #simulation td{
-	height: 45px;
+	height: 40px;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;
@@ -557,6 +556,10 @@ tr.modified {
 
 #edit_banks {
 	margin: 0 50px;
+}
+
+#edit_banks input[type="text"] {
+	width: 400px;
 }
 
 /* --- Catégories --- */

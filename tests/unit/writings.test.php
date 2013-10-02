@@ -111,7 +111,7 @@ class tests_Writings extends TableTestCase {
 		$writings->select();
 		
 		$table = $writings->show();
-		$this->assertPattern("/209.03&nbsp;/", $table);
+		$this->assertPattern("/5.5/", $table);
 		$this->assertPattern("/Bank 1/", $table);
 		$this->assertPattern("/Source 1/", $table);
 		$this->assertPattern("/Category 1/", $table);
@@ -238,6 +238,7 @@ class tests_Writings extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->id = array(1, 2);
+		$writings->select();
 		$writings->duplicate_over_from_ids("3m");
 		$writings->id = "";
 		$writings->select();

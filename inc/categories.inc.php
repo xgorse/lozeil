@@ -82,6 +82,7 @@ class Categories extends Collector  {
 			'cells' => array(
 				array(
 					'type' => "td",
+					'colspan' => "2",
 					'value' => $submit->item(""),
 				),
 			)
