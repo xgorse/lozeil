@@ -192,6 +192,39 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
+	function test_balance_per_day_in_a_year_in_array() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 15;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 16;
+		$writing->day = mktime(10, 0, 0, 1, 10, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -15;
+		$writing->day = mktime(10, 0, 0, 2, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 12;
+		$writing->day = mktime(10, 0, 0, 2, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 10;
+		$writing->day = mktime(10, 0, 0, 1, 5, 2013);
+		$writing->save();
+		$writings = new Writings();
+		$writings->select();
+		$balance_per_day = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, 2013));
+		$this->assertTrue(count($balance_per_day) == 365);
+		$this->assertTrue($balance_per_day[0] == 0);
+		$this->assertTrue($balance_per_day[4] == 10);
+		$this->assertTrue($balance_per_day[9] == 26);
+		$this->assertTrue($balance_per_day[19] == 41);
+		$this->assertTrue($balance_per_day[50] == 38);
+		$this->truncateTable("writings");
+	}
+
 	function test_filter_with() {
 		$writings = new Writings();
 		$writings->filter_with(array('start' => mktime(0, 0, 0, 3, 9, 2013), 'stop' => mktime(0, 0, 0, 3, 10, 2013), '*' => 'fullsearch'));
@@ -215,6 +248,139 @@ class tests_Writings extends TableTestCase {
 		$writings->select();
 		$this->assertTrue(count($writings) == 0);
 		$this->truncateTable("writings");
+	}
+	
+	function test_determine_show_form_modify() {
+		$category = new Category();
+		$category->name = "Category 1";
+		$category->save();
+		$source = new Source();
+		$source->name = "Source 1";
+		$source->save();
+		$writings = new Writings();
+		$this->assertPattern("/writings_modify_form/", $writings->determine_show_form_modify(""));
+		$this->assertPattern("/categories_id/", $writings->determine_show_form_modify("change_category"));
+		$this->assertPattern("/Category 1/", $writings->determine_show_form_modify("change_category"));
+		$this->assertPattern("/sources_id/", $writings->determine_show_form_modify("change_source"));
+		$this->assertPattern("/Source 1/", $writings->determine_show_form_modify("change_source"));
+		$this->assertPattern("/amount_inc_vat/", $writings->determine_show_form_modify("change_amount_inc_vat"));
+		$this->assertPattern("/input/", $writings->determine_show_form_modify("change_amount_inc_vat"));
+		$this->assertPattern("/vat/", $writings->determine_show_form_modify("change_vat"));
+		$this->assertPattern("/input/", $writings->determine_show_form_modify("change_vat"));
+		$this->assertPattern("/date/", $writings->determine_show_form_modify("change_day"));
+		$this->assertPattern("/input/", $writings->determine_show_form_modify("change_day"));
+		$this->assertPattern("/duplicate/", $writings->determine_show_form_modify("duplicate"));
+		$this->assertPattern("/input/", $writings->determine_show_form_modify("duplicate"));
+		$this->truncateTable("writings");
+		$this->truncateTable("sources");
+		$this->truncateTable("categories");
+	}
+	
+	function test_clean_from_ajax() {
+		$writings = new Writings();
+		$post = array(
+			'operation' => "change_category",
+			'ids' => "[\"4\",\"1\"]",
+			'categories_id' => 3
+		);
+		$expected = array(
+			'operation' => "change_category",
+			'value' => 3,
+			'id' => array(
+				0 => 4,
+				1 => 1
+			)
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		
+		$post = array(
+			'operation' => "change_source",
+			'ids' => "[\"10\",\"13\"]",
+			'sources_id' => 4
+		);
+		$expected = array(
+			'operation' => "change_source",
+			'value' => 4,
+			'id' => array(
+				0 => 10,
+				1 => 13
+			)
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		
+		$post = array(
+			'operation' => "change_vat",
+			'ids' => "[\"3\",\"4\"]",
+			'vat' => "13,52"
+		);
+		$expected = array(
+			'operation' => "change_vat",
+			'value' => 13.52,
+			'id' => array(
+				0 => 3,
+				1 => 4
+			)
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		
+		$post = array(
+			'operation' => "change_amount_inc_vat",
+			'ids' => "[\"3\",\"4\"]",
+			'amount_inc_vat' => "13,52"
+		);
+		$expected = array(
+			'operation' => "change_amount_inc_vat",
+			'value' => 13.52,
+			'id' => array(
+				0 => 3,
+				1 => 4
+			)
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		
+		$post = array(
+			'operation' => "change_day",
+			'ids' => "[\"30\",\"43\"]",
+			'day' => array(
+				'd' => 3,
+				'm' => 2,
+				'Y' => 2013
+			)
+		);
+		$expected = array(
+			'operation' => "change_day",
+			'value' => 1359846000,
+			'id' => array(
+				0 => 30,
+				1 => 43
+			)
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		
+		$post = array(
+			'operation' => "duplicate",
+			'ids' => "[\"30\",\"43\"]",
+			'duplicate' => "3m"
+		);
+		$expected = array(
+			'operation' => "duplicate",
+			'value' => "3m",
+			'id' => array(
+				0 => 30,
+				1 => 43
+			)
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		
+		$post = array(
+			'operation' => "duplicate",
+			'ids' => "[]",
+			'duplicate' => "3m"
+		);
+		$expected = array(
+			'operation' => "duplicate"
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
 	}
 	
 	function test_change_amount_inc_vat() {

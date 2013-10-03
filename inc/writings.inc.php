@@ -287,13 +287,13 @@ class Writings extends Collector {
 		return round($amount, 2);
 	}
 	
-	function balance_per_day_in_a_year_in_array($timestamp_max) {
+	function balance_per_day_in_a_year_in_array($timestamp_start) {
 		$values = array();
-		$nb_day = is_leap(date('Y',$timestamp_max) + 1) ? 366 : 365;
+		$nb_day = is_leap(date('Y',$timestamp_start) + 1) ? 366 : 365;
 		
-		for ($i = 0; $i <= $nb_day; $i++) {
-			$timestamp_max = strtotime('+1 day', $timestamp_max);
-			$value = $this->show_balance_at($timestamp_max);
+		for ($i = 0; $i < $nb_day; $i++) {
+			$timestamp_start = strtotime('+1 day', $timestamp_start);
+			$value = $this->show_balance_at($timestamp_start);
 			$values[] = $value;
 		}
 		

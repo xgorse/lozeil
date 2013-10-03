@@ -155,6 +155,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
+		$writing->accountingcodes_id = 5;
 		$writing->number = 1;
 		$writing->vat = 19.6;
 		
@@ -168,6 +169,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge->information = "Autre complément d'infos";
 		$writing_to_merge->paid = 1;
 		$writing_to_merge->sources_id = 1;
+		$writing_to_merge->accountingcodes_id = 2;
 		$writing_to_merge->number = 2;
 		$writing_to_merge->vat = 5.5;
 		$writing_to_merge->search_index = $writing_to_merge->search_index();
@@ -249,6 +251,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
+		$writing->accountingcodes_id = 5;
 		$writing->number = 1;
 		$writing->vat = 19.6;
 		$writing->save();
@@ -262,6 +265,7 @@ class tests_Writing extends TableTestCase {
 		$writing2->information = "Autre complément d'infos";
 		$writing2->paid = 1;
 		$writing2->sources_id = 1;
+		$writing2->accountingcodes_id = 2;
 		$writing2->number = 2;
 		$writing2->vat = 5.5;
 		$writing2->save();
@@ -281,6 +285,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing2_loaded->information, "Complément d'infos");
 		$this->assertEqual($writing2_loaded->paid, 0);
 		$this->assertEqual($writing2_loaded->sources_id, 2);
+		$this->assertEqual($writing2_loaded->accountingcodes_id, 5);
 		$this->assertEqual($writing2_loaded->number, 1);
 		$this->assertEqual($writing2_loaded->vat, 5.5);
 		
@@ -290,17 +295,20 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
 		$writing->banks_id = 1;
+		$writing->accountingcodes_id = 5;
 		$writing->vat = 0;
 		
 		$writing2 = new Writing();
 		$writing2->amount_excl_vat = 19.50;
 		$writing2->amount_inc_vat = 25;
+		$writing2->accountingcodes_id = 2;
 		$writing2->vat = 19.6;
 		
 		$writing->merge_from($writing2);
 		$this->assertTrue($writing->amount_inc_vat == 250);
 		$this->assertTrue($writing->vat == 19.6);
 		$this->assertTrue($writing->amount_excl_vat == 209.030100);
+		$this->assertTrue($writing->accountingcodes_id == 5);
 		
 		$this->truncateTable("writings");
 		
@@ -705,15 +713,18 @@ class tests_Writing extends TableTestCase {
 		$writing->amount_inc_vat = 200;
 		$writing->banks_id = 1;
 		$writing->comment = "Ceci est un commentaire";
+		$writing->information = "Ceci est une info";
 		$writing->day = mktime(10, 0, 0, 7, 31, 2013);
 		$writing->sources_id = 1;
-		$writing->number = 1;
+		$writing->number = 1213546;
 		$writing->vat = 19.6;
 		
 		$this->assertPattern("/cic/", $writing->search_index());
 		$this->assertPattern("/source 1/", $writing->search_index());
 		$this->assertPattern("/chèque/", $writing->search_index());
 		$this->assertPattern("/Ceci est un commentaire/", $writing->search_index());
+		$this->assertPattern("/Ceci est une info/", $writing->search_index());
+		$this->assertPattern("/1213546/", $writing->search_index());
 		$this->assertPattern("/31\/07\/2013/", $writing->search_index());
 		$this->assertPattern("/19.6/", $writing->search_index());
 		$this->assertPattern("/167.22/", $writing->search_index());
@@ -916,6 +927,22 @@ class tests_Writing extends TableTestCase {
 		$writing->load(1);
 		$this->assertEqual(mktime(10, 0, 0, 10, 1, 2013), $writing->day);
 		
+		$this->truncateTable("writings");
+	}
+	
+	function test_calculate_amount_excl_vat() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 200;
+		$writing->vat = 19.6;
+		$this->assertEqual($writing->calculate_amount_excl_vat(), 167.224080);
+		$writing = new Writing();
+		$writing->amount_inc_vat = 200;
+		$writing->vat = 0;
+		$this->assertEqual($writing->calculate_amount_excl_vat(), 200);
+		$writing = new Writing();
+		$writing->amount_inc_vat = 200;
+		$writing->vat = -100;
+		$this->assertEqual($writing->calculate_amount_excl_vat(), 0);
 		$this->truncateTable("writings");
 	}
 }

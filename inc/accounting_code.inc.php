@@ -1,7 +1,7 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-class Accounting_code extends Record {
+class Accounting_Code extends Record {
 	public $id = 0;
 	public $name = "";
 	public $number = "";
