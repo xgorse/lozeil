@@ -7,7 +7,20 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
 @font-face {
 	font-family: Bitter;
+	font-weight: normal;
 	src: url(../fonts/Bitter-Regular.ttf);
+}
+
+@font-face {
+	font-family: Bitter;
+	font-weight: bold;
+	src: url(../fonts/Bitter-Bold.ttf);
+}
+
+@font-face {
+	font-family: Bitter;
+	font-style: italic;
+	src: url(../fonts/Bitter-Italic.ttf);
 }
 
 ul,li {
@@ -60,7 +73,6 @@ th {
 	text-shadow: 0 1px 0 #F6F6F6;
 	text-decoration: none;
 	cursor: pointer;
-	padding-right: 18px;
 }
 
 th:hover {
@@ -164,7 +176,6 @@ input[type="submit"]:hover {
 .sortedup, .sortedup:hover {
 	background-image :  url(../images/up.png)!important;
 	background-position: right center;
-	background-position-x: 90%;
 	background-size: 8px;
 	background-repeat: no-repeat;
 	background-color: #f6f5f3;
@@ -175,7 +186,6 @@ input[type="submit"]:hover {
 .sorteddown, .sorteddown:hover {
 	background-image :  url(../images/down.png)!important;
 	background-position: right center;
-	background-position-x: 90%;
 	background-size: 8px;
 	background-repeat: no-repeat;
 	background-color: #f6f5f3;
@@ -572,6 +582,79 @@ tr.modified {
 
 #edit_sources {
 	margin: 0 50px;
+}
+/* --- accounting codes --- */
+
+#accounting_codes {
+	margin: 0 50px;
+}
+
+#accounting_codes tr.accounting_codes_parent{
+	cursor: pointer;
+}
+
+#accounting_codes tr.accounting_codes_parent:hover{
+	background-color: #F6F6F6;
+}
+
+.accounting_codes_shift_0 {
+	font-weight: bold;
+	color: #BF0000;
+}
+
+.accounting_codes_shift_1 {
+	font-weight: bold;
+	text-indent: 20px;
+	display: none;
+}
+
+.accounting_codes_shift_2 {
+	font-weight: bold;
+	text-indent: 40px;
+	display: none;
+}
+
+.accounting_codes_shift_3 {
+	font-weight: normal;
+	text-indent: 60px;
+	display: none;
+}
+
+.accounting_codes_shift_4 {
+	font-style: italic;
+	text-indent: 80px;
+	display: none;
+}
+
+.accounting_codes_shift_5 {
+	font-style: italic;
+	text-indent: 100px;
+	display: none;
+}
+
+.accounting_codes_shift_6 {
+	font-style: italic;
+	text-indent: 120px;
+	display: none;
+}
+
+.accounting_codes_shift_7 {
+	font-style: italic;
+	text-indent: 140px;
+	display: none;
+}
+
+.accounting_codes_shift_8 {
+	font-style: italic;
+	text-indent: 160px;
+	display: none;
+}
+
+.accounting_codes_numbers {
+}
+
+.accounting_codes_names {
+	margin-left: 10px;
 }
 
 /* --- login --- */

@@ -89,6 +89,7 @@ class Bot {
 		};
 		$password = $this->input_hidden(__('password'));
 		$this->db->query("INSERT INTO ".$GLOBALS['dbconfig']['table_users']." (id, username, password) VALUES (1, '".$username."', password('".$password."'));");
+		$this->import_accounting_plan();
 	}
 	
 	function reinstall_database() {
@@ -121,7 +122,7 @@ class Bot {
 	function help() {
 		$help = "Methods available within Lozeil:"."\n";
 		$ReflectionClass = new ReflectionClass('Bot');
-		foreach ($ReflectionClass->getMethods() as $method) {
+		foreach ($ReflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
 			if (!in_array($method->getName(), array("help", "__construct"))) {
 				$help .= "--".$method->getName()."\n";
 			}
@@ -339,18 +340,18 @@ class Bot {
 		$this->log(__("Stop building up demo"));
 	}
 	
-	function log($message) {
+	private function log($message) {
 		Message::log($message);
 		return $this;
 	}
 	
-	function input($message) {
+	private function input($message) {
 	  fwrite(STDOUT, "$message: ");
 	  $input = trim(fgets(STDIN));
 	  return $input;
 	}
 	
-	function input_hidden($message) {
+	private function input_hidden($message) {
 		fwrite(STDOUT, "$message: ");
 		$oldStyle = shell_exec('stty -g');
 		shell_exec('stty -echo');
@@ -358,5 +359,30 @@ class Bot {
 		echo "\n";
 		shell_exec('stty ' . $oldStyle);
 		return $password;
+	}
+	
+	function import_accounting_plan() {
+		$accountingplan = dirname(__FILE__)."/../medias/txt/accountingplan.txt";
+		if (file_exists($accountingplan)) {
+			$lines = file($accountingplan);
+			foreach ($lines as $line) {
+				$line = rtrim($line);
+				if (strlen($line) > 0) {
+					$line_in_array = preg_split("/([0-9])\./", $line, -1, PREG_SPLIT_DELIM_CAPTURE);
+					if (isset($line_in_array[1])) {
+						$accountingcode = new Accounting_Code();
+						$accountingcode->number = (int)$line_in_array[0].$line_in_array[1];
+						$accountingcode->name = preg_replace('/\t+/', '', $line_in_array[2]);
+						$accountingcode->save();
+					} else {
+						$class = explode(":", $line);
+						$accountingcode = new Accounting_Code();
+						$accountingcode->number = (int)substr(trim($class[0]), -1);
+						$accountingcode->name = preg_replace('/\t+/', '', trim($class[1]));
+						$accountingcode->save();
+					}
+				}
+			}
+		}
 	}
 }

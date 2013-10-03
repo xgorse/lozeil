@@ -62,6 +62,9 @@ class Theme_Default {
 			$js_files[] = "medias/js/writingssimulations.jquery.js";
 			$js_files[] = "medias/js/timeline.jquery.js";
 		}
+		if ($GLOBALS['content'] == "accountingplan.php") {
+			$js_files[] = "medias/js/accountingplan.jquery.js";
+		}
 		if ($GLOBALS['content'] == "login.php") {
 			$js_files[] = "medias/js/login.jquery.js";
 		}

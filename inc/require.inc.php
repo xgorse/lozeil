@@ -16,6 +16,8 @@ require $current_directory."/db.inc.php";
 require $current_directory."/record.inc.php";
 
 require $current_directory."/adodb-time.inc.php";
+require $current_directory."/accounting_code.inc.php";
+require $current_directory."/accounting_codes.inc.php";
 require $current_directory."/bank.inc.php";
 require $current_directory."/banks.inc.php";
 require $current_directory."/bot.inc.php";

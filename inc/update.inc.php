@@ -15,6 +15,17 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_16() {
+		$this->db->query("ALTER TABLE `writings` ADD `accountingcodes_id` INT(11);");
+		$this->db->query("CREATE TABLE `accountingcodes` (
+			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+			`name` varchar(255),
+			`number` varchar(100),
+			PRIMARY KEY (`id`)
+		  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		);
+	}
+	
 	function to_15() {
 		$this->param->add("nb_max_writings", "100");
 	}
