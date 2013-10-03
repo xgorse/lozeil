@@ -650,11 +650,59 @@ tr.modified {
 	display: none;
 }
 
-.accounting_codes_numbers {
-}
-
 .accounting_codes_names {
 	margin-left: 10px;
+}
+
+.input-ajax-content,
+.select-ajax-content {
+	position: relative;
+}
+
+.input-ajax-dynamic,
+.select-ajax-dynamic {
+	width: 500px;
+	margin-top: 4px;
+	font-size: 0.9em;
+	display: none;
+	position: absolute;
+	z-index: 999;
+	background: #FFF;
+	padding: 8px;
+	border-radius: 0 0 4px 4px;
+	-moz-border-radius: 0 0 4px 4px;
+	-webkit-border-bottom-left-radius: 4px;
+	-webkit-border-bottom-right-radius: 4px;
+	box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.3);
+}
+
+.input-ajax-dynamic > div,
+.select-ajax-dynamic > div {
+	margin-bottom: 8px;
+}
+.input-ajax-static {
+	padding-top: 4px;
+}
+
+.select-ajax-static {
+	padding: 8px 0;
+}
+
+.select-ajax-static > div {
+	margin-bottom: 4px;
+}
+
+.input-ajax-dynamic input[type="checkbox"],
+.select-ajax-dynamic input[type="checkbox"],
+.input-ajax-static input[type="checkbox"],
+.select-ajax-static input[type="checkbox"] {
+	margin:0 4px 0 0;
+}
+
+.mask {
+	display: none;
 }
 
 /* --- login --- */

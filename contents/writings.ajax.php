@@ -5,6 +5,20 @@ list($start, $stop) = determine_month($_SESSION['start']);
 
 switch ($_REQUEST['action']) {
 	
+	case "search":
+		$accounting_codes = new Accounting_Codes();
+		$accounting_codes->fullname = isset($_REQUEST['name']) ? $_REQUEST['name'] : "";
+		$accounting_codes->set_limit(10, 0);
+		if ($accounting_codes->fullname) {
+			$accounting_codes->select();
+			$output = json_encode($accounting_codes->fullnames());
+		} else {
+			$output = "";
+		}
+		echo $output;
+		exit(0);
+		break;	
+	
 	case "merge":
 		$writing_from = new Writing();
 		$writing_from->load((int)$_REQUEST['writing_from']);

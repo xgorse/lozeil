@@ -3,6 +3,7 @@
 
 class Accounting_Codes extends Collector  {
 	public $filters = null;
+	public $fullname = "";
 	
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
@@ -17,10 +18,40 @@ class Accounting_Codes extends Collector  {
 		parent::__construct($class, $table, $db);
 	}
 	
+	function get_where() {
+		$where = parent::get_where();
+		
+		if (isset($this->id) and !empty($this->id)) {
+			if (!is_array($this->id)) {
+				$this->id = array((int)$this->id);
+			}
+			$where[] = $this->db->config['table_accountingcodes'].".id IN ".array_2_list($this->id);
+		}
+		if (isset($this->fullname) and !empty($this->fullname)) {
+			if(is_numeric($this->fullname)) {
+				$where[] = "(".$this->db->config['table_accountingcodes'].".number LIKE ".$this->db->quote($this->fullname."%").")";
+			} else {
+				$where[] = "(".$this->db->config['table_accountingcodes'].".number LIKE ".$this->db->quote($this->fullname."%").
+				" OR ".$this->db->config['table_accountingcodes'].".name LIKE ".$this->db->quote("%".$this->fullname."%").
+				" OR SOUNDEX(".$this->db->config['table_accountingcodes'].".name) LIKE SOUNDEX(".$this->db->quote($this->fullname)."))";
+			}
+		}
+		
+		return $where;
+	}
+	
+	function fullnames() {
+		$numbers = array();
+		foreach ($this as $code) {
+			$numbers[$code->id] = $code->number." - ".$code->name;
+		}
+		return $numbers;
+	}
+	
 	function numbers() {
 		$numbers = array();
 		foreach ($this as $code) {
-			$numbers[$code->id] = $code->number();
+			$numbers[$code->id] = $code->number;
 		}
 		return $numbers;
 	}

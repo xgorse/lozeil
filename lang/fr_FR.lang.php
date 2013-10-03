@@ -5,6 +5,7 @@ $__['€'] = "€";
 
 $__[''] = "";
 $__['account'] = "compte";
+$__['accounting code'] = "code comptable";
 $__['accounting on'] = "trésorerie au";
 $__['accounting plan'] = "plan comptable";
 $__['add'] = "ajouter";

@@ -3,6 +3,7 @@
 
 class Writing extends Record {
 	public $id = 0;
+	public $accountingcodes_id = 0;
 	public $amount_excl_vat = 0;
 	public $amount_inc_vat = 0;
 	public $banks_id = 0;
@@ -74,6 +75,7 @@ class Writing extends Record {
 			paid = ".(int)$this->paid.",
 			day = ".(int)$this->day.",	
 			search_index = ".$this->db->quote($this->search_index()).",
+			accountingcodes_id = ".(int)$this->accountingcodes_id.",
 			timestamp = ".time()."
 			WHERE id = ".(int)$this->id
 		);
@@ -96,6 +98,7 @@ class Writing extends Record {
 			information = ".$this->db->quote($this->information).",
 			day = ".(int)$this->day.",
 			search_index = ".$this->db->quote($this->search_index()).",
+			accountingcodes_id = ".(int)$this->accountingcodes_id.",
 			paid = ".(int)$this->paid.",
 			timestamp = ".time()
 		);
@@ -134,6 +137,7 @@ class Writing extends Record {
 				$this->comment = !empty($this->comment) ? $this->comment : $to_merge->comment;
 				$this->information = !empty($this->information) ? $this->information : $to_merge->information;
 				$this->number = !empty($this->number) ? $this->number : $to_merge->number;
+				$this->accountingcodes_id = $this->accountingcodes_id > 0 ? (int)$this->accountingcodes_id : $to_merge->accountingcodes_id;
 				$this->search_index = $this->search_index();
 				$this->save();
 				$to_merge->delete();
@@ -148,6 +152,7 @@ class Writing extends Record {
 				$this->day = $to_merge->day;
 				$this->information = !empty($to_merge->information) ? $to_merge->information : $this->information;
 				$this->number = !empty($to_merge->number) ? $to_merge->number : $this->number;
+				$this->accountingcodes_id = $to_merge->accountingcodes_id > 0 ? (int)$to_merge->accountingcodes_id : $this->accountingcodes_id;
 				$this->paid = $to_merge->paid;
 				$this->search_index = $this->search_index();
 				$this->save();
@@ -192,10 +197,13 @@ class Writing extends Record {
 		$categories->select();
 		$sources = new Sources();
 		$sources->select();
+		$accountingcodes = new Accounting_Codes();
+		$accountingcodes->select();
 		
 		$datepicker = new Html_Input_Date("datepicker", $_SESSION['start']);
 		$category = new Html_Select("categories_id", $categories->names());
 		$source = new Html_Select("sources_id", $sources->names());
+		$accountingcode = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $accountingcodes->numbers());
 		$number = new Html_Input("number");
 		$amount_excl_vat = new Html_Input("amount_excl_vat");
 		$vat = new Html_Input("vat");
@@ -215,6 +223,9 @@ class Writing extends Record {
 				),
 				'source' => array(
 					'value' => $source->item(__('source')),
+				),
+				'accountingcode' => array(
+					'value' => $accountingcode->item(__('accounting code')),
 				),
 				'number' => array(
 					'value' => $number->item(__('piece nb')),
@@ -261,10 +272,16 @@ class Writing extends Record {
 		$categories->select();
 		$sources = new Sources();
 		$sources->select();
+		$currentcode = array();
+		$accountingcode = new Accounting_Code();
+		if($accountingcode->load($this->accountingcodes_id)) {
+			$currentcode[] = $accountingcode->number." - ".$accountingcode->name;
+		}
 		
 		$datepicker = new Html_Input_Date("datepicker", $this->day);
 		$category = new Html_Select("categories_id", $categories->names(), $this->categories_id);
 		$source = new Html_Select("sources_id", $sources->names(), $this->sources_id);
+		$accountingcode_input = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $currentcode);
 		$number = new Html_Input("number", $this->number);
 		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
 		$vat = new Html_Input("vat", $this->vat);
@@ -284,6 +301,9 @@ class Writing extends Record {
 				),
 				'source' => array(
 					'value' => $source->item(__('source')),
+				),
+				'accountingcode' => array(
+					'value' => $accountingcode_input->item(__('accounting code')),
 				),
 				'number' => array(
 					'value' => $number->item(__('piece nb')),

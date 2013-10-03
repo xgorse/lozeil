@@ -53,7 +53,7 @@ $(document).ready(function() {
 		})
 		
 		//Toggle input split & duplicate
-		.on("click", "input#table_writingssimulation_duplicate_submit", function() {
+		.on("click", "input#table_writingssimulation_duplicate_submit", function(event) {
 			var next = "";
 			if ($(this).next().val() == "") {
 				event.preventDefault();

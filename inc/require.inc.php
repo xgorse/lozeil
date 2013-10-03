@@ -31,6 +31,7 @@ require $current_directory."/heading_area.inc.php";
 require $current_directory."/html_checkbox.inc.php";
 require $current_directory."/html_cubismchart.inc.php";
 require $current_directory."/html_input.inc.php";
+require $current_directory."/html_input_ajax.inc.php";
 require $current_directory."/html_input_date.inc.php";
 require $current_directory."/html_list.inc.php";
 require $current_directory."/html_radio.inc.php";

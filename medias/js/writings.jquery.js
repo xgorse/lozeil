@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	make_drag_and_drop();
+	var timer;
 	$("body")
 		.on("click", "#insert_writings_show", function() {
 			$(".insert_writings_form").slideDown(1, function() {
@@ -115,9 +116,10 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		.on("click", "input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit", function() {
+		.on("click", "input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit", function(event) {
 			if ($(this).next().val() == "") {
 				event.preventDefault();
+				console.log($(this).next().attr("type"));
 				if ($(this).next().attr("type") == "hidden") {
 					var next = "text";
 				} else {
@@ -184,13 +186,17 @@ $(document).ready(function() {
 		})
 
 		.on("keyup", "form[name=\"extra_filter_writings_form\"]", function() {
-			$.post(
-				"index.php?content=writings.ajax.php",
-				$(this).serialize(),
-				function(data){
-					$('#table_writings table').html(data);
-				}
-			);
+			var input = $(this);
+			clearTimeout(timer);
+			timer = setTimeout(function() {
+				$.post(
+					"index.php?content=writings.ajax.php",
+					input.serialize(),
+					function(data){
+						$('#table_writings table').html(data);
+					}
+				);
+			}, 200);
 		})
 		
 		.on("mouseenter", "#table_writings tr", function() {
@@ -346,8 +352,11 @@ $(document).ajaxStop(function() {
 })
 
 
+var timercolor;
+
 function changeColorLine(){
-	setTimeout(function(){
+	clearTimeout(timercolor);
+	timercolor = setTimeout(function(){
 		$('#table_writings tr.modified').removeClass('modified');
 	},6000);
 };
