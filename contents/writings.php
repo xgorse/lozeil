@@ -6,6 +6,11 @@ if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction']))
 	$_SESSION['order_direction'] = 'ASC';
 }
 
+if (isset($_POST['action']) and $_POST['action'] == "update_bayesian_dictionary") {
+	$bayesiandictionaries = new Bayesian_Dictionaries();
+	$bayesiandictionaries->train();
+}
+
 $start = determine_integer_from_post_get_session(null, "start");
 $stop = determine_integer_from_post_get_session(null, "stop");
 
@@ -37,6 +42,7 @@ echo $heading->show();
 
 echo $writings->display();
 echo $writings->modify_options();
+echo $writings->form_update_bayesian_dictionnary();
 
 $writing = new Writing();
 echo $writing->form();

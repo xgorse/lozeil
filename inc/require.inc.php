@@ -20,6 +20,8 @@ require $current_directory."/accounting_code.inc.php";
 require $current_directory."/accounting_codes.inc.php";
 require $current_directory."/bank.inc.php";
 require $current_directory."/banks.inc.php";
+require $current_directory."/bayesian_dictionary.inc.php";
+require $current_directory."/bayesian_dictionaries.inc.php";
 require $current_directory."/bot.inc.php";
 require $current_directory."/categories.inc.php";
 require $current_directory."/category.inc.php";

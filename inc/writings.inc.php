@@ -71,6 +71,9 @@ class Writings extends Collector {
 		if (isset($this->filters['categories_id'])) {
 			$query_where[] = $this->db->config['table_writings'].".categories_id = ".(int)$this->filters['categories_id'];
 		}
+		if (isset($this->filters['positive_categories_id'])) {
+			$query_where[] = $this->db->config['table_writings'].".categories_id > 0";
+		}
 		
 		return $query_where;
 	}
@@ -503,6 +506,7 @@ class Writings extends Collector {
 	}
 	
 	function change_category($value) {
+		$bayesiandictionary = new Bayesian_Dictionary();
 		$category = new Category();
 		$category->load($value);
 		foreach ($this as $writing) {
@@ -510,6 +514,7 @@ class Writings extends Collector {
 			if($writing->vat == 0) {
 				$writing->vat = $category->vat;
 			}
+			$bayesiandictionary->addData($writing);
 			$writing->update();
 		}
 	}
@@ -546,5 +551,18 @@ class Writings extends Collector {
 		foreach($this as $writing) {
 			$writing->duplicate($amount);
 		}
+	}
+	
+	function form_update_bayesian_dictionnary() {
+		$form = "<div class=\"writings_update_bayesian_dictionary\"><form method=\"post\" name=\"writings_update_bayesian_dictionary_form\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_action = new Html_Input("action", "update_bayesian_dictionary");
+		$submit = new Html_Input("writings_update_bayesian_dictionary_submit",__('update dictionary'), "submit");
+		$submit->properties = array(
+				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
+			);
+		$form .= $input_hidden_action->input_hidden().$submit->input();
+		$form .= "</form></div>";
+		
+		return $form;
 	}
 }

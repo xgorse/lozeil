@@ -69,7 +69,8 @@ class Writings_Data_File {
 	}
 	
 	function import_as_cic() {
-		
+		$bayesiandictionaries = new Bayesian_Dictionaries();
+		$bayesiandictionaries->prepare();
 		$writings_imported = new Writings_Imported();
 		$writings_imported->filter_with(array("banks_id" => $this->banks_id));
 		$writings_imported->select();
@@ -98,6 +99,7 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
+					$writing->categories_id = $bayesiandictionaries->classify($writing);
 					$writing->save();
 					$nb_records++;
 				} else {
@@ -111,7 +113,8 @@ class Writings_Data_File {
 	}
 	
 	function import_as_coop() {
-		
+		$bayesiandictionaries = new Bayesian_Dictionaries();
+		$bayesiandictionaries->prepare();
 		$writings_imported = new Writings_Imported();
 		$writings_imported->filter_with(array("banks_id" => $this->banks_id));
 		$writings_imported->select();
@@ -151,6 +154,7 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
+					$writing->categories_id = $bayesiandictionaries->classify($writing);
 					$writing->save();
 					$nb_records++;
 				} else {
@@ -164,6 +168,8 @@ class Writings_Data_File {
 	}
 	
 	function import_as_ofx() {
+		$bayesiandictionaries = new Bayesian_Dictionaries();
+		$bayesiandictionaries->prepare();
 		$writings_imported = new Writings_Imported();
 		$writings_imported->filter_with(array("banks_id" => $this->banks_id));
 		$writings_imported->select();
@@ -212,6 +218,7 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
+					$writing->categories_id = $bayesiandictionaries->classify($writing);
 					$writing->save();
 					$nb_records++;
 				} else {

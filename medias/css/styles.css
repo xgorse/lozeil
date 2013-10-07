@@ -214,6 +214,8 @@ input[type="submit"]:hover {
 
 #select_modify_writings {
 	margin: 10px 50px 0 60px;
+	width: 70%;
+	display: inline-block;
 }
 
 #form_modify_writings {
@@ -916,4 +918,17 @@ canvas {
 	display: block;
 	width: 1095px;
 	margin: 10px auto;
+}
+
+/* --- update dictionary --- */
+
+.writings_update_bayesian_dictionary {
+	margin: 4px 0 0 0;
+	margin-right: 50px;
+	display: inline-block;
+	float: right;
+}
+
+.writings_update_bayesian_dictionary input{
+	border: none;
 }

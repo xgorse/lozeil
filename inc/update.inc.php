@@ -15,7 +15,23 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_17() {
+		$this->param->add("comment_weight", 1);
+		$this->param->add("amount_inc_vat_weight", 3);
+		$this->dbconfig->add("table_bayesiandictionaries", "bayesiandictionaries");
+		$this->db->query("CREATE TABLE `bayesiandictionaries` (
+			`id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
+			`word` VARCHAR(100),
+			`field` VARCHAR(100),
+			`categories_id` INT(11),
+			`occurrences` INT(11),
+			PRIMARY KEY (`id`)
+		  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+		);
+	}
+	
 	function to_16() {
+		$this->dbconfig->add("table_accountingcodes", "accountingcodes");
 		$this->db->query("ALTER TABLE `writings` ADD `accountingcodes_id` INT(11);");
 		$this->db->query("CREATE TABLE `accountingcodes` (
 			`id` int(11) unsigned NOT NULL AUTO_INCREMENT,

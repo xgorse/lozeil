@@ -31,7 +31,12 @@ switch ($_REQUEST['action']) {
 		if (isset($_POST['writing_id']) and $_POST['writing_id'] > 0) {
 			$writing = new Writing();
 			$writing->load($_POST['writing_id']);
+			$cat_has_change = ($writing->categories_id != $_POST['categories_id']) ? true : false;
 			$writing->fill($_POST);
+			if($cat_has_change) {
+				$bayesiandictionary = new Bayesian_Dictionary();
+				$bayesiandictionary->addData($writing);
+			}
 			$writing->save();
 		}
 		break;
@@ -92,6 +97,8 @@ switch ($_REQUEST['action']) {
 	case 'insert':
 		$writing = new Writing();
 		$writing->fill($_POST);
+		$bayesiandictionary = new Bayesian_Dictionary();
+		$bayesiandictionary->addData($writing);
 		$writing->save();
 		break;
 	

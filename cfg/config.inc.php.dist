@@ -3,7 +3,7 @@
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "16";
+$config['version'] = "17";
 
 $config['layout_mediaserver'] = "";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;
@@ -26,3 +26,4 @@ $dbconfig['table_banks'] = "banks";
 $dbconfig['table_categories'] = "categories";
 $dbconfig['table_users'] = "users";
 $dbconfig['table_accountingcodes'] = "accountingcodes";
+$dbconfig['table_bayesiandictionaries'] = "bayesiandictionaries";

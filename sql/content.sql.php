@@ -81,5 +81,14 @@ $queries = array(
 		`name` VARCHAR(255),
 		`number` VARCHAR(100),
 		PRIMARY KEY (`id`)
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	
+	'bayesiandictionaries' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_bayesiandictionaries']." (
+		`id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
+		`word` VARCHAR(100),
+		`field` VARCHAR(100),
+		`categories_id` INT(11),
+		`occurrences` INT(11),
+		PRIMARY KEY (`id`)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );
