@@ -109,6 +109,13 @@ switch ($_REQUEST['action']) {
 		exit(0);
 		break;
 	
+	case 'reload_select_modify_writings':
+		$writing = new Writings();
+		echo $writing->modify_options();
+		
+		exit(0);
+		break;
+	
 	case 'delete':
 		if (isset($_POST['table_writings_delete_id'])) {
 			$writing = new Writing($_POST['table_writings_delete_id']);
@@ -136,7 +143,6 @@ switch ($_REQUEST['action']) {
 			$writings_to_modify->id = $parameters['id'];
 			$writings_to_modify->select();
 			$writings_to_modify->apply($parameters['operation'], $parameters['value']);
-			$writings->selected = $writings_to_modify->id;
 		}
 		break;
 	

@@ -3,7 +3,6 @@
 
 class Writings extends Collector {
 	public $filters = null;
-	public $selected = array();
 	public $amounts = array();
 	
 	function __construct($class = null, $table = null, $db = null) {
@@ -181,9 +180,6 @@ class Writings extends Collector {
 		foreach ($this as $writing) {
 			$informations = $writing->show_further_information();
 			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
-			if (in_array($writing->id, $this->selected)) {
-				$checkbox->selected = true;
-			}
 			$checkbox->properties = array("class" => "table_checkbox");
 			$grid[] =  array(
 				'class' => $writing->is_recently_modified() ? "draggable modified" : "draggable",

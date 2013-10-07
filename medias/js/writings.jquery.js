@@ -287,6 +287,16 @@ function reload_insert_form() {
 	});
 }
 
+function reload_select_modify_writings() {
+	$.ajax({
+		type: "POST",
+		url : "index.php?content=writings.ajax.php",
+		data : {action: "reload_select_modify_writings"}
+	}).done(function (data2) {
+		$("#select_modify_writings").replaceWith(data2);
+	});
+}
+
 function confirm_option(text) {
 	var select = $("#options_modify_writings");
 	
@@ -338,6 +348,7 @@ function confirm_modify(text) {
 			"index.php?content=writings.ajax.php",
 			serialized,
 			function(data) {
+				reload_select_modify_writings();
 				refresh_balance();
 				$('#table_writings table').html(data);
 			}
