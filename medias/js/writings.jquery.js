@@ -49,10 +49,8 @@ $(document).ready(function() {
 				"index.php?content=writings.ajax.php",
 				$(this).serialize(),
 				function(data) {
+					$('#table_writings table').html(data);
 					refresh_balance();
-					$("#table_edit_writings").slideUp(400, function() {
-						$('#table_writings table').html(data);
-					})
 				}
 			);
 			return false;

@@ -20,26 +20,29 @@ class Writings extends Collector {
 	
 	function get_join() {
 		$join = parent::get_join();
-		$join[] = "
-			LEFT JOIN ".$this->db->config['table_categories']."
-			ON ".$this->db->config['table_categories'].".id = ".$this->db->config['table_writings'].".categories_id
-		";
-		$join[] = "
-			LEFT JOIN ".$this->db->config['table_sources']."
-			ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".sources_id
-		";
-		$join[] = "
-			LEFT JOIN ".$this->db->config['table_banks']."
-			ON ".$this->db->config['table_banks'].".id = ".$this->db->config['table_writings'].".banks_id
-		";
+		if(!empty($this->order)) {
+			$join[] = "
+				LEFT JOIN ".$this->db->config['table_categories']."
+				ON ".$this->db->config['table_categories'].".id = ".$this->db->config['table_writings'].".categories_id
+			";
+			$join[] = "
+				LEFT JOIN ".$this->db->config['table_sources']."
+				ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".sources_id
+			";
+			$join[] = "
+				LEFT JOIN ".$this->db->config['table_banks']."
+				ON ".$this->db->config['table_banks'].".id = ".$this->db->config['table_writings'].".banks_id
+			";
+		}
 		
 		return $join;
 	}
 	
 	function get_columns() {
 		$columns = parent::get_columns();
-		$columns[] = $this->db->config['table_categories'].".name as category_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_banks'].".name as bank_name";
-
+		if(!empty($this->order)) {
+			$columns[] = $this->db->config['table_categories'].".name as category_name, ".$this->db->config['table_sources'].".name as source_name, ".$this->db->config['table_banks'].".name as bank_name";
+		}
 		return $columns;
 	}
 	
@@ -177,6 +180,7 @@ class Writings extends Collector {
 		$banks_name = $banks->names();
 		
 		$grid = array();
+		
 		foreach ($this as $writing) {
 			$informations = $writing->show_further_information();
 			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
