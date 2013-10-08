@@ -279,7 +279,7 @@ class Writings_Data_File {
 	}
 	
 	function is_csv() {
-		if (pathinfo($this->file_name, PATHINFO_EXTENSION) == "csv") {
+		if (strtolower(pathinfo($this->file_name, PATHINFO_EXTENSION)) == "csv") {
 			return true;
 		} else {
 			return false;

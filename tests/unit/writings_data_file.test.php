@@ -7,10 +7,16 @@ class tests_Writings_Data_File extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"writings",
 			"banks",
+			"bayesianelements",
+			"writings",
 			"writingsimported"
 		);
+	}
+	
+	function test_is_csv() {
+		$import = new Writings_Data_File("temp.123", "temp.CSV", "");
+		$this->assertTrue($import->is_csv());
 	}
 	
 	function test_is_line_cic() {
