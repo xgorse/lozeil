@@ -15,6 +15,11 @@ class tests_Writings_Data_File extends TableTestCase {
 		);
 	}
 	
+	function test_is_ofx() {
+		$import = new Writings_Data_File("temp.123", "temp.OFX", "");
+		$this->assertTrue($import->is_ofx());
+	}
+	
 	function test_is_csv() {
 		$import = new Writings_Data_File("temp.123", "temp.CSV", "");
 		$this->assertTrue($import->is_csv());
