@@ -503,17 +503,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertPattern("/table_writings_split_submit/", $form_split);
 		$this->assertPattern("/table_writings_split_amount/", $form_split);
 	}
-	
-	function test_fill() {
-		$writing = new Writing();
-		$hash = array();
-		$hash['datepicker']['m'] = 8;
-		$hash['datepicker']['d'] = 26;
-		$hash['datepicker']['Y'] = 2013;
-		$writing->fill($hash);
-		$this->assertEqual($writing->day, 1377468000);
-	}
-	
+		
 	function test_duplicate() {
 		$writing = new Writing();
 		$writing->day = mktime(0, 0, 0, 8, 26, 2013);
@@ -944,5 +934,33 @@ class tests_Writing extends TableTestCase {
 		$writing->vat = -100;
 		$this->assertEqual($writing->calculate_amount_excl_vat(), 0);
 		$this->truncateTable("writings");
+	}
+	
+	function test_get_data() {
+		$writing = new Writing();
+		$writing->accountingcodes_id = 601;
+		$writing->categories_id = 3;
+		$writing->comment = "Ceci est un commentaire";
+		$writing->amount_inc_vat = 200;
+		$writing->vat = 19.6;
+				
+		$expected = array(
+			'classification_target' => array(
+				'categories' => 3,
+				'accountingcodes' => 601
+			),
+			'classification_data' => array(
+				'comment' => array(
+					'Ceci',
+					'est',
+					'commentaire'
+				),
+				'amount_inc_vat' => array(
+					200
+				)
+			)
+		);
+	
+		$this->assertEqual($expected, $writing->get_data());
 	}
 }

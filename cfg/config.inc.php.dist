@@ -26,4 +26,4 @@ $dbconfig['table_banks'] = "banks";
 $dbconfig['table_categories'] = "categories";
 $dbconfig['table_users'] = "users";
 $dbconfig['table_accountingcodes'] = "accountingcodes";
-$dbconfig['table_bayesiandictionaries'] = "bayesiandictionaries";
+$dbconfig['table_bayesianelements'] = "bayesianelements";

@@ -922,13 +922,13 @@ canvas {
 
 /* --- update dictionary --- */
 
-.writings_update_bayesian_dictionary {
+.writings_update_bayesian_element {
 	margin: 4px 0 0 0;
 	margin-right: 50px;
 	display: inline-block;
 	float: right;
 }
 
-.writings_update_bayesian_dictionary input{
+.writings_update_bayesian_element input{
 	border: none;
 }

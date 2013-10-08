@@ -27,17 +27,17 @@ switch ($_REQUEST['action']) {
 		$writing_into->merge_from($writing_from);
 		break;
 	
-	case 'edit':
-		if (isset($_POST['writing_id']) and $_POST['writing_id'] > 0) {
+	case "edit":
+		if (isset($_POST['writings_id']) and $_POST['writings_id'] > 0) {
 			$writing = new Writing();
-			$writing->load($_POST['writing_id']);
-			$cat_has_change = ($writing->categories_id != $_POST['categories_id']) ? true : false;
-			$writing->fill($_POST);
-			if($cat_has_change) {
-				$bayesiandictionary = new Bayesian_Dictionary();
-				$bayesiandictionary->addData($writing);
-			}
+			$writing->load((int)$_POST['writings_id']);
+			$writing_before = clone $writing;
+			$cleaned = $writing->clean($_POST);
+			$writing->fill($cleaned);
 			$writing->save();
+
+			$bayesianelements = new Bayesian_Elements();
+			$bayesianelements->increment_decrement($writing_before, $writing);
 		}
 		break;
 			
@@ -96,9 +96,11 @@ switch ($_REQUEST['action']) {
 		
 	case 'insert':
 		$writing = new Writing();
-		$writing->fill($_POST);
-		$bayesiandictionary = new Bayesian_Dictionary();
-		$bayesiandictionary->addData($writing);
+		$cleaned = $writing->clean($_POST);
+		$writing->fill($cleaned);
+		$bayesianelements = new Bayesian_Elements();
+		$bayesianelements->stuff_with($writing);
+		$bayesianelements->increment();
 		$writing->save();
 		break;
 	

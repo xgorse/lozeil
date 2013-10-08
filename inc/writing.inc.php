@@ -108,6 +108,22 @@ class Writing extends Record {
 		return $this->id;
 	}
 	
+	function clean($post) {
+		$cleaned = array();
+		if (isset($post['datepicker'])) {
+			$cleaned['day'] = timestamp_from_datepicker($post['datepicker']);
+		}
+		$cleaned['accountingcodes_id'] = (int)$post[md5('accountingcodes_id')];
+		$cleaned['categories_id'] = (int)$post['categories_id'];
+		$cleaned['sources_id'] = (int)$post['sources_id'];
+		$cleaned['paid'] = (int)$post['paid'];
+		$cleaned['comment'] = $post['comment'];
+		$cleaned['amount_excl_vat'] = str_replace(",", ".", $post['amount_excl_vat']);
+		$cleaned['amount_inc_vat'] = str_replace(",", ".", $post['amount_inc_vat']);
+		$cleaned['vat'] = str_replace(",", ".", $post['vat']);
+		return $cleaned;
+	}
+	
 	function search_index() {
 		$bank = new Bank();
 		$bank->load($this->banks_id);
@@ -265,7 +281,7 @@ class Writing extends Record {
 			<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
 		$input_hidden = new Html_Input("action", "edit", "submit");
-		$input_hidden_id = new Html_Input("writing_id", $this->id);
+		$input_hidden_id = new Html_Input("writings_id", $this->id);
 		$form .= $input_hidden->input_hidden().$input_hidden_id->input_hidden();
 		
 		$categories = new Categories();
@@ -397,9 +413,6 @@ class Writing extends Record {
 	function fill($hash) {
 		$writing = parent::fill($hash);
 		
-		if (isset($hash['datepicker'])) {
-			$writing->day = timestamp_from_datepicker($hash['datepicker']);
-		}
 		if($writing->banks_id > 0) {
 			$writing->amount_excl_vat = $writing->calculate_amount_excl_vat();
 		}
@@ -488,5 +501,36 @@ class Writing extends Record {
 			return true;
 		}
 		return false;
+	}
+	
+	function get_data() {
+		$datas = array();
+		
+		$datas['classification_target'] = array(
+			$this->db->config['table_categories'] => $this->categories_id,
+			$this->db->config['table_accountingcodes'] => $this->accountingcodes_id
+		);
+		
+		preg_match_all('(\w{3,})u', $this->comment, $matches['comment']);
+		
+		$datas['classification_data'] = array(
+			'comment' => $matches['comment'][0],
+			'amount_inc_vat' => array($this->amount_inc_vat)
+		);
+		
+		return $datas;
+	}
+	
+	function different_from(Writing $writing) {
+		switch (true) {
+			case $this->accountingcodes_id != $writing->accountingcodes_id:
+			case $this->categories_id != $writing->categories_id:
+			case $this->amount_inc_vat != $writing->amount_inc_vat:
+			case $this->comment != $writing->comment:
+			case $this->sources_id != $writing->sources_id:
+				return true;
+			default :
+				return false;
+		}
 	}
 }

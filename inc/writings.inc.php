@@ -73,8 +73,8 @@ class Writings extends Collector {
 		if (isset($this->filters['categories_id'])) {
 			$query_where[] = $this->db->config['table_writings'].".categories_id = ".(int)$this->filters['categories_id'];
 		}
-		if (isset($this->filters['positive_categories_id'])) {
-			$query_where[] = $this->db->config['table_writings'].".categories_id > 0";
+		if (isset($this->filters['categories_id_min'])) {
+			$query_where[] = $this->db->config['table_writings'].".categories_id >= ".(int)$this->filters['categories_id_min'];
 		}
 		
 		return $query_where;
@@ -506,15 +506,16 @@ class Writings extends Collector {
 	}
 	
 	function change_category($value) {
-		$bayesiandictionary = new Bayesian_Dictionary();
+		$bayesianelements = new Bayesian_Elements();
 		$category = new Category();
 		$category->load($value);
 		foreach ($this as $writing) {
+			$writing_before = clone $writing;
 			$writing->categories_id = $value;
 			if($writing->vat == 0) {
 				$writing->vat = $category->vat;
 			}
-			$bayesiandictionary->addData($writing);
+			$bayesianelements->increment_decrement($writing_before, $writing);
 			$writing->update();
 		}
 	}
@@ -554,9 +555,9 @@ class Writings extends Collector {
 	}
 	
 	function form_update_bayesian_dictionnary() {
-		$form = "<div class=\"writings_update_bayesian_dictionary\"><form method=\"post\" name=\"writings_update_bayesian_dictionary_form\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_action = new Html_Input("action", "update_bayesian_dictionary");
-		$submit = new Html_Input("writings_update_bayesian_dictionary_submit",__('update dictionary'), "submit");
+		$form = "<div class=\"writings_update_bayesian_element\"><form method=\"post\" name=\"writings_update_bayesian_element_form\" action=\"\" enctype=\"multipart/form-data\">";
+		$input_hidden_action = new Html_Input("action", "update_bayesian_element");
+		$submit = new Html_Input("writings_update_bayesian_element_submit",__('update dictionary'), "submit");
 		$submit->properties = array(
 				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
 			);

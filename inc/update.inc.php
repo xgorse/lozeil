@@ -18,12 +18,13 @@ class Update {
 	function to_17() {
 		$this->param->add("comment_weight", 1);
 		$this->param->add("amount_inc_vat_weight", 3);
-		$this->dbconfig->add("table_bayesiandictionaries", "bayesiandictionaries");
-		$this->db->query("CREATE TABLE `bayesiandictionaries` (
+		$this->dbconfig->add("table_bayesianelements", "bayesianelements");
+		$this->db->query("CREATE TABLE `bayesianelements` (
 			`id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
-			`word` VARCHAR(100),
+			`element` VARCHAR(100),
 			`field` VARCHAR(100),
-			`categories_id` INT(11),
+			`table_name` VARCHAR(100),
+			`table_id` INT(11),
 			`occurrences` INT(11),
 			PRIMARY KEY (`id`)
 		  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
