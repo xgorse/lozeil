@@ -5,7 +5,8 @@ function make_timeline() {
 		isleap_year = $("#cubism_isleap_year").text(),
 		positive_average = [],
 		negative_average = [],
-		titles = []
+		titles = [],
+		link = []
 	
 	if (isleap_year.length == 0) {
 		isleap_year = 1;
@@ -13,23 +14,31 @@ function make_timeline() {
 		isleap_year = 0;
 	}
 	
+	 $(".cubism_link").each(function() {
+		 link.push($(this).text());
+	 });
+	
 	$(".cubism_data_title").each(function() {
 		titles.push($(this).text());
 	})
 	
 	$(".cubism_data_positive_average").each(function() {
-		positive_average.push($(this).text());
+		positive_average.push(parseFloat($(this).text()));
 	})
 	
 	$(".cubism_data_negative_average").each(function() {
-		negative_average.push($(this).text());
+		negative_average.push(parseFloat($(this).text()));
 	})
+	var max = Math.max.apply(Math, positive_average);
+	var min = Math.min.apply(Math, negative_average);
+	var scale = Math.max.apply(Math, [max, Math.abs(min)]);
 	var context = cubism.context()
 		.serverDelay(Date.now() - new Date(parseInt(start_year) + 1, 0, parseInt(isleap_year), 0,0 ,0 ,0))
 		.clientDelay(0)
 		.step(1000*60*60*8)
 		.size(width)
 		.stop();
+		
 	
 	d3.select("#cubismtimeline").call(function(div) {
 		
@@ -55,7 +64,7 @@ function make_timeline() {
 				.colors(["#B80000", "#D43333", "#F26F6F", "#FABEBE", "#bae4b3", "#74c476", "#31a354", "#006d2c"])
 				.format(d3.format("r"))
 				.title(titles[i - 1])
-				.extent([negative_average[i-1]*1.5, positive_average[i-1]*1.5])
+				.extent([-scale*1.5, scale*1.5])
 			);
 		})
 		
@@ -66,6 +75,10 @@ function make_timeline() {
 		$(".rule_stat .line")
 		.css("top", (-$(".timeseries").height() + 21) + "px")
 		.css("height", $(".timeseries").height() + "px");
+	});
+	
+	$("#cubismtimeline g .tick").on("click", function() {
+		window.location = link[$(this).index("#cubismtimeline g .tick")];
 	});
 	
 	$("text").each(function() {

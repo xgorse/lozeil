@@ -32,7 +32,7 @@ class Html_Cubismchart {
 		
 		for ($i = 0; $i <12; $i++) {
 			list($start, $stop) = determine_month(mktime(0, 0, 0, $i + 1, 1, date ('Y',$this->start)));
-			$data .= "<li class=\"cubism_link\">".link_content("content=".$this->name.".php&amp;start=".$start."&amp;stop=".$stop)."</li>";
+			$data .= "<li class=\"cubism_link\">".link_content("content=writings.php&amp;start=".$start."&amp;stop=".$stop)."</li>";
 		}
 			$data .= "</ul>";
 			
