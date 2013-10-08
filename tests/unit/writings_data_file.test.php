@@ -8,6 +8,7 @@ class tests_Writings_Data_File extends TableTestCase {
 		parent::__construct();
 		$this->initializeTables(
 			"banks",
+			"categories",
 			"bayesianelements",
 			"writings",
 			"writingsimported"

@@ -7,7 +7,8 @@ class tests_Source extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"sources"
+			"sources",
+			"writings"
 		);
 	}
 	

@@ -10,12 +10,16 @@ class tests_Writings extends TableTestCase {
 			"writings",
 			"categories",
 			"sources",
-			"banks"
+			"banks",
+			"bayesianelements",
+			"accountingcodes"
 		);
 	}
 	
 	function test_get_join() {
 		$writings = new Writings();
+		$writings->filter_with(array("timestamp" => 3));
+		$writings->add_order("amount_inc_vat DESC");
 		$join = $writings->get_join();
 		$this->assertPattern("/LEFT JOIN categories/", $join[0]);
 		$this->assertPattern("/ON categories.id = writings.categories_id/", $join[0]);
@@ -28,6 +32,7 @@ class tests_Writings extends TableTestCase {
 	
 	function test_get_columns() {
 		$writings = new Writings();
+		$writings->add_order("amount_inc_vat DESC");
 		$columns = $writings->get_columns();
 		$this->assertPattern("/`writings`.*/", $columns[0]);
 		$this->assertPattern("/categories.name as category_name, sources.name as source_name, banks.name as bank_name/", $columns[1]);
@@ -292,6 +297,20 @@ class tests_Writings extends TableTestCase {
 			)
 		);
 		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		$post = array(
+			'operation' => "change_accounting_code",
+			'ids' => "[\"4\",\"2\"]",
+			'accountingcodes_id' => 3
+		);
+		$expected = array(
+			'operation' => "change_accounting_code",
+			'value' => 3,
+			'id' => array(
+				0 => 4,
+				1 => 2
+			)
+		);
+		$this->assertEqual($writings->clean_from_ajax($post), $expected);
 		
 		$post = array(
 			'operation' => "change_source",
@@ -462,6 +481,27 @@ class tests_Writings extends TableTestCase {
 		$writing->load(2);
 		$this->assertTrue($writing->categories_id == 1);
 		$this->assertTrue($writing->vat == 5.5);
+		$this->truncateTable("writings");
+	}
+	
+	
+	function test_change_accounting_codes() {		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->accountingcodes_id = 125;
+		$writing->save();
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 25, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->select();
+		$writings->change_accounting_code(12);
+		
+		$writing->load(1);
+		$this->assertTrue($writing->accountingcodes_id = 12);
+		$writing->load(2);
+		$this->assertTrue($writing->accountingcodes_id = 12);
 		$this->truncateTable("writings");
 	}
 	

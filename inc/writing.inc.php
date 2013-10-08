@@ -113,7 +113,7 @@ class Writing extends Record {
 		if (isset($post['datepicker'])) {
 			$cleaned['day'] = timestamp_from_datepicker($post['datepicker']);
 		}
-		$cleaned['accountingcodes_id'] = (int)$post[md5('accountingcodes_id')];
+		$cleaned['accountingcodes_id'] = isset($post['accountingcodes_id']) ? (int)$post['accountingcodes_id'] : 0;
 		$cleaned['categories_id'] = (int)$post['categories_id'];
 		$cleaned['sources_id'] = (int)$post['sources_id'];
 		$cleaned['paid'] = (int)$post['paid'];
@@ -121,6 +121,7 @@ class Writing extends Record {
 		$cleaned['amount_excl_vat'] = str_replace(",", ".", $post['amount_excl_vat']);
 		$cleaned['amount_inc_vat'] = str_replace(",", ".", $post['amount_inc_vat']);
 		$cleaned['vat'] = str_replace(",", ".", $post['vat']);
+		$cleaned['number'] = $post['number'];
 		return $cleaned;
 	}
 	

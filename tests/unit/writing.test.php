@@ -10,7 +10,8 @@ class tests_Writing extends TableTestCase {
 			"categories",
 			"sources",
 			"writings",
-			"banks"
+			"banks",
+			"accountingcodes"
 		);
 	}
 	
@@ -962,5 +963,72 @@ class tests_Writing extends TableTestCase {
 		);
 	
 		$this->assertEqual($expected, $writing->get_data());
+	}
+	
+	function test_different_from() {
+		$writing = new Writing();
+		$writing->accountingcodes_id = 601;
+		$writing->categories_id = 3;
+		$writing->comment = "Ceci est un commentaire";
+		$writing->amount_inc_vat = 200;
+		$writing->sources_id = 2;
+		
+		$writing2 = new Writing();
+		$writing2->accountingcodes_id = 601;
+		$writing2->categories_id = 3;
+		$writing2->comment = "Ceci est un commentaire";
+		$writing2->amount_inc_vat = 200;
+		$writing2->sources_id = 2;
+		$this->assertFalse($writing->different_from($writing2));
+		
+		$writing2->categories_id = 2;
+		$this->assertTrue($writing->different_from($writing2));
+		$writing2->categories_id = 3;
+		$writing2->comment = "Commentaire";
+		$this->assertTrue($writing->different_from($writing2));
+		$writing2->comment = "Ceci est un commentaire";
+		$writing2->sources_id = 3;
+		$this->assertTrue($writing->different_from($writing2));
+		$writing2->sources_id = 2;
+		$writing->accountingcodes_id = 51;
+		$this->assertTrue($writing->different_from($writing2));
+		$this->truncateTable("writings");
+	}
+	
+	function test_clean() {
+		$post = array(
+			'action' => 'edit',
+			'writings_id' => '310',
+			'datepicker' => array (
+							'd' => '09',
+							'm' => '07',
+							'Y' => '2013'
+							  ),
+			'categories_id' => '2',
+			'sources_id' => '0',
+			'e243c26543db4bd701a1f3563acf584b' => '512',
+			'accountingcodes_id' => '546',
+			'number' => '12345',
+			'amount_excl_vat' => '-15000.000000' ,
+			'vat' => '0.00',
+			'amount_inc_vat' => '-15000.000000',
+			'comment' => 'COOPA 09/07',
+			'paid' => '1'
+		);
+		
+		$cleaned = array(
+			'day' => mktime(0, 0, 0, 7, 9, 2013),
+			'accountingcodes_id' => '546',
+			'categories_id' => '2',
+			'sources_id' => '0',
+			'paid' => '1',
+			'comment' => 'COOPA 09/07',
+			'amount_excl_vat' => '-15000.000000' ,
+			'amount_inc_vat' => '-15000.000000',
+			'vat' => '0.00',
+			'number' => '12345',
+			);
+		$writing = new Writing();
+		$this->assertEqual($cleaned, $writing->clean($post));
 	}
 }
