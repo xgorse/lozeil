@@ -24,6 +24,7 @@ $__['cancel operation'] = "annuler l'opération";
 $__['cancel record'] = "annuler l'enregistrement";
 $__['categories'] = "catégories";
 $__['category'] = "catégorie";
+$__['change accounting code to'] = "changer le code comptable en";
 $__['change amount including vat to'] = "changer le montant TTC en";
 $__['change category to'] = "changer la catégorie en";
 $__['change date to'] = "changer la date en";

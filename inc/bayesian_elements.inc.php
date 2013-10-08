@@ -66,6 +66,7 @@ class Bayesian_Elements extends Collector  {
 	}
 	
 	function prepare() {
+		$this->filter_with(array('table_name' => $GLOBALS['dbconfig']['table_categories']));
 		$this->select();
 		foreach ($this as $bayesiandictionnary) {
 			if (!isset($this->count[$bayesiandictionnary->table_id])) {
@@ -93,6 +94,9 @@ class Bayesian_Elements extends Collector  {
 		}
 		if (isset($this->filters['element'])) {
 			$query_where[] = $this->db->config['table_bayesianelements'].".element = ".$this->db->quote($this->filters['element']);
+		}
+		if (isset($this->filters['table_name'])) {
+			$query_where[] = $this->db->config['table_bayesianelements'].".table_name = ".$this->db->quote($this->filters['table_name']);
 		}
 		if (isset($this->filters['field'])) {
 			$query_where[] = $this->db->config['table_bayesianelements'].".field = ".$this->db->quote($this->filters['field']);

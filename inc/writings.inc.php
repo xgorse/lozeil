@@ -352,6 +352,7 @@ class Writings extends Collector {
 			"null" => "--",
 			"change_category" => __('change category to')." ...",
 			"change_source" => __('change source to')." ...",
+			"change_accounting_code" => __('change accounting code to')." ...",
 			"change_amount_inc_vat" => __('change amount including vat to')." ...",
 			"change_vat" => __('change vat to')." ...",
 			"change_day" => __('change date to')." ...",
@@ -370,14 +371,14 @@ class Writings extends Collector {
 	
 	function determine_show_form_modify($target) {
 		$form = "<form method=\"post\" name=\"writings_modify_form\" action=\"\" enctype=\"multipart/form-data\" onsubmit=\"return confirm_modify('".utf8_ucfirst(__('are you sure?'))."')\">";
-		$submit = new Html_Input("submit_writings_modify_form", "", "submit");
+		$submit = new Html_Input("submit_writings_modify_form", __('ok'), "submit");
 		switch($target) {
 			case 'change_category':
 				$categories = new Categories();
 				$categories->select();
 				$category = new Html_Select("categories_id", $categories->names());
 				$category->properties = array(
-					'onchange' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
+					'onsubmit' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
 				);
 				$form .= $category->item("");
 				break;
@@ -386,19 +387,26 @@ class Writings extends Collector {
 				$sources->select();
 				$source = new Html_Select("sources_id", $sources->names());
 				$source->properties = array(
-					'onchange' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
+					'onsubmit' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
 				);
 				$form .= $source->item("");
+				break;
+			case 'change_accounting_code':
+				$accountingcodes = new Accounting_Codes();
+				$accountingcodes->select();
+				$accountingcode = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $accountingcodes->numbers());
+				$accountingcode->properties = array(
+					'onsubmit' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
+				);
+				$form .= $accountingcode->item("");
 				break;
 			case 'change_amount_inc_vat':
 				$amount_inc_vat = new Html_Input("amount_inc_vat");
 				$form .= $amount_inc_vat->input();
-				$form .= $submit->input();
 				break;
 			case 'change_vat':
 				$vat = new Html_Input("vat");
 				$form .= $vat->input();
-				$form .= $submit->input();
 				break;
 			case 'change_day':
 				$datepicker = new Html_Input_Date("day");
@@ -406,16 +414,15 @@ class Writings extends Collector {
 					'onsubmit' => "confirm_modify('".utf8_ucfirst(__('are you sure?'))."')"
 				);
 				$form .= $datepicker->item("");
-				$form .= $submit->input();
 				break;
 			case 'duplicate':
 				$vat = new Html_Input("duplicate");
 				$form .= $vat->input();
-				$form .= $submit->input();
 				break;
 			default :
 				break;
 		}
+		$form .= $submit->input();
 		$form .= "</form>";
 		
 		return $form;
@@ -435,6 +442,12 @@ class Writings extends Collector {
 					break;
 				case 'change_source':
 					$parameters['value'] = (int)$post['sources_id'];
+					if (!empty($parameters['value']) or $parameters['value'] == 0) {
+						$parameters['id'] = $ids;
+					}
+					break;
+				case 'change_accounting_code':
+					$parameters['value'] = (int)$post['accountingcodes_id'];
 					if (!empty($parameters['value']) or $parameters['value'] == 0) {
 						$parameters['id'] = $ids;
 					}
@@ -480,6 +493,9 @@ class Writings extends Collector {
 			case 'change_source':
 				$this->change_source($value);
 				break;
+			case 'change_accounting_code':
+				$this->change_accounting_code($value);
+				break;
 			case 'change_vat':
 				$this->change_vat($value);
 				break;
@@ -515,6 +531,18 @@ class Writings extends Collector {
 			if($writing->vat == 0) {
 				$writing->vat = $category->vat;
 			}
+			$bayesianelements->increment_decrement($writing_before, $writing);
+			$writing->update();
+		}
+	}
+	
+	function change_accounting_code($value) {
+		$bayesianelements = new Bayesian_Elements();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->load($value);
+		foreach ($this as $writing) {
+			$writing_before = clone $writing;
+			$writing->accountingcodes_id = $value;
 			$bayesianelements->increment_decrement($writing_before, $writing);
 			$writing->update();
 		}

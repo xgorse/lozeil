@@ -223,11 +223,6 @@ input[type="submit"]:hover {
 	margin-left: 10px;
 }
 
-#submit_writings_modify_form {
-	position: absolute;
-	left: -9999px;
-}
-
 #options_modify_writings {
 	margin-left: 10px;
 }
