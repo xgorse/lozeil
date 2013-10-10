@@ -36,4 +36,12 @@ class tests_misc extends TableTestCase {
 		$this->assertFalse(in_array(date('Y') + 5, close_years_in_array()));
 		$this->assertTrue(sizeof(close_years_in_array()) == 7);
 	}
+	
+	function test_determine_first_day_of_year() {
+		$this->assertEqual(determine_first_day_of_year(mktime(0, 0, 0, 10, 10, 2013)), mktime(0, 0, 0, 1, 1, 2013));
+	}
+	
+	function test_determine_last_day_of_year() {
+		$this->assertEqual(determine_last_day_of_year(mktime(0, 0, 0, 10, 10, 2013)), mktime(23, 59, 59, 12, 31, 2013));
+	}
 }

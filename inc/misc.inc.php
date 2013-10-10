@@ -301,6 +301,18 @@ function determine_month($timestamp) {
 	return array($starttime, $stoptime);
 }
 
+function determine_last_day_of_year($timestamp) {
+	$starttime = mktime(23, 59, 59, 13 , 0, date("Y", $timestamp));
+
+	return $starttime;
+}
+
+function determine_first_day_of_year($timestamp) {
+	$starttime = mktime(0, 0, 0, 1, 1, date("Y",$timestamp));
+
+	return $starttime;
+}
+
 function determine_first_day_of_month($timestamp) {
 	$starttime = mktime(0, 0, 0, date("m", $timestamp), 1, date("Y",$timestamp));
 

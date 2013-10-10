@@ -14,7 +14,7 @@ class Writings_Followup  {
 		foreach ($categories as $category) {
 			$writings->month = determine_first_day_of_month($timestamp);
 			$writings->select_columns('amount_inc_vat', 'day');
-			$writings->filter_with(array("categories_id" => $category->id));
+			$writings->filter_with(array("categories_id" => $category->id, 'start' => determine_first_day_of_year($timestamp), 'stop' => determine_last_day_of_year($timestamp) ));
 			$writings->select();
 			if ($writings->count() > 0) {
 				$cubismchart->start = $writings->month;
