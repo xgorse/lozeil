@@ -84,8 +84,4 @@ class Category extends Record {
 		);
 		return $result;
 	}
-	
-	function name() {
-		return 	$this->name;
-	}
 }

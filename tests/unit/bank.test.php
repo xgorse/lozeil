@@ -45,5 +45,18 @@ class tests_Bank extends TableTestCase {
 		$this->assertTrue($bank_loaded->load(1));
 		$bank->delete();
 		$this->assertFalse($bank_loaded->load(1));
+		$this->truncateTable("banks");
+	}
+	
+	function test_is_deletable() {
+		$bank = new Bank();
+		$bank->name = "premier bank";
+		$bank->save();
+		$this->assertTrue($bank->is_deletable());
+		$writing = new Writing();
+		$writing->banks_id = 1;
+		$writing->save();
+		$this->assertFalse($bank->is_deletable());
+		$this->truncateTable("banks");
 	}
 }

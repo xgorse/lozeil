@@ -10,4 +10,11 @@ class tests_Writings_Imported extends TableTestCase {
 			"writingsimported"
 		);
 	}
+	
+	function test_filter_with() {
+		$writings_imported = new Writings_Imported();
+		$writings_imported->filter_with(array('id' => 3));
+		$this->assertTrue($writings_imported->filters['id'] == 3);
+		$this->truncateTable("writingsimported");
+	}
 }

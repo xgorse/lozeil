@@ -53,5 +53,6 @@ class tests_Writing_Imported extends TableTestCase {
 		$this->assertTrue($writing_imported_loaded->load(1));
 		$writing_imported->delete();
 		$this->assertFalse($writing_imported_loaded->load(1));
+		$this->truncateTable("writingsimported");
 	}
 }

@@ -680,6 +680,7 @@ class tests_Writing extends TableTestCase {
 	
 	function test_show_further_information() {
 		$writing = new Writing();
+		$this->assertEqual("", $writing->show_further_information());
 		$writing->information = "Ceci est un complément d'information";
 		$this->assertPattern("/class=\"table_writings_comment_further_information\"/", $writing->show_further_information());
 		$this->assertPattern("/Ceci est un complément d'information/", $writing->show_further_information());
@@ -1096,5 +1097,16 @@ class tests_Writing extends TableTestCase {
 			'number' => '12345',
 			);
 		$this->assertEqual($cleaned, $writing->clean($post));
+		$this->truncateTable("writings");
+	}
+	
+	function test_is_recently_modified() {
+		$writing = new Writing();
+		$writing->save();
+		$writing->load(1);
+		$this->assertTrue($writing->is_recently_modified());
+		$writing->timestamp = $writing->timestamp - 11;
+		$this->assertFalse($writing->is_recently_modified());
+		$this->truncateTable("writings");
 	}
 }

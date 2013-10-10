@@ -77,4 +77,17 @@ class tests_Category extends TableTestCase {
 		$this->truncateTable("categories");
 		$this->truncateTable("writings");
 	}
+	
+	function test_is_in_use() {
+		$category = new Category();
+		$category->name = "premiere catégorie";
+		$category->save();
+		$this->assertFalse($category->is_in_use());
+		$writing = new Writing();
+		$writing->categories_id = 1;
+		$writing->save();
+		$this->assertTrue($category->is_in_use());
+		$this->truncateTable("categories");
+		$this->truncateTable("writings");
+	}
 }

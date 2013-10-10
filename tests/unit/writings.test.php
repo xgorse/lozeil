@@ -197,6 +197,30 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
+	function test_show_timeline_at() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 15.50;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 16.80;
+		$writing->day = mktime(10, 0, 0, 1, 10, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -15.5;
+		$writing->day = mktime(10, 0, 0, 2, 20, 2013);
+		$writing->save();
+		$writings = new Writings();
+		$timeline = $writings->show_timeline_at(mktime(0, 0, 0, 3, 1, 2013));
+		$this->assertPattern("/cubismtimeline/", $timeline);
+		$this->assertPattern("/cubism_data_title/", $timeline);
+		$this->assertPattern("/cubism_data_positive_average/", $timeline);
+		$this->assertPattern("/cubism_data_negative_average/", $timeline);
+		$this->assertPattern("/32.3/", $timeline);
+		$this->assertPattern("/16.8/", $timeline);
+		$this->truncateTable("writings");
+	}
+	
 	function test_balance_per_day_in_a_year_in_array() {
 		$writing = new Writing();
 		$writing->amount_inc_vat = 15;
@@ -268,6 +292,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertPattern("/Category 1/", $writings->determine_show_form_modify("change_category"));
 		$this->assertPattern("/sources_id/", $writings->determine_show_form_modify("change_source"));
 		$this->assertPattern("/Source 1/", $writings->determine_show_form_modify("change_source"));
+		$this->assertPattern("/accountingcodes_id/", $writings->determine_show_form_modify("change_accounting_code"));
 		$this->assertPattern("/amount_inc_vat/", $writings->determine_show_form_modify("change_amount_inc_vat"));
 		$this->assertPattern("/input/", $writings->determine_show_form_modify("change_amount_inc_vat"));
 		$this->assertPattern("/vat/", $writings->determine_show_form_modify("change_vat"));
@@ -400,6 +425,7 @@ class tests_Writings extends TableTestCase {
 			'operation' => "duplicate"
 		);
 		$this->assertEqual($writings->clean_from_ajax($post), $expected);
+		$this->truncateTable("writings");
 	}
 	
 	function test_change_amount_inc_vat() {
@@ -409,6 +435,13 @@ class tests_Writings extends TableTestCase {
 		$writing = new Writing();
 		$writing->amount_inc_vat = -3250.21;
 		$writing->save();
+		$writings = new Writings();
+		$writings->select();
+		$writings->change_amount_inc_vat(200);
+		$writing->load(1);
+		$this->assertTrue($writing->amount_inc_vat == 200);
+		$writing->load(2);
+		$this->assertTrue($writing->amount_inc_vat == 200);
 		$this->truncateTable("writings");
 	}
 	

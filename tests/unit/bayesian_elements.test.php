@@ -567,6 +567,44 @@ class tests_Bayesian_Elements extends TableTestCase {
 		$this->assertEqual($bayesianelements->element_id_estimated($writing), 2);
 		$this->truncateTable("bayesianelements");
 		
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "virement";
+		$bayesianelement->occurrences = 10;
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "telecom";
+		$bayesianelement->occurrences = 10;
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "OVH";
+		$bayesianelement->occurrences = 12;
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "virement";
+		$bayesianelement->occurrences = 10;
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->save();
+		
+		$writing = new Writing();
+		$writing->amount_inc_vat = 50;
+		$writing->comment = "ceci est un telecom OVH";
+		
+		$bayesianelements = new Bayesian_Elements();
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
+		$this->assertEqual($bayesianelements->element_id_estimated($writing), 0);
+		$this->truncateTable("bayesianelements");
+		
 		$accounting_code = new Accounting_Code();
 		$accounting_code->number = 512;
 		$accounting_code->save();
@@ -712,5 +750,6 @@ class tests_Bayesian_Elements extends TableTestCase {
 		$this->assertTrue(count($bayesianelements_in_use) == 2);
 		$this->truncateTable("bayesianelements");
 		$this->truncateTable("accountingcodes");
+		$this->truncateTable("writings");
 	}
 }

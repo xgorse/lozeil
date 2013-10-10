@@ -42,4 +42,11 @@ class tests_Accounting_Codes extends TableTestCase {
 		$this->assertEqual($fullnames[2], "603");
 		$this->truncateTable("accountingcodes");
 	}
+	
+	function test_filter_with() {
+		$accounting_codes = new Accounting_Codes();
+		$accounting_codes->filter_with(array('id' => 3));
+		$this->assertTrue($accounting_codes->filters['id'] == 3);
+		$this->truncateTable("accountingcodes");
+	}
 }

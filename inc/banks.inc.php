@@ -21,7 +21,7 @@ class Banks extends Collector  {
 		$names = array();
 		$names[0] = "--";
 		foreach ($this as $bank) {
-			$names[$bank->id] = $bank->name();
+			$names[$bank->id] = $bank->name;
 		}
 		return $names;
 	}
@@ -31,7 +31,7 @@ class Banks extends Collector  {
 		$names[0] = "--";
 		foreach ($this as $bank) {
 			if ($bank->selected == 1) {
-				$names[$bank->id] = $bank->name();
+				$names[$bank->id] = $bank->name;
 			}
 		}
 		return $names;

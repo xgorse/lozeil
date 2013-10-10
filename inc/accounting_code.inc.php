@@ -71,8 +71,4 @@ class Accounting_Code extends Record {
 
 		return $this->id;
 	}
-	
-	function number() {
-		return 	$this->number;
-	}
 }

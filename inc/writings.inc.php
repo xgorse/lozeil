@@ -259,13 +259,13 @@ class Writings extends Collector {
 	function show_timeline_at($timestamp) {
 		$writings = new Writings();
 		$writings->month = determine_first_day_of_month($timestamp);
+		$writings->filter_with(array('stop' => determine_last_day_of_year($timestamp)));
 		$writings->select_columns('amount_inc_vat', 'day');
 		$writings->select();
 		
 		$cubismchart = new Html_Cubismchart("writings");
 		$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, date('Y',$writings->month)));
 		$cubismchart->start = $writings->month;
-		
 		return $cubismchart->show();
 	}
 	
@@ -582,7 +582,7 @@ class Writings extends Collector {
 		}
 	}
 	
-	function form_update_bayesian_dictionnary() {
+	function form_update_bayesian_code() {
 		$form = "<div class=\"writings_update_bayesian_element\"><form method=\"post\" name=\"writings_update_bayesian_element_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "update_bayesian_element");
 		$submit = new Html_Input("writings_update_bayesian_element_submit",__('update dictionary'), "submit");

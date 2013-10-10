@@ -45,5 +45,6 @@ class tests_Accounting_Code extends TableTestCase {
 		$this->assertTrue($accountingcode_loaded->load(1));
 		$accountingcode->delete();
 		$this->assertFalse($accountingcode_loaded->load(1));
+		$this->truncateTable("accountingcodes");
 	}
 }

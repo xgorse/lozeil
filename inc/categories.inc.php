@@ -32,7 +32,7 @@ class Categories extends Collector  {
 		$names = array();
 		$names[0] = "--";
 		foreach ($this as $category) {
-			$names[$category->id] = $category->name();
+			$names[$category->id] = $category->name;
 		}
 		return $names;
 	}

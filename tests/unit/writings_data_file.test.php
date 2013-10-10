@@ -18,11 +18,15 @@ class tests_Writings_Data_File extends TableTestCase {
 	function test_is_ofx() {
 		$import = new Writings_Data_File("temp.123", "temp.OFX", "");
 		$this->assertTrue($import->is_ofx());
+		$import = new Writings_Data_File("temp.123", "temp.csv", "");
+		$this->assertFalse($import->is_ofx());
 	}
 	
 	function test_is_csv() {
 		$import = new Writings_Data_File("temp.123", "temp.CSV", "");
 		$this->assertTrue($import->is_csv());
+		$import = new Writings_Data_File("temp.123", "temp.ofx", "");
+		$this->assertFalse($import->is_csv());
 	}
 	
 	function test_is_line_cic() {
@@ -64,6 +68,8 @@ class tests_Writings_Data_File extends TableTestCase {
 			$row++;
 		}
 		$this->assertTrue($data->is_cic($data->csv_data));
+		$data->csv_data[0][1] = "Autre champ";
+		$this->assertFalse($data->is_cic($data->csv_data));
 	}
 	
 	function test_is_coop() {
@@ -98,6 +104,8 @@ class tests_Writings_Data_File extends TableTestCase {
 		  $row++;
 		}
 		$this->assertTrue($data->is_coop($data->csv_data));
+		$data->csv_data[0][0] = "Autre champ";
+		$this->assertFalse($data->is_coop($data->csv_data));
 	}
 	
 	function test_import_as_cic() {
