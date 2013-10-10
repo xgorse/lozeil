@@ -1030,5 +1030,71 @@ class tests_Writing extends TableTestCase {
 			);
 		$writing = new Writing();
 		$this->assertEqual($cleaned, $writing->clean($post));
+		
+		$post = array(
+			'action' => 'edit',
+			'writings_id' => '310',
+			'datepicker' => array (
+							'd' => '09',
+							'm' => '07',
+							'Y' => '2013'
+							  ),
+			'categories_id' => '2',
+			'sources_id' => '0',
+			'e243c26543db4bd701a1f3563acf584b' => '',
+			'accountingcodes_id' => '0',
+			'number' => '12345',
+			'amount_excl_vat' => '-15000.000000' ,
+			'vat' => '0.00',
+			'amount_inc_vat' => '-15000.000000',
+			'comment' => 'COOPA 09/07',
+			'paid' => '1'
+		);
+		
+		$cleaned = array(
+			'day' => mktime(0, 0, 0, 7, 9, 2013),
+			'categories_id' => '2',
+			'sources_id' => '0',
+			'paid' => '1',
+			'comment' => 'COOPA 09/07',
+			'amount_excl_vat' => '-15000.000000' ,
+			'amount_inc_vat' => '-15000.000000',
+			'vat' => '0.00',
+			'number' => '12345',
+			);
+		$this->assertEqual($cleaned, $writing->clean($post));
+		
+		$post = array(
+			'action' => 'edit',
+			'writings_id' => '310',
+			'datepicker' => array (
+							'd' => '09',
+							'm' => '07',
+							'Y' => '2013'
+							  ),
+			'categories_id' => '2',
+			'sources_id' => '0',
+			'e243c26543db4bd701a1f3563acf584b' => '',
+			'number' => '12345',
+			'amount_excl_vat' => '-15000.000000' ,
+			'vat' => '0.00',
+			'amount_inc_vat' => '-15000.000000',
+			'comment' => 'COOPA 09/07',
+			'paid' => '1'
+		);
+		
+		$cleaned = array(
+			'day' => mktime(0, 0, 0, 7, 9, 2013),
+			'accountingcodes_id' => '0',
+			'categories_id' => '2',
+			'sources_id' => '0',
+			'paid' => '1',
+			'comment' => 'COOPA 09/07',
+			'amount_excl_vat' => '-15000.000000' ,
+			'amount_inc_vat' => '-15000.000000',
+			'vat' => '0.00',
+			'number' => '12345',
+			);
+		$this->assertEqual($cleaned, $writing->clean($post));
 	}
 }

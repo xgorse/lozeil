@@ -113,7 +113,13 @@ class Writing extends Record {
 		if (isset($post['datepicker'])) {
 			$cleaned['day'] = timestamp_from_datepicker($post['datepicker']);
 		}
-		$cleaned['accountingcodes_id'] = isset($post['accountingcodes_id']) ? (int)$post['accountingcodes_id'] : 0;
+		if (isset($post['accountingcodes_id'])) {
+			if ($post['accountingcodes_id'] != 0) {
+				$cleaned['accountingcodes_id'] = (int)$post['accountingcodes_id'];
+			}
+		} else {
+			$cleaned['accountingcodes_id'] = 0;
+		}
 		$cleaned['categories_id'] = (int)$post['categories_id'];
 		$cleaned['sources_id'] = (int)$post['sources_id'];
 		$cleaned['paid'] = (int)$post['paid'];
@@ -413,7 +419,6 @@ class Writing extends Record {
 	
 	function fill($hash) {
 		$writing = parent::fill($hash);
-		
 		if($writing->banks_id > 0) {
 			$writing->amount_excl_vat = $writing->calculate_amount_excl_vat();
 		}
