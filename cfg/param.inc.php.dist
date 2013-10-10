@@ -6,3 +6,4 @@ $param['nb_max_writings'] = 100;
 //Probabilities bayesian filter
 $param['comment_weight'] = 1;
 $param['amount_inc_vat_weight'] = 3;
+$param['threshold'] = 3;

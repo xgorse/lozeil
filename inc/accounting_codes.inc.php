@@ -18,6 +18,15 @@ class Accounting_Codes extends Collector  {
 		parent::__construct($class, $table, $db);
 	}
 	
+	function filter_with() {
+		$elements = func_get_args();
+		foreach ($elements as  $element) {
+			foreach ($element as $key => $value) {
+				$this->filters[$key] = $value;
+			}
+		}
+	}
+	
 	function get_where() {
 		$where = parent::get_where();
 		

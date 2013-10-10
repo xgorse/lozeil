@@ -15,6 +15,19 @@ class Categories extends Collector  {
 		parent::__construct($class, $table, $db);
 	}
 	
+	function get_where() {
+		$where = parent::get_where();
+		
+		if (isset($this->id) and !empty($this->id)) {
+			if (!is_array($this->id)) {
+				$this->id = array((int)$this->id);
+			}
+			$where[] = $this->db->config['table_categories'].".id IN ".array_2_list($this->id);
+		}
+		
+		return $where;
+	}
+	
 	function names() {
 		$names = array();
 		$names[0] = "--";

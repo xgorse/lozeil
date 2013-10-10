@@ -69,8 +69,12 @@ class Writings_Data_File {
 	}
 	
 	function import_as_cic() {
-		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements->prepare();
+		$bayesianelements_categories_id = new Bayesian_Elements();
+		$bayesianelements_categories_id->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$bayesianelements_accounting_codes_id = new Bayesian_Elements();
+		$bayesianelements_accounting_codes_id->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		
 		$writings_imported = new Writings_Imported();
 		$writings_imported->filter_with(array("banks_id" => $this->banks_id));
 		$writings_imported->select();
@@ -99,7 +103,8 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
-					$writing->categories_id = $bayesianelements->categories_id_estimated($writing);
+					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
 					$writing->save();
 					$nb_records++;
 				} else {
@@ -113,8 +118,12 @@ class Writings_Data_File {
 	}
 	
 	function import_as_coop() {
-		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements->prepare();
+		$bayesianelements_categories_id = new Bayesian_Elements();
+		$bayesianelements_categories_id->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$bayesianelements_accounting_codes_id = new Bayesian_Elements();
+		$bayesianelements_accounting_codes_id->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		
 		$writings_imported = new Writings_Imported();
 		$writings_imported->filter_with(array("banks_id" => $this->banks_id));
 		$writings_imported->select();
@@ -154,7 +163,8 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
-					$writing->categories_id = $bayesianelements->categories_id_estimated($writing);
+					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
 					$writing->save();
 					$nb_records++;
 				} else {
@@ -168,8 +178,12 @@ class Writings_Data_File {
 	}
 	
 	function import_as_ofx() {
-		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements->prepare();
+		$bayesianelements_categories_id = new Bayesian_Elements();
+		$bayesianelements_categories_id->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$bayesianelements_accounting_codes_id = new Bayesian_Elements();
+		$bayesianelements_accounting_codes_id->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		
 		$writings_imported = new Writings_Imported();
 		$writings_imported->filter_with(array("banks_id" => $this->banks_id));
 		$writings_imported->select();
@@ -218,7 +232,8 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
-					$writing->categories_id = $bayesianelements->categories_id_estimated($writing);
+					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
 					$writing->save();
 					$nb_records++;
 				} else {

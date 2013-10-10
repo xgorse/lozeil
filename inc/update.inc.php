@@ -15,6 +15,10 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_18() {
+		$this->param->add("threshold", 3);
+	}
+	
 	function to_17() {
 		$this->param->add("comment_weight", 1);
 		$this->param->add("amount_inc_vat_weight", 3);

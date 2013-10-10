@@ -3,8 +3,8 @@
 
 class Bayesian_Elements extends Collector  {
 	public $filters = null;
-	public $count = array();
-	public $categories = array();
+	public $elements = array();
+	public $table_elements = array();
 	
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
@@ -65,22 +65,48 @@ class Bayesian_Elements extends Collector  {
 		return true;
 	}
 	
-	function prepare() {
-		$this->filter_with(array('table_name' => $GLOBALS['dbconfig']['table_categories']));
-		$this->select();
-		foreach ($this as $bayesiandictionnary) {
-			if (!isset($this->count[$bayesiandictionnary->table_id])) {
-				$this->count[$bayesiandictionnary->table_id] = array();
-			}
-			if (!isset($this->count[$bayesiandictionnary->table_id][$bayesiandictionnary->element])) {
-				$this->count[$bayesiandictionnary->table_id][$bayesiandictionnary->element] = 0;
-			}
-			$this->count[$bayesiandictionnary->table_id][$bayesiandictionnary->element] += $bayesiandictionnary->occurrences;
+	function get_distinct_table_id($table_name) {
+		$ids = array();
+		$result = $this->db->query("SELECT DISTINCT table_id FROM ".$this->db->config['table_bayesianelements']."
+			WHERE table_name = ".$this->db->quote($table_name));
+		while ($row = $this->db->fetchArray($result[0])) {
+			$ids[] = $row['table_id'];
+		}
+		return $ids;
+	}
+	
+	function get_accounting_codes_in_use() {
+		$accounting_codes = new Accounting_Codes();
+		$accounting_codes->id = $this->get_distinct_table_id($GLOBALS['dbconfig']['table_accountingcodes']);
+		$accounting_codes->select();
+		return $accounting_codes;
+	}
+	
+	function get_categories_in_use() {
+		$categories = new Categories();
+		$categories->id = $this->get_distinct_table_id($GLOBALS['dbconfig']['table_categories']);
+		$categories->select();
+		return $categories;
+	}
+	
+	function prepare_id_estimation($table_name) {
+		if ($table_name == $GLOBALS['dbconfig']['table_accountingcodes']) {
+			$this->table_elements = $this->get_accounting_codes_in_use();
+		} elseif ($table_name == $GLOBALS['dbconfig']['table_categories']) {
+			$this->table_elements = $this->get_categories_in_use();
 		}
 		
-		$categories = new Categories();
-		$categories->select();
-		$this->categories = $categories;
+		$this->filter_with(array('table_name' => $table_name));
+		$this->select();
+		foreach ($this as $bayesian_element) {
+			if (!isset($this->elements[$bayesian_element->table_id])) {
+				$this->elements[$bayesian_element->table_id] = array();
+			}
+			if (!isset($this->elements[$bayesian_element->table_id][$bayesian_element->element])) {
+				$this->elements[$bayesian_element->table_id][$bayesian_element->element] = 0;
+			}
+			$this->elements[$bayesian_element->table_id][$bayesian_element->element] += $bayesian_element->occurrences;
+		}
 	}
 		
 	function get_where() {
@@ -124,7 +150,6 @@ class Bayesian_Elements extends Collector  {
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->truncateTable();
 		$writings = new Writings();
-		$writings->filter_with(array('categories_min' => 1));
 		$writings->select();
 		foreach ($writings as $writing) {
 			$bayesianelements = new Bayesian_Elements();
@@ -134,70 +159,71 @@ class Bayesian_Elements extends Collector  {
 		return true;
 	}
 	
-	function element_probabilities($element, $categories_id) {
-		$occurrences = isset($this->count[$categories_id]) ? array_sum($this->count[$categories_id]) : 0;
-		$element_occurrence = isset($this->count[$categories_id][$element]) ? $this->count[$categories_id][$element] : 0;
+	function element_probabilities($element, $table_id) {
+		$occurrences = isset($this->elements[$table_id]) ? array_sum($this->elements[$table_id]) : 0;
+		$element_occurrence = isset($this->elements[$table_id][$element]) ? $this->elements[$table_id][$element] : 0;
 		if ($occurrences == 0) return 0;
 		return $element_occurrence/$occurrences;
 	}
 	
-	function element_weighted_probabilities($element, $category, $weight = 1.0, $assumed_probability = 0.5) {
-		$basic_probability = $this->element_probabilities($element, $category);
+	function element_weighted_probabilities($element, $table_elements, $weight = 1.0, $assumed_probability = 0.5) {
+		$basic_probability = $this->element_probabilities($element, $table_elements);
 
 		$total = 0;
-		foreach ($this->count as $category) {
-			if (isset($category[$element])) {
-				$total += $category[$element];
+		foreach ($this->elements as $table_element) {
+			if (isset($table_element[$element])) {
+				$total += $table_element[$element];
 			}
 		}
 		
 		return (($weight * $assumed_probability) + ($total * $basic_probability)) / ($weight + $total);
 	}
 	
-	function data_probability(Writing $writing, $category) {
+	function data_probability(Writing $writing, $table_elements) {
 		$probabilities = 1;
 		$data = $writing->get_data();
 		
 		foreach($data['classification_data']['comment'] as $element) {
-			$probabilities *= $this->element_weighted_probabilities($element, $category, $GLOBALS['param']['comment_weight']);
+			$probabilities *= $this->element_weighted_probabilities($element, $table_elements, $GLOBALS['param']['comment_weight']);
 		}
 		
-		$probabilities *= $this->element_weighted_probabilities($data['classification_data']['amount_inc_vat'][0], $category, $GLOBALS['param']['amount_inc_vat_weight']);
+		$probabilities *= $this->element_weighted_probabilities($data['classification_data']['amount_inc_vat'][0], $table_elements, $GLOBALS['param']['amount_inc_vat_weight']);
 		
 		return $probabilities;
 	}
 	
-	function probability(Writing $writing, $category) {
-		$proba = $this->data_probability($writing, $category);
-		if (!isset($this->count[$category])) {
+	function probability(Writing $writing, $table_elements) {
+		$proba = $this->data_probability($writing, $table_elements);
+		if (!isset($this->elements[$table_elements])) {
 			return 0;
 		}
 		$sum = 0;
-		foreach($this->count as $cat) {
-			$sum += array_sum($cat);
+		foreach($this->elements as $table_element) {
+			$sum += array_sum($table_element);
 		}
-		return (count($this->count[$category])/$sum) * $proba;
+		return (count($this->elements[$table_elements])/$sum) * $proba;
 	}
 	
-	function categories_id_estimated(Writing $writing, $category_id_default = 0, $threshold = 2) {
+	function element_id_estimated(Writing $writing, $table_element_id_default = 0) {
+		$threshold = $GLOBALS['param']['threshold'];
 		$probabilities = array();
 		$probability_max = 0;
-		$category_id_best = $category_id_default;
-		foreach ($this->categories as $category) {
-			$probabilities[$category->id] = $this->probability($writing, $category->id);
-			if ($probabilities[$category->id] > $probability_max) {
-				$probability_max = $probabilities[$category->id];
-				$category_id_best = $category->id;
+		$table_element_id_best = $table_element_id_default;
+		foreach ($this->table_elements as $table_element) {
+			$probabilities[$table_element->id] = $this->probability($writing, $table_element->id);
+			if ($probabilities[$table_element->id] > $probability_max) {
+				$probability_max = $probabilities[$table_element->id];
+				$table_element_id_best = $table_element->id;
 			}
 		}
-		foreach ($probabilities as $category_id => $probability) {
-			if ($category_id != $category_id_best) {
-				if (isset($probabilities[$category_id_best]) and $probability * $threshold > $probabilities[$category_id_best]) {
-					return $category_id_default;
+		foreach ($probabilities as $table_element_id => $probability) {
+			if ($table_element_id != $table_element_id_best) {
+				if (isset($probabilities[$table_element_id_best]) and $probability * $threshold > $probabilities[$table_element_id_best]) {
+					return $table_element_id_default;
 				}
 			}
 		}
 		
-		return $category_id_best;
+		return $table_element_id_best;
 	}
 }
