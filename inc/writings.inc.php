@@ -182,11 +182,18 @@ class Writings extends Collector {
 		$grid = array();
 		
 		foreach ($this as $writing) {
+			$class = "draggable droppable";
+			if ($writing->is_recently_modified()) {
+				$class .= " modified";
+			}
+			if ($writing->attachment) {
+				$class .= " file_attached";
+			}
 			$informations = $writing->show_further_information();
 			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
 			$checkbox->properties = array("class" => "table_checkbox");
 			$grid[] =  array(
-				'class' => $writing->is_recently_modified() ? "draggable modified" : "draggable",
+				'class' => $class,
 				'id' => "table_".$writing->id,
 				'cells' => array(
 					array(

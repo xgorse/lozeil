@@ -15,6 +15,7 @@ class Writing extends Record {
 	public $paid = 0;
 	public $search_index = "";
 	public $sources_id = 0;
+	public $attachment = 0;
 	public $timestamp = 0;
 	public $vat = 0;
 	
@@ -76,6 +77,7 @@ class Writing extends Record {
 			day = ".(int)$this->day.",	
 			search_index = ".$this->db->quote($this->search_index()).",
 			accountingcodes_id = ".(int)$this->accountingcodes_id.",
+			attachment = ".(int)$this->attachment.",
 			timestamp = ".time()."
 			WHERE id = ".(int)$this->id
 		);
@@ -99,6 +101,7 @@ class Writing extends Record {
 			day = ".(int)$this->day.",
 			search_index = ".$this->db->quote($this->search_index()).",
 			accountingcodes_id = ".(int)$this->accountingcodes_id.",
+			attachment = ".(int)$this->attachment.",
 			paid = ".(int)$this->paid.",
 			timestamp = ".time()
 		);
@@ -282,7 +285,7 @@ class Writing extends Record {
 	}
 	
 	function form_in_table() {
-		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"10\" ><div id=\"table_edit_writings\">
+		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"9\" ><div id=\"table_edit_writings\">
 			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['start']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"table_edit_writings_form\">
 			<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
@@ -312,7 +315,11 @@ class Writing extends Record {
 		$comment = new Html_Textarea("comment", $this->comment);
 		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
 		$submit = new Html_Input("submit", __('save'), "submit");
-		
+		$link = "";
+		if ($this->attachment) {
+			$link = $this->link_to_file_attached();
+		}
+				
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
@@ -354,7 +361,7 @@ class Writing extends Record {
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
-		$form .= "</form></div></div></td></tr>";
+		$form .= "</form></div></div></td><td colspan=\"2\" >".$link."</td></tr>";
 
 		return $form;
 	}
@@ -538,5 +545,29 @@ class Writing extends Record {
 			default :
 				return false;
 		}
+	}
+	
+	function link_to_file_attached() {
+		$files = new Files();
+		$files->filter_with(array('writings_id' => $this->id));
+		$files->select();
+		$link = "<div class=\"manage_writing_attachment\">";
+		foreach ($files as $file) {
+			$input_hidden_id = new Html_Input("id", $file->id);
+			$link .= "<form method=\"post\" name=\"open_writing_attachment\" action=\"\" enctype=\"multipart/form-data\">";
+			$input_name = new Html_Input("open_writing_attachment", $file->value, "submit");
+			$action = new Html_Input("action", "open_attachment");
+			$link .= $input_hidden_id->input_hidden().$action->input_hidden().$input_name->input();
+			$link .= "</form>";
+			$link .= "<form method=\"post\" name=\"delete_writing_attachment\" action=\"\" enctype=\"multipart/form-data\">";
+			$input_delete = new Html_Input("delete_writing_attachment", "X", "submit");
+			$action = new Html_Input("action", "delete_attachment");
+			$input_delete->properties = array(
+				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
+			);
+			$link .= $input_hidden_id->input_hidden().$action->input_hidden().$input_delete->input();
+			$link .= "</form><br />";
+		}
+		return $link."</div>";
 	}
 }

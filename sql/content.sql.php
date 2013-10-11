@@ -40,6 +40,7 @@ $queries = array(
 		  number VARCHAR(100),
 		  vat DECIMAL(5,2),
 		  accountingcodes_id INT(11),
+		  attachment TINYINT(1) NOT NULL DEFAULT 0,
 		  timestamp INT(10),
 		  PRIMARY KEY (`id`),
 		  KEY categories_id (categories_id),
@@ -90,6 +91,14 @@ $queries = array(
 		`table_name` VARCHAR(100),
 		`table_id` INT(11),
 		`occurrences` INT(11),
+		PRIMARY KEY (`id`)
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	
+	'files' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_files']." (
+		`id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
+		`writings_id` INT(11),
+		`hash` VARCHAR(100),
+		`value` VARCHAR(255),
 		PRIMARY KEY (`id`)
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 );

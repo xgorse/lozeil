@@ -23,6 +23,10 @@ class Theme_Default {
 	function css_files() {
 		$css_files[] = "medias/css/styles.css";
 		
+		if ($GLOBALS['content'] == "writings.php") {
+			$css_files[] = "medias/css/dropzone.css";
+		}
+		
 		$html = "";
 
 		if (is_array($css_files)) {
@@ -52,6 +56,7 @@ class Theme_Default {
 		$js_files[] = "medias/js/d3.js";
 		$js_files[] = "medias/js/cubism.js";
 		if ($GLOBALS['content'] == "writings.php") {
+			$js_files[] = "medias/js/dropzone.js";
 			$js_files[] = "medias/js/writings.jquery.js";
 			$js_files[] = "medias/js/timeline.jquery.js";
 		}

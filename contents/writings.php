@@ -11,6 +11,19 @@ if (isset($_POST['action']) and $_POST['action'] == "update_bayesian_element") {
 	$bayesianelements->train();
 }
 
+if (isset($_REQUEST['action'])) {
+	switch ($_REQUEST['action']) {
+	case "open_attachment" :
+		$file = new File();
+		$file->load((int)$_REQUEST['id']);
+		$file->open_attachment();
+		exit();
+		break;
+	default:
+		break;
+	}
+}
+
 $start = determine_integer_from_post_get_session(null, "start");
 $stop = determine_integer_from_post_get_session(null, "stop");
 

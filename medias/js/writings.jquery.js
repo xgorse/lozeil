@@ -44,6 +44,17 @@ $(document).ready(function() {
 			return false;
 		})
 		
+		.on("submit", "form[name=\"delete_writing_attachment\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					$(".manage_writing_attachment").replaceWith(data);
+				}
+			);
+			return false;
+		})
+		
 		.on("submit", "form[name=\"table_edit_writings_form\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -117,7 +128,6 @@ $(document).ready(function() {
 		.on("click", "input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit", function(event) {
 			if ($(this).next().val() == "") {
 				event.preventDefault();
-				console.log($(this).next().attr("type"));
 				if ($(this).next().attr("type") == "hidden") {
 					var next = "text";
 				} else {
@@ -238,6 +248,12 @@ $(document).ready(function() {
 });
 
 function make_drag_and_drop() {
+	$(".droppable").each(function() {
+		$(this).dropzone({
+		url: "index.php?content=writings.ajax.php",
+		paramName: $(this).attr('id')
+		})
+	});
 	$("#table_writings tr.draggable").droppable({
 		tolerance : "pointer",
 		over: function() {

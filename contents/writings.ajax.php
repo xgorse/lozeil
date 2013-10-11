@@ -3,7 +3,20 @@
 $writings = new Writings();
 list($start, $stop) = determine_month($_SESSION['start']);
 
+if (!empty($_FILES)) {
+	$file = new File();
+	$file->save_attachment($_FILES);
+	exit(0);
+}
+
 switch ($_REQUEST['action']) {
+	
+	case "delete_attachment" :
+		$file = new File();
+		$file->load((int)$_REQUEST['id']);
+		echo $file->delete_attachment();
+		exit(0);
+		break;
 	
 	case "search":
 		$accounting_codes = new Accounting_Codes();

@@ -26,6 +26,7 @@ class tests_Writing extends TableTestCase {
 		$writing->information = "Complément d'infos";
 		$writing->paid = 0;
 		$writing->sources_id = 2;
+		$writing->attachment = 1;
 		$writing->number = 132;
 		$writing->vat = 19.6;
 		$writing->save();
@@ -43,6 +44,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->paid, $writing->paid);
 		$this->assertEqual($writing_loaded->sources_id, $writing->sources_id);
 		$this->assertEqual($writing_loaded->number, $writing->number);
+		$this->assertEqual($writing_loaded->attachment, $writing->attachment);
 		$this->assertEqual($writing_loaded->vat, $writing->vat);
 		$this->truncateTable("writings");
 	}
@@ -59,6 +61,7 @@ class tests_Writing extends TableTestCase {
 		$writing->paid = 0;
 		$writing->sources_id = 2;
 		$writing->number = 132;
+		$writing->attachment = 0;
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
@@ -74,10 +77,12 @@ class tests_Writing extends TableTestCase {
 		$writing_loaded->paid = 1;
 		$writing_loaded->sources_id = 1;
 		$writing_loaded->number = 2;
+		$writing_loaded->attachment = 1;
 		$writing_loaded->vat = 5.5;
 		$writing_loaded->save();
+		$writing_loaded->load(1);
 		$this->assertEqual($writing_loaded->categories_id, 2);
-		$this->assertEqual($writing_loaded->amount_excl_vat, 19.5);
+		$this->assertEqual($writing_loaded->amount_excl_vat, 23.696682);
 		$this->assertEqual($writing_loaded->amount_inc_vat, 25);
 		$this->assertEqual($writing_loaded->banks_id, 3);
 		$this->assertEqual($writing_loaded->comment, "Ceci est un autre test");
@@ -87,6 +92,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->paid, 1);
 		$this->assertEqual($writing_loaded->sources_id, 1);
 		$this->assertEqual($writing_loaded->number, 2);
+		$this->assertEqual($writing_loaded->attachment, 1);
 		$this->assertEqual($writing_loaded->vat, 5.5);
 		$this->truncateTable("writings");
 		

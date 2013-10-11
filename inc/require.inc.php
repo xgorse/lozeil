@@ -29,6 +29,8 @@ require $current_directory."/config_file.inc.php";
 require $current_directory."/debug.inc.php";
 require $current_directory."/excel.inc.php";
 require $current_directory."/export_excel.inc.php";
+require $current_directory."/file.inc.php";
+require $current_directory."/files.inc.php";
 require $current_directory."/format.inc.php";
 require $current_directory."/heading_area.inc.php";
 require $current_directory."/html_checkbox.inc.php";

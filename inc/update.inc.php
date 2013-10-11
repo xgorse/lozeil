@@ -15,6 +15,18 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_19() {
+		$this->dbconfig->add("table_files", "files");
+		$this->db->query("ALTER TABLE `writings` ADD `attachment` TINYINT(1)  NOT NULL  DEFAULT 0  AFTER `accountingcodes_id`;");
+		$this->db->query("CREATE TABLE `files` (
+			`id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
+			`writings_id` INT(11),
+			`hash` VARCHAR(100),
+			`value` VARCHAR(255),
+			PRIMARY KEY (`id`)
+		  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+	}
+	
 	function to_18() {
 		$this->param->add("threshold", 3);
 	}

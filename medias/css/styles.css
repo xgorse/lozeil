@@ -95,7 +95,7 @@ table {
 
 .dragged {
 	position: absolute;
-	width: 92%;
+	width: 1095px;
 	cursor: move;
 }
 
@@ -225,6 +225,28 @@ input[type="submit"]:hover {
 
 #options_modify_writings {
 	margin-left: 10px;
+}
+
+#open_writing_attachment {
+	border: none;
+	cursor: pointer;
+	padding: 0px;
+	font-size: 14px;
+}
+
+#open_writing_attachment:hover {
+	background-color: white;
+	text-decoration: underline;
+}
+
+#delete_writing_attachment {
+	border: none;
+	font-size: 14px;
+}
+
+.manage_writing_attachment form[name="delete_writing_attachment"],
+.manage_writing_attachment form[name="open_writing_attachment"] {
+	display: inline-block;
 }
 
 /* --- Tables writings & writingssimulations --- */
@@ -926,4 +948,8 @@ canvas {
 
 .writings_update_bayesian_element input{
 	border: none;
+}
+
+.file_attached {
+	background-color: #f6f6f6;
 }
