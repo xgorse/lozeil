@@ -571,15 +571,19 @@ class Writings extends Collector {
 	
 	function change_amount_inc_vat($amount) {
 		foreach($this as $writing) {
-			$writing->amount_inc_vat = $amount;
-			$writing->update();
+			if ($writing->banks_id == 0) {
+				$writing->amount_inc_vat = $amount;
+				$writing->update();
+			}
 		}
 	}
 	
 	function change_day($value) {
 		foreach ($this as $writing) {
-			$writing->day = $value;
-			$writing->update();
+			if ($writing->banks_id == 0) {
+				$writing->day = $value;
+				$writing->update();
+			}
 		}
 	}
 

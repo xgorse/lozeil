@@ -63,24 +63,25 @@ class Writing extends Record {
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_writings'].
-			" SET categories_id = ".(int)$this->categories_id.",
-			banks_id = ".(int)$this->banks_id.",
-			sources_id = ".(int)$this->sources_id.",
-			amount_inc_vat = ".(float)$this->amount_inc_vat.",
-			number  = ".$this->db->quote($this->number).",
-			vat = ".(float)$this->vat.",
-			amount_excl_vat = ".$this->calculate_amount_excl_vat().",
-			comment = ".$this->db->quote($this->comment).",
-			information = ".$this->db->quote($this->information).",
-			paid = ".(int)$this->paid.",
-			day = ".(int)$this->day.",	
-			search_index = ".$this->db->quote($this->search_index()).",
-			accountingcodes_id = ".(int)$this->accountingcodes_id.",
-			attachment = ".(int)$this->attachment.",
-			timestamp = ".time()."
-			WHERE id = ".(int)$this->id
-		);
+			$result = $this->db->query("UPDATE ".$this->db->config['table_writings'].
+				" SET categories_id = ".(int)$this->categories_id.",
+				banks_id = ".(int)$this->banks_id.",
+				sources_id = ".(int)$this->sources_id.",
+				amount_inc_vat = ".(float)$this->amount_inc_vat.",
+				number  = ".$this->db->quote($this->number).",
+				vat = ".(float)$this->vat.",
+				amount_excl_vat = ".$this->calculate_amount_excl_vat().",
+				comment = ".$this->db->quote($this->comment).",
+				information = ".$this->db->quote($this->information).",
+				paid = ".(int)$this->paid.",
+				day = ".(int)$this->day.",	
+				search_index = ".$this->db->quote($this->search_index()).",
+				accountingcodes_id = ".(int)$this->accountingcodes_id.",
+				attachment = ".(int)$this->attachment.",
+				timestamp = ".time()."
+				WHERE id = ".(int)$this->id
+			);
+		
 		$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
@@ -125,10 +126,14 @@ class Writing extends Record {
 		}
 		$cleaned['categories_id'] = (int)$post['categories_id'];
 		$cleaned['sources_id'] = (int)$post['sources_id'];
-		$cleaned['paid'] = (int)$post['paid'];
+		if (isset($post['paid'])) {
+			$cleaned['paid'] = (int)$post['paid'];
+		}
+		if (isset($post['amount_inc_vat'])) {
+			$cleaned['amount_inc_vat'] = str_replace(",", ".", $post['amount_inc_vat']);
+		}
 		$cleaned['comment'] = $post['comment'];
 		$cleaned['amount_excl_vat'] = str_replace(",", ".", $post['amount_excl_vat']);
-		$cleaned['amount_inc_vat'] = str_replace(",", ".", $post['amount_inc_vat']);
 		$cleaned['vat'] = str_replace(",", ".", $post['vat']);
 		$cleaned['number'] = $post['number'];
 		return $cleaned;
@@ -318,6 +323,13 @@ class Writing extends Record {
 		$link = "";
 		if ($this->attachment) {
 			$link = $this->link_to_file_attached();
+		}
+		
+		if ($this->banks_id > 0) {
+			$disabled = array('disabled' => 'disabled');
+			$amount_inc_vat->properties = $disabled;
+			$datepicker->properties = $disabled;
+			$paid->properties = $disabled;
 		}
 				
 		$grid = array(
