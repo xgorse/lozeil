@@ -935,6 +935,7 @@ canvas {
 	display: block;
 	width: 1095px;
 	margin: 10px auto;
+	padding-bottom: 30px;
 }
 
 /* --- update dictionary --- */

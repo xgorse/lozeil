@@ -4,6 +4,7 @@
 class Writings extends Collector {
 	public $filters = null;
 	public $amounts = array();
+	public $categories_id = null;
 	
 	function __construct($class = null, $table = null, $db = null) {
 		if ($class === null) {
@@ -289,7 +290,7 @@ class Writings extends Collector {
 	function show_balance_at($timestamp_max) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
-			if($writing->day < $timestamp_max) {
+			if (($writing->day < $timestamp_max) and ((int)$writing->categories_id == $this->categories_id)) {
 				$amount += $writing->amount_inc_vat;
 			}
 		}
