@@ -168,6 +168,8 @@ switch ($_REQUEST['action']) {
 $writings->set_limit($GLOBALS['param']['nb_max_writings']);
 if (isset($_SESSION['filter'])) {
 	$writings->filter_with($_SESSION['filter']);
+} else {
+	$writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
 }
 
 $writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
