@@ -270,7 +270,6 @@ function make_drag_and_drop() {
 				{action: "merge", writing_from: writing_from, writing_into: writing_into},
 				function(data) {
 					$('#table_writings table tbody').remove();
-					refresh_balance();
 					$('#table_writings table').html(data);
 				}
 			);
