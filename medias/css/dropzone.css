@@ -124,3 +124,7 @@
 .dz-error .dz-progress, .dz-success .dz-progress{
 	display: none !important;
 }
+
+.dz-fallback {
+	display: block;
+}
