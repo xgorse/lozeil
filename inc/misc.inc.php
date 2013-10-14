@@ -376,9 +376,9 @@ function is_leap($year=NULL) {
 
 function is_datepicker_valid($time) {
 	switch (true) {
-		case empty($time['d']) :
-		case empty($time['m']) :
-		case empty($time['Y']) :
+		case !isset($time['d']) :
+		case !isset($time['m']) :
+		case !isset($time['Y']) :
 			return false;
 		default:
 			return true;

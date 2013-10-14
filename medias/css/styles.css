@@ -138,8 +138,8 @@ input[type="submit"]:hover {
 }
 
 .itemsform label {
-	width: 150px;
-	padding: 8px 20px 8px 0;
+	width: 105px;
+	padding: 4px 20px 5px 0;
 	line-height: 1em;
 	display: block;
 	text-align: right;
@@ -463,18 +463,27 @@ tr.modified {
 	border: none;
 }
 
-.extra_filter_writings_days {
+.extra_filter_item {
 	display: none;
 }
 
 #extra_filter_writings_toggle {
 	cursor: pointer;
+	margin-top: 4px;
+}
+
+#submit_hidden {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
 }
 
 /*Extra*/
 
 .extra {
 	margin: 20px 50px 10px 50px;
+	border: 1px #EDEDED solid;
 }
 
 /* --- Menu --- */

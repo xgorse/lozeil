@@ -68,11 +68,29 @@ class Writings extends Collector {
 		if (isset($this->filters['stop'])) {
 			$query_where[] = $this->db->config['table_writings'].".day <= ".(int)$this->filters['stop'];
 		}
-		if (isset($this->filters['*']) and !empty($this->filters['*'])) {
-			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filters['*']."%");
+		if (isset($this->filters['search_index']) and !empty($this->filters['search_index'])) {
+			$query_where[] = $this->db->config['table_writings'].".search_index LIKE ".$this->db->quote("%".$this->filters['search_index']."%");
 		}
 		if (isset($this->filters['categories_id'])) {
 			$query_where[] = $this->db->config['table_writings'].".categories_id = ".(int)$this->filters['categories_id'];
+		}
+		if (isset($this->filters['sources_id'])) {
+			$query_where[] = $this->db->config['table_writings'].".sources_id = ".(int)$this->filters['sources_id'];
+		}
+		if (isset($this->filters['banks_id'])) {
+			$query_where[] = $this->db->config['table_writings'].".banks_id = ".(int)$this->filters['banks_id'];
+		}
+		if (isset($this->filters['accountingcodes_id'])) {
+			$query_where[] = $this->db->config['table_writings'].".accountingcodes_id = ".(int)$this->filters['accountingcodes_id'];
+		}
+		if (isset($this->filters['amount_inc_vat'])) {
+			$query_where[] = $this->db->config['table_writings'].".amount_inc_vat = ".round((float)$this->filters['amount_inc_vat'], 6);
+		}
+		if (isset($this->filters['number'])) {
+			$query_where[] = $this->db->config['table_writings'].".number LIKE ".$this->db->quote("%".$this->filters['number']."%");
+		}
+		if (isset($this->filters['comment'])) {
+			$query_where[] = $this->db->config['table_writings'].".comment LIKE ".$this->db->quote("%".$this->filters['comment']."%");
 		}
 		if (isset($this->filters['categories_id_min'])) {
 			$query_where[] = $this->db->config['table_writings'].".categories_id >= ".(int)$this->filters['categories_id_min'];
@@ -314,10 +332,72 @@ class Writings extends Collector {
 	function form_filter($start, $stop, $value = "") {
 		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "filter");
+		$input = new Html_Input("extra_filter_writings_value",$value);
 		$date_start = new Html_Input_Date("filter_day_start", $start);
 		$date_stop = new Html_Input_Date("filter_day_stop", $stop);
-		$input = new Html_Input("extra_filter_writings_value",$value);
-		$form .= $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span><span class=\"extra_filter_writings_days\">".$date_start->input().$date_stop->input()."</span>";
+		$categories = new Categories();
+		$categories->select();
+		$sources = new Sources();
+		$sources->select();
+		if (isset($_SESSION['filter']['accountingcodes_id'])) {
+			$accountingcode = new Accounting_Code();
+			$accountingcode->load((int)$_SESSION['filter']['accountingcodes_id']);
+		}
+		$banks = new Banks();
+		$banks->select();
+		
+		$category = new Html_Select("categories_id", $categories->names(), isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
+		$source = new Html_Select("sources_id", $sources->names(), isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
+		$bank = new Html_Select("banks_id", $banks->names_of_selected_banks(), isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
+		$accountingcode_input = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), isset($_SESSION['filter']['accountingcodes_id']) ? array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname()) : array());
+		$number = new Html_Input("number", isset($_SESSION['filter']['number']) ? $_SESSION['filter']['number'] : "");
+		$amount_inc_vat = new Html_Input("amount_inc_vat", isset($_SESSION['filter']['amount_inc_vat']) ? $_SESSION['filter']['amount_inc_vat'] : "");
+		$comment = new Html_Textarea("comment", isset($_SESSION['filter']['comment']) ? $_SESSION['filter']['comment'] : "");
+		$submit = new Html_Input("submit_hidden", "", "submit");
+		
+		$grid = array(
+			'class' => 'itemsform',
+			'leaves' => array(
+				'*' => array(
+					'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
+				),
+				'date' => array(
+					'class' => "extra_filter_item",
+					'value' => $date_start->item(__('date')).$date_stop->input()
+				),
+				'category' => array(
+					'class' => "extra_filter_item",
+					'value' => $category->item(__('category'))
+				),
+				'source' => array(
+					'class' => "extra_filter_item",
+					'value' => $source->item(__('source')),
+				),
+				'bank' => array(
+					'class' => "extra_filter_item",
+					'value' => $bank->item(__('bank')),
+				),
+				'accountingcode' => array(
+					'class' => "extra_filter_item",
+					'value' => $accountingcode_input->item(__('accounting code')),
+				),
+				'number' => array(
+					'class' => "extra_filter_item",
+					'value' => $number->item(__('piece nb')),
+				),
+				'amount_inc_vat' => array(
+					'class' => "extra_filter_item",
+					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'comment' => array(
+					'class' => "extra_filter_item",
+					'value' => $comment->item(__('comment')),
+				),
+			)
+		);				
+		$list = new Html_List($grid);
+		$form .= "<div class=\"extra_filter_writings\">".
+			$list->show().$submit->input()."</div>";
 		$form .= "</form></div>";
 		
 		return $form;
@@ -605,5 +685,35 @@ class Writings extends Collector {
 		$form .= "</form></div>";
 		
 		return $form;
+	}
+	
+	function clean_filter_from_ajax($post) {
+		$cleaned = array ();
+		if (!empty($post['extra_filter_writings_value'])) {
+			$cleaned['search_index'] = $post['extra_filter_writings_value'];
+		}
+		list($cleaned['start'], $cleaned['stop']) = determine_start_stop($post['filter_day_start'], $post['filter_day_stop']);
+		if ($post['categories_id']) {
+			$cleaned['categories_id'] = $post['categories_id'];
+		}
+		if ($post['sources_id']) {
+			$cleaned['sources_id'] = $post['sources_id'];
+		}
+		if ($post['banks_id']) {
+			$cleaned['banks_id'] = $post['banks_id'];
+		}
+		if (isset($post['accountingcodes_id'])) {
+			$cleaned['accountingcodes_id'] = $post['accountingcodes_id'];
+		}
+		if (!empty($post['number'])) {
+			$cleaned['number'] = $post['number'];
+		}
+		if (!empty($post['amount_inc_vat'])) {
+			$cleaned['amount_inc_vat'] = (float)$post['amount_inc_vat'];
+		}
+		if (!empty($post['comment'])) {
+			$cleaned['comment'] = $post['comment'];
+		}
+		return $cleaned;
 	}
 }

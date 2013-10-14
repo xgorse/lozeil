@@ -1,6 +1,7 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
+unset($_SESSION['filter']);
 if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction'])) {
 	$_SESSION['order_col_name'] = 'day';
 	$_SESSION['order_direction'] = 'ASC';
@@ -42,15 +43,10 @@ $writings = new Writings();
 $writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
 $writings->add_order("amount_inc_vat DESC");
 
-$writings_filter_value = "";
-if (isset($_SESSION['filter_value_*']) and !empty($_SESSION['filter_value_*'])) {
-	$writings_filter_value = $_SESSION['filter_value_*'];
-	$writings->filter_with(array('*' => $writings_filter_value));
-}
 $writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
 $writings->select();
 
-$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['start']), $writings->form_filter($start, $stop, $writings_filter_value).$writings->form_cancel_last_operation());
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['start']), $writings->form_filter($start, $stop).$writings->form_cancel_last_operation());
 echo $heading->show();
 
 echo $writings->display();

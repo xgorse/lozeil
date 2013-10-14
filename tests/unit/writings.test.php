@@ -599,4 +599,71 @@ class tests_Writings extends TableTestCase {
 		$this->assertTrue($writing->day == mktime(0, 0, 0, 10, 25, 2013));
 		$this->truncateTable("writings");
 	}
+	
+	function test_clean_filter_from_ajax() {
+		$post = array(
+			"action" => "filter",
+			"extra_filter_writings_value" => "test",
+			"filter_day_start" => array(
+				"d" => 01,
+				"m" => 10,
+				"Y" => 2013
+				),
+			"filter_day_stop" => array(
+				"d" => 31,
+				"m" => 10,
+				"Y" => 2013
+				),
+			"categories_id" => 1,
+			"sources_id" => 1,
+			"banks_id" => 1,
+			"e243c26543db4bd701a1f3563acf584b" => 512,
+			"accountingcodes_id" => 546,
+			"number" => 124,
+			"amount_inc_vat" => 251,
+			"comment" => "Test de commentaire"
+			);
+		$expected = array(
+			"search_index" => "test",
+			"stop" => mktime(0, 0, 0, 10, 31, 2013),
+			"start" => mktime(0, 0, 0, 10, 01, 2013),
+			"categories_id" => 1,
+			"sources_id" => 1,
+			"banks_id" => 1,
+			"accountingcodes_id" => 546,
+			"number" => 124,
+			"amount_inc_vat" => 251,
+			"comment" => "Test de commentaire"
+		);
+		$writings = new Writings();
+		$this->assertEqual($expected, $writings->clean_filter_from_ajax($post));
+		
+		$post = array(
+			"action" => "filter",
+			"extra_filter_writings_value" => "",
+			"filter_day_start" => array(
+				"d" => 01,
+				"m" => 10,
+				"Y" => 2013
+				),
+			"filter_day_stop" => array(
+				"d" => 31,
+				"m" => 10,
+				"Y" => 2013
+				),
+			"categories_id" => 0,
+			"sources_id" => 0,
+			"banks_id" => 0,
+			"e243c26543db4bd701a1f3563acf584b" => 512,
+			"number" => "",
+			"amount_inc_vat" => "",
+			"comment" => ""
+			);
+		$expected = array(
+			"stop" => mktime(0, 0, 0, 10, 31, 2013),
+			"start" => mktime(0, 0, 0, 10, 01, 2013)
+		);
+		$writings = new Writings();
+		$this->assertEqual($expected, $writings->clean_filter_from_ajax($post));
+	}
 }

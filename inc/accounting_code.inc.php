@@ -71,4 +71,8 @@ class Accounting_Code extends Record {
 
 		return $this->id;
 	}
+	
+	function fullname() {
+		return $this->number." - ".$this->name;
+	}
 }

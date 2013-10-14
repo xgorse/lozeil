@@ -60,8 +60,10 @@ $(document)
 
 	window.input_ajax_get = function() {
 		var input = input_ajax_input;
-		$('#'+input.attr("id")+'-dynamic').empty();
-		$('#'+input.attr("id")+'-dynamic').show();
+		var input_dynamic = $(input).next();
+		var input_static = $(input).next().next();
+		$(input_dynamic).empty();
+		$(input_dynamic).show();
 		input.addClass("waiting");
 		$.getJSON(
 			input.attr("data-url"),
@@ -70,13 +72,13 @@ $(document)
 				for (i in data) {
 					var checkbox = $("<div><input type=\"checkbox\" value=\""+i+"\" name=\""+input.attr("data-name")+"\" class=\"input-ajax-checkbox\" /></div>");
 					checkbox.append(data[i]);
-					$('#'+input.attr("id")+'-dynamic').append(checkbox);
+					$(input_dynamic).append(checkbox);
 					checkbox.click(function() {
 						if ($(this).parent().attr("id") == input.attr("id")+'-dynamic') {
 							$(this).detach();
 							$(this).children("input").attr('checked', "checked");
-							$('#'+input.attr("id")+'-static').prepend($(this));
-							$('#'+input.attr("id")+'-dynamic').empty();
+							$(input_static).prepend($(this));
+							$(input_dynamic).empty();
 							input.hide();
 						}
 					});
