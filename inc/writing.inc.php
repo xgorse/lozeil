@@ -452,6 +452,7 @@ class Writing extends Record {
 				$new_writing->id = 0;
 				$new_writing->day = strtotime('+1 months', $new_writing->day);
 				$new_writing->banks_id = 0;
+				$new_writing->number = "";
 				$new_writing->save();
 			}
 		} else {
@@ -463,6 +464,7 @@ class Writing extends Record {
 						$new_writing->id = 0;
 						$new_writing->day = strtotime('+1 months', $new_writing->day);
 						$new_writing->banks_id = 0;
+						$new_writing->number = "";
 						$new_writing->save();
 					}
 				} elseif(preg_match("/(q)|(t)/i", $split[1])) {
@@ -471,6 +473,7 @@ class Writing extends Record {
 						$new_writing->id = 0;
 						$new_writing->day = strtotime('+3 months', $new_writing->day);
 						$new_writing->banks_id = 0;
+						$new_writing->number = "";
 						$new_writing->save();
 					}
 				} elseif(preg_match("/(a)|(y)/i", $split[1])) {
@@ -479,6 +482,7 @@ class Writing extends Record {
 						$new_writing->id = 0;
 						$new_writing->day = strtotime('+1 year', $new_writing->day);
 						$new_writing->banks_id = 0;
+						$new_writing->number = "";
 						$new_writing->save();
 					}
 				}

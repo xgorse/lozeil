@@ -679,6 +679,22 @@ class tests_Writing extends TableTestCase {
 		$writing->load(4);
 		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
 		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->day = mktime(0, 0, 0, 9, 5, 2013);
+		$writing->number = "12345 / 12346";
+		$writing->save();
+		$writing->duplicate('2m');
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 3);
+		$writing->load(2);
+		$this->assertEqual(mktime(0, 0, 0, 10, 5, 2013), $writing->day);
+		$this->assertTrue(empty($writing->number));
+		$writing->load(3);
+		$this->assertEqual(mktime(0, 0, 0, 11, 5, 2013), $writing->day);
+		$this->assertTrue(empty($writing->number));
+		$this->truncateTable("writings");
 	}
 	
 	function test_show_further_information() {
