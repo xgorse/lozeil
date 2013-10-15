@@ -63,6 +63,7 @@ $__['Finish updating SVN'] = "Fin de la mise à jour du SVN";
 $__['hide form'] = "masquer le formulaire";
 $__['id'] = "id";
 $__['import bank statement'] = "importer le journal de banque";
+$__['import writings from source'] = "importer des enregistrement d'une source";
 $__['information'] = "information";
 $__['last'] = "dernier";
 $__['less'] = "moins";

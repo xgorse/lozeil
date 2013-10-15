@@ -61,7 +61,10 @@ class Menu_Area {
 							   Html_tag::a(link_content("content=accountingplan.php"), __("accounting plan"))
 				),
 				array(
-					'value' => $data->form_import()
+					'value' => $data->form_import_bank()
+				),
+				array(
+					'value' => $data->form_import_source()
 				),
 				array(
 					'value' =>  "<a id=\"menu_actions_export_label\" href=\"\">".utf8_ucfirst(__("export writings"))."</a>".$data->form_export()

@@ -6,6 +6,7 @@ class Writings_Data_File {
 	public $tmp_name = "";
 	public $type = "";
 	public $banks_id = 0;
+	public $sources_id = 0;
 	public $csv_data = array();
 	public $unique_keys = array();
 	
@@ -19,13 +20,23 @@ class Writings_Data_File {
 	function import() {
 		if ($this->is_csv()) {
 			$this->prepare_csv_data();
-			if ($this->is_cic($this->csv_data)) {
-				$this->import_as_cic();
-			} elseif ($this->is_coop($this->csv_data)) {
-				$this->import_as_coop();
-			} else {
-				log_status(__(('file %s is not in supported format'),  $this->file_name));
+			
+			if ($this->banks_id > 0) {
+				if ($this->is_cic($this->csv_data)) {
+					$this->import_as_cic();
+				} elseif ($this->is_coop($this->csv_data)) {
+					$this->import_as_coop();
+				} else {
+					log_status(__(('file %s is not in supported format'),  $this->file_name));
+				}
+			} elseif ($this->sources_id > 0) {
+				if ($this->is_paybox($this->csv_data)) {
+					$this->import_as_paybox();
+				} else {
+					log_status(__(('file %s is not in supported format'),  $this->file_name));
+				}
 			}
+			
 		} elseif ($this->is_ofx()) {
 			$this->import_as_ofx();
 		}
@@ -44,6 +55,22 @@ class Writings_Data_File {
 			fclose($file_opened);
 		} else {
 			log_status(__('can not open file')." : ".$this->file_name);
+		}
+	}
+	
+	function is_paybox($data) {
+		switch (true) {
+			case $data[0][6] != "Date":
+			case $data[0][12] != "Reference":
+			case $data[0][13] != "Origin":
+			case $data[0][15] != "Canal":
+			case $data[0][17] != "Amount":
+			case $data[0][21] != "Country":
+			case $data[0][23] != "Payment":
+			case $data[0][28] != "Status":
+				return false;
+			default :
+				return true;
 		}
 	}
 	
@@ -66,6 +93,64 @@ class Writings_Data_File {
 			default :
 				return true;
 		}
+	}
+	
+	function import_as_paybox() {
+		$bayesianelements_categories_id = new Bayesian_Elements();
+		$bayesianelements_categories_id->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$bayesianelements_accounting_codes_id = new Bayesian_Elements();
+		$bayesianelements_accounting_codes_id->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		
+		$writings_imported = new Writings_Imported();
+		$writings_imported->filter_with(array("sources_id" => $this->sources_id));
+		$writings_imported->select();
+		foreach ($writings_imported as $writing_imported) {
+			$this->unique_keys[] = $writing_imported->hash;
+		}
+		
+		$nb_records = 0;
+		$row_names = $this->csv_data[0];
+		unset($this->csv_data[0]);
+
+		foreach ($this->csv_data as $line) {
+			if ($this->is_line_paybox($line)) {
+				$information = "";
+				if (!empty($line[4])) $information .= $row_names[4]." : ".$line[4]."\n";
+				if (!empty($line[15])) $information .= $row_names[15]." : ".$line[15]."\n";
+				if (!empty($line[21])) $information .= $row_names[21]." : ".$line[21]."\n";
+				if (!empty($line[4])) $information .= $row_names[23]." : ".$line[23]."\n";
+				if (!empty($line[4])) $information .= $row_names[28]." : ".$line[28]."\n";
+				$writing = new Writing();
+				$time = explode("/", $line[6]);
+				$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
+				$writing->comment = $line[12]." ".$line[13];
+				$writing->sources_id = $this->sources_id;
+				if (!empty($information)) {
+					$writing->information = utf8_encode($information);
+				}
+				$amount_inc_vat = substr($line[17], 0, -2).".".substr($line[17], -2);
+				$writing->amount_inc_vat = (float)$amount_inc_vat;
+				$writing->paid = 1;
+				$hash = hash('md5', $writing->day.$writing->comment.$writing->sources_id.$writing->amount_inc_vat.$writing->information);
+				
+				if (!in_array($hash, $this->unique_keys)) {
+					$writing_imported = new Writing_Imported();
+					$writing_imported->hash = $hash;
+					$writing_imported->sources_id = $this->sources_id;
+					$writing_imported->save();
+					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
+					$writing->save();
+					$nb_records++;
+				} else {
+					//log_status(__('line %s of file %s already exists', array(implode(' - ', $line), $this->file_name)));
+				}
+			} else {
+				log_status(__('line %s of file %s is not in coop format', array(implode(' - ', $line), $this->file_name)));
+			}
+		}
+		log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
 	}
 	
 	function import_as_cic() {
@@ -244,6 +329,17 @@ class Writings_Data_File {
 		log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
 	}
 	
+	function is_line_paybox($line) {
+		$time = explode("/", $line[6]);
+		
+		switch (true) {
+			case (!isset($time[1]) OR !isset($time[2])) :
+				return false;
+			default :
+				return true;
+		}
+	}
+	
 	function is_line_cic($line) {
 		$time = explode("/", $line[1]);
 		
@@ -269,14 +365,26 @@ class Writings_Data_File {
 		}
 	}
 	
-	function form_import() {
+	function form_import_bank() {
 		$banks = new Banks();
 		$banks->select();
-		$form = "<div id=\"menu_actions_import\"><form method=\"post\" name=\"menu_actions_import_form\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
+		$form = "<div id=\"menu_actions_import_bank\"><form method=\"post\" name=\"menu_actions_import_bank_form\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
 		$import_file = new Html_Input("menu_actions_import_file", "", "file");
 		$bank_select = new Html_Select("menu_actions_import_bank", $banks->names_of_selected_banks());
 		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
-		$form .= "<a id=\"menu_actions_import_label\" href=\"\">".utf8_ucfirst(__("import bank statement"))."</a>".$import_file->item("").$bank_select->item("").$submit->input();
+		$form .= "<a class=\"menu_actions_import_label\" href=\"\">".utf8_ucfirst(__("import bank statement"))."</a>".$import_file->item("").$bank_select->item("").$submit->input();
+		$form .= "</form></div>";
+		return $form;
+	}
+	
+	function form_import_source() {
+		$sources = new Sources();
+		$sources->select();
+		$form = "<div id=\"menu_actions_import_source\"><form method=\"post\" name=\"menu_actions_import_source_form\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
+		$import_file = new Html_Input("menu_actions_import_file", "", "file");
+		$bank_select = new Html_Select("menu_actions_import_source", $sources->names());
+		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
+		$form .= "<a class=\"menu_actions_import_label\" href=\"\">".utf8_ucfirst(__("import writings from source"))."</a>".$import_file->item("").$bank_select->item("").$submit->input();
 		$form .= "</form></div>";
 		return $form;
 	}

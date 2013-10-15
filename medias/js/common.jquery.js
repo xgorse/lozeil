@@ -33,7 +33,7 @@ $(document)
 		
 		$("#menu_actions_export").hide();
 		
-		$("#menu_actions_import_label").nextAll().hide();
+		$(".menu_actions_import_label").nextAll().hide();
 		
 		$(".menu_handle").on("click", function() {
 			if ($(this).hasClass("hide")) {
@@ -50,7 +50,7 @@ $(document)
 			$("#menu_actions_export").toggle();
 			return false;
 		})
-		$("#menu_actions_import_label").on("click", function() {
+		$(".menu_actions_import_label").on("click", function() {
 			$(this).nextAll().toggle();
 			return false;
 		})

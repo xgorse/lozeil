@@ -29,6 +29,80 @@ class tests_Writings_Data_File extends TableTestCase {
 		$this->assertFalse($import->is_csv());
 	}
 	
+	function test_is_line_paybox() {
+		$import = new Writings_Data_File();
+		$mydata = array (
+				0 => '967003686',
+				1 => '261556',
+				2 => '5135830',
+				3 => '001',
+				4 => 'OPENTIME.FR',
+				5 => '507355493',
+				6 => '13/08/2013',
+				7 => '966899879',
+				8 => '1024997136',
+				9 => '12/08/2013',
+				10 => '0917',
+				11 => '12/08/2013',
+				12 => 'opentime.fr',
+				13 => 'PPPS->AutoDebitAbonne',
+				14 => 'Autorisation',
+				15 => 'Paybox Direct Plus',
+				16 => '652256', 
+				17 => '26910',
+				18 => '978',
+				19 => '',
+				20 => '',
+				21 => 'FRA',
+				22 => '',
+				23 => 'CB-Visa',
+				24 => '',
+				25 => '',
+				26 => '',
+				27 => 'aaaaaa',
+				28 => 'T�l�collect�',
+				29 => '',
+				30 => '', 
+				31 => ''
+			);
+		$mydata2 = array (
+				0 => '967003686',
+				1 => '261556',
+				2 => '5135830',
+				3 => '001',
+				4 => 'OPENTIME.FR',
+				5 => '507355493',
+				6 => '13.08.2013',
+				7 => '966899879',
+				8 => '1024997136',
+				9 => '12/08/2013',
+				10 => '0917',
+				11 => '12/08/2013',
+				12 => 'opentime.fr',
+				13 => 'PPPS->AutoDebitAbonne',
+				14 => 'Autorisation',
+				15 => 'Paybox Direct Plus',
+				16 => '652256', 
+				17 => '26910',
+				18 => '978',
+				19 => '',
+				20 => '',
+				21 => 'FRA',
+				22 => '',
+				23 => 'CB-Visa',
+				24 => '',
+				25 => '',
+				26 => '',
+				27 => 'aaaaaa',
+				28 => 'T�l�collect�',
+				29 => '',
+				30 => '', 
+				31 => ''
+			);
+		$this->assertTrue($import->is_line_paybox($mydata));
+		$this->assertFalse($import->is_line_paybox($mydata2));
+	}
+	
 	function test_is_line_cic() {
 		$import = new Writings_Data_File();
 		$mydata = array("01/07/2013", "01/07/2013", "", "152,20", "test de libellé", "123456");
@@ -41,7 +115,6 @@ class tests_Writings_Data_File extends TableTestCase {
 		$this->assertTrue($import->is_line_cic($mydata4));
 	}
 	
-	
 	function test_is_line_coop() {
 		$import = new Writings_Data_File();
 		$mydata = array("27/08/2013", "" , "", "12.52","DEBIT");
@@ -50,6 +123,90 @@ class tests_Writings_Data_File extends TableTestCase {
 		$this->assertTrue($import->is_line_coop($mydata));
 		$this->assertFalse($import->is_line_coop($mydata2));
 		$this->assertFalse($import->is_line_coop($mydata3));
+	}
+	
+	function test_is_paybox() {
+		$mydata = array (
+			0 => array (
+				0 => 'RemittancePaybox',
+				1 => 'Bank',
+				2 => 'Site',
+				3 => 'Rank',
+				4 => 'ShopName',
+				5 => 'IdPaybox',
+				6 => 'Date',
+				7 => 'TransactionId',
+				8 => 'IdAppel',
+				9 => 'DateOfIssue',
+				10 => 'HourOfIssue',
+				11 => 'DateOfExpiry',
+				12 => 'Reference',
+				13 => 'Origin',
+				14 => 'Type',
+				15 => 'Canal',
+				16 => 'NumberOfAuthorization',
+				17 => 'Amount',
+				18 => 'Currency',
+				19 => 'Entity',
+				20 => 'Operator',
+				21 => 'Country',
+				22 => 'CountryIP',
+				23 => 'Payment',
+				24 => 'ThreeDSecureStatus',
+				25 => 'ThreeDSecureInscription',
+				26 => 'ThreeDSecureWarranted',
+				27 => 'RefArchive',
+				28 => 'Status',
+				29 => 'PAN',
+				30 => 'IP',
+				31 => 'ErrorCode'
+			),
+			1 => array (
+				0 => '967003686',
+				1 => '261556',
+				2 => '5135830',
+				3 => '001',
+				4 => 'OPENTIME.FR',
+				5 => '507355493',
+				6 => '13/08/2013',
+				7 => '966899879',
+				8 => '1024997136',
+				9 => '12/08/2013',
+				10 => '0917',
+				11 => '12/08/2013',
+				12 => 'opentime.fr',
+				13 => 'PPPS->AutoDebitAbonne',
+				14 => 'Autorisation',
+				15 => 'Paybox Direct Plus',
+				16 => '652256', 
+				17 => '26910',
+				18 => '978',
+				19 => '',
+				20 => '',
+				21 => 'FRA',
+				22 => '',
+				23 => 'CB-Visa',
+				24 => '',
+				25 => '',
+				26 => '',
+				27 => 'aaaaaa',
+				28 => 'T�l�collect�',
+				29 => '',
+				30 => '', 
+				31 => ''
+			)
+		);
+		$data = new Writings_Data_File();
+		$row = 0;
+		foreach ($mydata as $line) {
+			foreach ($line as $key => $value) {
+				$data->csv_data[$row][$key] = trim($value);
+			}
+			$row++;
+		}
+		$this->assertTrue($data->is_paybox($data->csv_data));
+		$data->csv_data[0][6] = "Autre champ";
+		$this->assertFalse($data->is_paybox($data->csv_data));
 	}
 	
 	function test_is_cic() {
@@ -106,6 +263,168 @@ class tests_Writings_Data_File extends TableTestCase {
 		$this->assertTrue($data->is_coop($data->csv_data));
 		$data->csv_data[0][0] = "Autre champ";
 		$this->assertFalse($data->is_coop($data->csv_data));
+	}
+	
+	function test_import_as_paybox() {
+		$name = tempnam('/tmp', 'csv');
+		
+		$mydata = array (
+			0 => array (
+				0 => 'RemittancePaybox',
+				1 => 'Bank',
+				2 => 'Site',
+				3 => 'Rank',
+				4 => 'ShopName',
+				5 => 'IdPaybox',
+				6 => 'Date',
+				7 => 'TransactionId',
+				8 => 'IdAppel',
+				9 => 'DateOfIssue',
+				10 => 'HourOfIssue',
+				11 => 'DateOfExpiry',
+				12 => 'Reference',
+				13 => 'Origin',
+				14 => 'Type',
+				15 => 'Canal',
+				16 => 'NumberOfAuthorization',
+				17 => 'Amount',
+				18 => 'Currency',
+				19 => 'Entity',
+				20 => 'Operator',
+				21 => 'Country',
+				22 => 'CountryIP',
+				23 => 'Payment',
+				24 => 'ThreeDSecureStatus',
+				25 => 'ThreeDSecureInscription',
+				26 => 'ThreeDSecureWarranted',
+				27 => 'RefArchive',
+				28 => 'Status',
+				29 => 'PAN',
+				30 => 'IP',
+				31 => 'ErrorCode'
+			),
+			1 => array (
+				0 => '967003686',
+				1 => '261556',
+				2 => '5135830',
+				3 => '001',
+				4 => 'OPENTIME.FR',
+				5 => '507355493',
+				6 => '13/08/2013',
+				7 => '966899879',
+				8 => '1024997136',
+				9 => '12/08/2013',
+				10 => '0917',
+				11 => '12/08/2013',
+				12 => 'opentime.fr',
+				13 => 'PPPS->AutoDebitAbonne',
+				14 => 'Autorisation',
+				15 => 'Paybox Direct Plus',
+				16 => '652256', 
+				17 => '26910',
+				18 => '978',
+				19 => '',
+				20 => '',
+				21 => 'FRA',
+				22 => '',
+				23 => 'CB-Visa',
+				24 => '',
+				25 => '',
+				26 => '',
+				27 => 'aaaaaa',
+				28 => 'Telecollecte',
+				29 => '',
+				30 => '', 
+				31 => ''
+			),
+			2 => array (
+				0 => '967003686',
+				1 => '261556',
+				2 => '5135830',
+				3 => '001',
+				4 => 'LOZEIL',
+				5 => '507355493',
+				6 => '13/08/2013',
+				7 => '966899879',
+				8 => '1024997136',
+				9 => '12/08/2013',
+				10 => '0917',
+				11 => '12/08/2013',
+				12 => 'lozeil',
+				13 => 'adrien.delannoy@noparking.net',
+				14 => 'Autorisation',
+				15 => 'Paybox Direct Plus',
+				16 => '652256', 
+				17 => '24000',
+				18 => '978',
+				19 => '',
+				20 => '',
+				21 => 'FRA',
+				22 => '',
+				23 => 'CB-Mastercard',
+				24 => '',
+				25 => '',
+				26 => '',
+				27 => 'aaaaaa',
+				28 => 'Telecollecte',
+				29 => '',
+				30 => '', 
+				31 => ''
+			)
+		);
+		
+		$handle = fopen($name, 'w+');
+		
+		foreach($mydata as $data) {
+			fputcsv($handle, $data, ";");
+		}
+		
+		$data = new Writings_Data_File($name);
+		$data->sources_id = 1;
+		$data->prepare_csv_data();
+		$data->import_as_paybox();
+		
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 1,
+				'amount_inc_vat' => "269.1000000",
+				'sources_id' => 1,
+				'comment' => "opentime.fr PPPS->AutoDebitAbonne",
+				'information' => "ShopName : OPENTIME.FR
+Canal : Paybox Direct Plus
+Country : FRA
+Payment : CB-Visa
+Status : Telecollecte
+"
+			)
+		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 2,
+				'amount_inc_vat' => "240.000000",
+				'sources_id' => 1,
+				'comment' => "lozeil adrien.delannoy@noparking.net",
+				'information' => "ShopName : LOZEIL
+Canal : Paybox Direct Plus
+Country : FRA
+Payment : CB-Mastercard
+Status : Telecollecte
+"
+			)
+		);
+		$data = new Writings_Data_File($name);
+		$data->sources_id = 1;
+		$data->prepare_csv_data();
+		$data->import_as_cic();
+		
+		fclose($handle);
+		unlink($name);
+		$writing = new Writing();
+		$this->assertFalse($writing->load(3));
+		$this->truncateTable("writings");
+		$this->truncateTable("writingsimported");
 	}
 	
 	function test_import_as_cic() {
@@ -182,7 +501,6 @@ class tests_Writings_Data_File extends TableTestCase {
 		$this->truncateTable("writings");
 		$this->truncateTable("writingsimported");
 	}
-	
 	
 	function test_import_as_coop() {
 		$name = tempnam('/tmp', 'csv');
@@ -274,10 +592,10 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		$this->truncateTable("writingsimported");
 	}
 	
-	function test_form_import() {
+	function test_form_import_bank() {
 		$data = new Writings_Data_File();
-		$form_import = $data->form_import("label");
-		$this->assertPattern("/id=\"menu_actions_import\"/", $form_import);
+		$form_import = $data->form_import_bank("label");
+		$this->assertPattern("/id=\"menu_actions_import_bank\"/", $form_import);
 		$this->assertPattern("/label/", $form_import);
 		$this->assertPattern("/menu_actions_import_file/", $form_import);
 		$this->assertPattern("/menu_actions_import_submit/", $form_import);

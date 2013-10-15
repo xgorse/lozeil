@@ -499,6 +499,11 @@ tr.modified {
 	z-index: 9999;
 }
 
+.menu_actions input[type="submit"],
+.menu_actions label{
+	margin: 0;
+}
+
 #menu_header_balance {
 	margin-left: 50px;
 	margin-top: 3px;
