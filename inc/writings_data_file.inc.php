@@ -19,6 +19,11 @@ class Writings_Data_File {
 		$this->csv_data = array();
 	}
 	
+	function determine_start_stop($timestamp) {
+		$this->start = !isset($this->start) ? $timestamp : min($this->start, $timestamp);
+		$this->stop = !isset($this->stop) ? $timestamp : max($this->stop, $timestamp);
+	}
+	
 	function import() {
 		if ($this->is_csv()) {
 			$this->prepare_csv_data();
@@ -119,8 +124,7 @@ class Writings_Data_File {
 		foreach ($this->csv_data as $line) {
 			if ($this->is_line_paybox($line)) {
 				$information = "";
-				$columns_for_information = array(4, 7, 15, 21, 23, 28, 30);
-				foreach ($columns_for_information as $nb) {
+				foreach (array(4, 7, 15, 21, 23, 28, 30) as $nb) {
 					if (!empty($line[$nb])) $information .= $row_names[$nb]." : ".$line[$nb]."\n";
 				}
 				$writing = new Writing();
@@ -128,17 +132,13 @@ class Writings_Data_File {
 				$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 				$writing->comment = $line[12]." ".$line[13];
 				$writing->sources_id = $this->sources_id;
-				if (!empty($information)) {
-					$writing->information = utf8_encode($information);
-				}
-				$amount_inc_vat = substr($line[17], 0, -2).".".substr($line[17], -2);
-				$writing->amount_inc_vat = (float)$amount_inc_vat;
+				$writing->information = utf8_encode($information);
+				$writing->amount_inc_vat = (float)(substr($line[17], 0, -2).".".substr($line[17], -2));
 				$writing->paid = 1;
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->sources_id.$writing->amount_inc_vat.$writing->information);
 				
 				if (!in_array($hash, $this->unique_keys)) {
-					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
-					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+					$this->determine_start_stop($writing->day);
 
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
@@ -181,16 +181,11 @@ class Writings_Data_File {
 				$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 				$writing->comment = $line[4];
 				$writing->banks_id = $this->banks_id;
-				if (!empty($line[2])) {
-					$writing->amount_inc_vat = (float)str_replace(",", ".", $line[2]);
-				} else {
-					$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
-				}
+				$writing->amount_inc_vat = !empty($line[2]) ? (float)str_replace(",", ".", $line[2]) : (float)str_replace(",", ".", $line[3]);
 				$writing->paid = 1;
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 				if (!in_array($hash, $this->unique_keys)) {
-					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
-					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+					$this->determine_start_stop($writing->day);
 
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
@@ -241,9 +236,7 @@ class Writings_Data_File {
 				$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
 				$writing->comment = $line[1];
 				$writing->banks_id = $this->banks_id;
-				if (!empty($information)) {
-					$writing->information = utf8_encode($information);
-				}
+				$writing->information = utf8_encode($information);
 				if ($line[4] == "DEBIT") {
 					$line[3] = "-".$line[3];
 				}
@@ -252,8 +245,7 @@ class Writings_Data_File {
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 				
 				if (!in_array($hash, $this->unique_keys)) {
-					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
-					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+					$this->determine_start_stop($writing->day);
 
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
@@ -324,8 +316,7 @@ class Writings_Data_File {
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 
 				if (!in_array($hash, $this->unique_keys)) {
-					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
-					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+					$this->determine_start_stop($writing->day);
 
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
