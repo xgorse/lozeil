@@ -129,7 +129,7 @@ class tests_Writings extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->add_order("day ASC");
-		$writings->filter_with(array('*' => "élément"));
+		$writings->filter_with(array('search_index' => "élément"));
 		$writings->select();
 		
 		$table = $writings->show();
@@ -138,7 +138,7 @@ class tests_Writings extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->add_order("day ASC");
-		$writings->filter_with(array('*' => "Bank"));
+		$writings->filter_with(array('search_index' => "Bank"));
 		$writings->select();
 		
 		$table = $writings->show();
@@ -147,7 +147,7 @@ class tests_Writings extends TableTestCase {
 		
 		$writings = new Writings();
 		$writings->add_order("day ASC");
-		$writings->filter_with(array('*' => "Source 1"));
+		$writings->filter_with(array('search_index' => "Source 1"));
 		$writings->select();
 		
 		$table = $writings->show();
@@ -256,10 +256,10 @@ class tests_Writings extends TableTestCase {
 
 	function test_filter_with() {
 		$writings = new Writings();
-		$writings->filter_with(array('start' => mktime(0, 0, 0, 3, 9, 2013), 'stop' => mktime(0, 0, 0, 3, 10, 2013), '*' => 'fullsearch'));
+		$writings->filter_with(array('start' => mktime(0, 0, 0, 3, 9, 2013), 'stop' => mktime(0, 0, 0, 3, 10, 2013), 'search_index' => 'fullsearch'));
 		$this->assertEqual($writings->filters['start'], 1362783600);
 		$this->assertEqual($writings->filters['stop'], 1362870000);
-		$this->assertEqual($writings->filters['*'], "fullsearch");
+		$this->assertEqual($writings->filters['search_index'], "fullsearch");
 		$this->truncateTable("writings");
 	}
 	

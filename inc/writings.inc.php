@@ -84,7 +84,7 @@ class Writings extends Collector {
 			$query_where[] = $this->db->config['table_writings'].".accountingcodes_id = ".(int)$this->filters['accountingcodes_id'];
 		}
 		if (isset($this->filters['amount_inc_vat'])) {
-			$query_where[] = $this->db->config['table_writings'].".amount_inc_vat = ".round((float)$this->filters['amount_inc_vat'], 6);
+			$query_where[] = $this->db->config['table_writings'].".amount_inc_vat = ".(float)$this->filters['amount_inc_vat'];
 		}
 		if (isset($this->filters['number'])) {
 			$query_where[] = $this->db->config['table_writings'].".number LIKE ".$this->db->quote("%".$this->filters['number']."%");
@@ -709,7 +709,7 @@ class Writings extends Collector {
 			$cleaned['number'] = $post['number'];
 		}
 		if (!empty($post['amount_inc_vat'])) {
-			$cleaned['amount_inc_vat'] = (float)$post['amount_inc_vat'];
+			$cleaned['amount_inc_vat'] = (float)str_replace(",", ".", $post['amount_inc_vat']);
 		}
 		if (!empty($post['comment'])) {
 			$cleaned['comment'] = $post['comment'];
