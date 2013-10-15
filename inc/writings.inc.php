@@ -95,8 +95,20 @@ class Writings extends Collector {
 		if (isset($this->filters['categories_id_min'])) {
 			$query_where[] = $this->db->config['table_writings'].".categories_id >= ".(int)$this->filters['categories_id_min'];
 		}
+		if (isset($this->filters['duplicate'])) {
+			$query_where[] = $this->db->config['table_writings'].".amount_inc_vat IN ".$this->filters['duplicate'];
+		}
 		
 		return $query_where;
+	}
+	
+	function set_filter_duplicate($start, $stop) {
+		$query_duplicate = "(SELECT amount_inc_vat
+			FROM ".$this->db->config['table_writings']."
+			WHERE (day >= ".$start." AND day <= ".$stop.")
+			GROUP BY amount_inc_vat
+			HAVING COUNT(*) > 1)";
+		$this->filter_with(array("duplicate" => $query_duplicate));
 	}
 	
 	function grid_header() {
@@ -353,6 +365,7 @@ class Writings extends Collector {
 		$number = new Html_Input("number", isset($_SESSION['filter']['number']) ? $_SESSION['filter']['number'] : "");
 		$amount_inc_vat = new Html_Input("amount_inc_vat", isset($_SESSION['filter']['amount_inc_vat']) ? $_SESSION['filter']['amount_inc_vat'] : "");
 		$comment = new Html_Textarea("comment", isset($_SESSION['filter']['comment']) ? $_SESSION['filter']['comment'] : "");
+		$checkbox = new Html_Checkbox("duplicate", "duplicate", isset($_SESSION['filter']['duplicate']) ? $_SESSION['filter']['duplicate'] : 0);
 		$submit = new Html_Input("submit_hidden", "", "submit");
 		
 		$grid = array(
@@ -392,6 +405,10 @@ class Writings extends Collector {
 				'comment' => array(
 					'class' => "extra_filter_item",
 					'value' => $comment->item(__('comment')),
+				),
+				'checkbox' => array(
+					'class' => "extra_filter_item",
+					'value' => $checkbox->item(__('duplicates')),
 				),
 			)
 		);				

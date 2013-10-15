@@ -228,6 +228,11 @@ $(document).ready(function() {
 					$(this).closest(".extra_filter_item").hide();
 				}
 			})
+			$(".extra_filter_item input[type=\"checkbox\"]").each(function () {
+				if (!this.checked) {
+					$(this).closest(".extra_filter_item").hide();
+				}
+			})
 			if ($(".extra_filter_item textarea").val() == "") {
 				$(".extra_filter_item textarea").closest(".extra_filter_item").hide();
 			}

@@ -16,6 +16,38 @@ class tests_Writings extends TableTestCase {
 		);
 	}
 	
+	function test_select_duplicate() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 250;
+		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 250;
+		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -250;
+		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 249;
+		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->save();
+		$writing->amount_inc_vat = 0;
+		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->set_filter_duplicate(mktime(0, 0, 0, 10, 14, 2013), mktime(0, 0, 0, 10, 16, 2013));
+		$this->assertTrue($writings->filters['duplicate'] == "(SELECT amount_inc_vat
+			FROM ".$this->db->config['table_writings']."
+			WHERE day >= ".mktime(0, 0, 0, 10, 14, 2013)." AND day <= ".mktime(0, 0, 0, 10, 16, 2013)."
+			GROUP BY amount_inc_vat
+			HAVING COUNT(*) > 1)");
+		
+		$this->truncateTable("writings");
+	}
+	
 	function test_get_join() {
 		$writings = new Writings();
 		$writings->filter_with(array("timestamp" => 3));
