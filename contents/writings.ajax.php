@@ -166,7 +166,7 @@ $writings->set_limit($GLOBALS['param']['nb_max_writings']);
 $writings->filter_with($_SESSION['filter']);
 
 $writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['direction']);
-$writings->add_order("amount_inc_vat DESC");
+$writings->add_order("number DESC, amount_inc_vat DESC");
 $writings->select();
 
 echo $writings->show();
