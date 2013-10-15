@@ -41,7 +41,7 @@ class tests_Writings extends TableTestCase {
 		$writings->set_filter_duplicate(mktime(0, 0, 0, 10, 14, 2013), mktime(0, 0, 0, 10, 16, 2013));
 		$this->assertTrue($writings->filters['duplicate'] == "(SELECT amount_inc_vat
 			FROM ".$this->db->config['table_writings']."
-			WHERE day >= ".mktime(0, 0, 0, 10, 14, 2013)." AND day <= ".mktime(0, 0, 0, 10, 16, 2013)."
+			WHERE (day >= ".mktime(0, 0, 0, 10, 14, 2013)." AND day <= ".mktime(0, 0, 0, 10, 16, 2013).")
 			GROUP BY amount_inc_vat
 			HAVING COUNT(*) > 1)");
 		
