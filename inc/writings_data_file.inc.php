@@ -119,8 +119,8 @@ class Writings_Data_File {
 				if (!empty($line[4])) $information .= $row_names[4]." : ".$line[4]."\n";
 				if (!empty($line[15])) $information .= $row_names[15]." : ".$line[15]."\n";
 				if (!empty($line[21])) $information .= $row_names[21]." : ".$line[21]."\n";
-				if (!empty($line[4])) $information .= $row_names[23]." : ".$line[23]."\n";
-				if (!empty($line[4])) $information .= $row_names[28]." : ".$line[28]."\n";
+				if (!empty($line[23])) $information .= $row_names[23]." : ".$line[23]."\n";
+				if (!empty($line[28])) $information .= $row_names[28]." : ".$line[28]."\n";
 				$writing = new Writing();
 				$time = explode("/", $line[6]);
 				$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);

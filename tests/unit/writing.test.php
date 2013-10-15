@@ -180,7 +180,16 @@ class tests_Writing extends TableTestCase {
 		
 		$writing->merge_from($writing_to_merge);
 		
-		$this->assertIdentical($writing_to_merge, $writing);
+		$this->assertTrue($writing_to_merge->categories_id == $writing->categories_id);
+		$this->assertTrue($writing_to_merge->amount_excl_vat == $writing->amount_excl_vat);
+		$this->assertTrue($writing_to_merge->amount_inc_vat == $writing->amount_inc_vat);
+		$this->assertTrue($writing_to_merge->comment == $writing->comment);
+		$this->assertTrue($writing_to_merge->day == $writing->day);
+		$this->assertTrue($writing->information == "Autre complément d'infos\nCeci est un test\nComplément d'infos");
+		$this->assertTrue($writing_to_merge->paid == $writing->paid);
+		$this->assertTrue($writing_to_merge->sources_id == $writing->sources_id);
+		$this->assertTrue($writing_to_merge->number == $writing->number);
+		$this->assertTrue($writing_to_merge->vat == $writing->vat);
 		
 		$writing_to_merge_2 = new Writing();
 		$writing_to_merge_2->categories_id = 0;
@@ -201,7 +210,7 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->amount_inc_vat = 0;
 		$writing_to_merge_3->comment = "Ceci est un autre test";
 		$writing_to_merge_3->day = 0;
-		$writing_to_merge_3->information = "Autre complément d'infos";
+		$writing_to_merge_3->information = "Autre complément d'infos\nCeci est un test\nComplément d'infos";
 		$writing_to_merge_3->paid = 0;
 		$writing_to_merge_3->sources_id = 1;
 		$writing_to_merge_3->number = 2;
@@ -209,7 +218,6 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->search_index = $writing_to_merge_3->search_index();
 		
 		$writing->merge_from($writing_to_merge_2);
-		
 		$this->assertTrue($writing_to_merge_3->categories_id == $writing->categories_id);
 		$this->assertTrue($writing_to_merge_3->amount_excl_vat == $writing->amount_excl_vat);
 		$this->assertTrue($writing_to_merge_3->amount_inc_vat == $writing->amount_inc_vat);
@@ -284,9 +292,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing2_loaded->amount_excl_vat, 236.966825);
 		$this->assertEqual($writing2_loaded->amount_inc_vat, 250);
 		$this->assertEqual($writing2_loaded->banks_id, 4);
-		$this->assertEqual($writing2_loaded->comment, "Ceci est un test");
+		$this->assertEqual($writing2_loaded->comment, "Ceci est un autre test");
 		$this->assertEqual($writing2_loaded->day, mktime(10, 0, 0, 7, 29, 2013));
-		$this->assertEqual($writing2_loaded->information, "Complément d'infos");
+		$this->assertEqual($writing2_loaded->information, "Autre complément d'infos\nCeci est un test\nComplément d'infos");
 		$this->assertEqual($writing2_loaded->paid, 0);
 		$this->assertEqual($writing2_loaded->sources_id, 2);
 		$this->assertEqual($writing2_loaded->accountingcodes_id, 5);
@@ -374,7 +382,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing_loaded->banks_id, 4);
 		$this->assertEqual($writing_loaded->comment, "Ceci est un test");
 		$this->assertEqual($writing_loaded->day, mktime(10, 0, 0, 7, 29, 2013));
-		$this->assertEqual($writing_loaded->information, "Complément d'infos");
+		$this->assertEqual($writing_loaded->information, "Complément d'infos
+Ceci est un autre test
+Autre complément d'infos");
 		$this->assertEqual($writing_loaded->paid, 0);
 		$this->assertEqual($writing_loaded->sources_id, 2);
 		$this->assertEqual($writing_loaded->number, 1);
