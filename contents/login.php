@@ -7,8 +7,4 @@ if (isset($_SESSION)) {
 $auth = new User_Authentication();
 $html = $auth->form();
 
-if (isset($_SESSION['global_status'][0])) {
-	$html.= $_SESSION['global_status'][0]['value'];
-}
-
-echo "<div id=\"form_login\">".$html."</div>";
+echo "<div id=\"form_login\">".$html.show_status()."</div>";

@@ -183,6 +183,30 @@ function success_status($message, $priority = 0) {
 	return $_SESSION['global_status'];
 }
 
+function show_status() {
+	if (isset($_SESSION['global_status']) and !empty($_SESSION['global_status'])) {
+		if (isset($GLOBALS['param']['layout_multiplestatus']) and $GLOBALS['param']['layout_multiplestatus']) {
+			$status_shown = "<ul class=\"content_status\">";
+			foreach ($_SESSION['global_status'] as $status) {
+				$status_shown .= $status['value'];
+			}
+			$status_shown .= "</ul>";
+		} else {
+			$last_priority = 0;
+			foreach ($_SESSION['global_status'] as $status) {
+				if ($status['priority'] >= $last_priority) {
+					$status_shown = "<span class=\"small\">".$status['value']."</span>";
+					$last_priority = $status['priority'];
+				}
+			}
+		}
+		unset($_SESSION['global_status']);
+		return $status_shown;
+	} else {
+		return "";
+	}
+}
+
 function error_handling($type, $msg, $file, $line, $args) {
 	if (!isset($args['content'])) {
 		$args['content'] = "";
