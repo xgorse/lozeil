@@ -1,10 +1,9 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-unset($_SESSION['filter']);
-if (!isset($_SESSION['order_col_name']) or !isset($_SESSION['order_direction'])) {
-	$_SESSION['order_col_name'] = 'day';
-	$_SESSION['order_direction'] = 'ASC';
+if (!isset($_SESSION['order']['name']) or !isset($_SESSION['order']['direction'])) {
+	$_SESSION['order']['name'] = 'day';
+	$_SESSION['order']['direction'] = 'ASC';
 }
 
 if (isset($_POST['action']) and $_POST['action'] == "update_bayesian_element") {
@@ -25,28 +24,25 @@ if (isset($_REQUEST['action'])) {
 	}
 }
 
-$start = determine_integer_from_post_get_session(null, "start");
-$stop = determine_integer_from_post_get_session(null, "stop");
-
-if (($start > 0 and strlen($start) <= 12) and ($stop > 0 and strlen($stop) <= 12)) {
-	$_SESSION['start'] = $start;
-	$_SESSION['stop'] = $stop;
-} else {
-	list($_SESSION['start'], $_SESSION['stop']) = determine_month(mktime(0, 0, 0, date("m"), 1, date("Y")));
-}
-
 $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
 $writings = new Writings();
-$writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
+$writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['direction']);
 $writings->add_order("amount_inc_vat DESC");
 
-$writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
+if (isset($_GET['start']) and isset($_GET['stop'])) {
+	$_SESSION['filter'] = array('start' => $_GET['start'], 'stop' => $_GET['stop']);
+} elseif (!isset($_SESSION['filter']) or empty($_SESSION['filter'])) {
+	list($start, $stop) = determine_month(time());
+	$_SESSION['filter'] = array('start' => $start, 'stop' => $stop);
+}
+
+$writings->filter_with($_SESSION['filter']);
 $writings->select();
 
-$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['start']), $writings->form_filter($start, $stop).$writings->form_cancel_last_operation());
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['filter']['start']), $writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop']).$writings->form_cancel_last_operation());
 echo $heading->show();
 
 echo $writings->display();

@@ -3,5 +3,5 @@
 
 $writings = new Writings();
 
-echo $writings->show_timeline_at($_SESSION['start']);
+echo $writings->show_timeline_at($_SESSION['filter']['start']);
 exit(0);

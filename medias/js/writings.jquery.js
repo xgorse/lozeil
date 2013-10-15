@@ -1,6 +1,12 @@
 $(document).ready(function() {
-	make_drag_and_drop();
 	var timer;
+	make_drag_and_drop();
+	$(".extra_filter_item input[type=\"checkbox\"]").each(function () {
+		if (this.checked) {
+			$(this).closest(".extra_filter_item").show();
+			$(".input-date").closest(".extra_filter_item").show();
+		}
+	})
 	$("body")
 		.on("click", "#insert_writings_show", function() {
 			$(".insert_writings_form").slideDown(1, function() {
@@ -414,9 +420,7 @@ $(document).ajaxStop(function() {
 	//make_drag_and_drop();
 })
 
-
 var timercolor;
-
 function changeColorLine(){
 	clearTimeout(timercolor);
 	timercolor = setTimeout(function(){

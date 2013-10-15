@@ -7,6 +7,8 @@ class Writings_Data_File {
 	public $type = "";
 	public $banks_id = 0;
 	public $sources_id = 0;
+	public $start;
+	public $stop;
 	public $csv_data = array();
 	public $unique_keys = array();
 	
@@ -135,6 +137,9 @@ class Writings_Data_File {
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->sources_id.$writing->amount_inc_vat.$writing->information);
 				
 				if (!in_array($hash, $this->unique_keys)) {
+					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
+					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
 					$writing_imported->sources_id = $this->sources_id;
@@ -184,6 +189,9 @@ class Writings_Data_File {
 				$writing->paid = 1;
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 				if (!in_array($hash, $this->unique_keys)) {
+					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
+					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
@@ -244,6 +252,9 @@ class Writings_Data_File {
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 				
 				if (!in_array($hash, $this->unique_keys)) {
+					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
+					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
@@ -313,6 +324,9 @@ class Writings_Data_File {
 				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 
 				if (!in_array($hash, $this->unique_keys)) {
+					$this->start = !isset($this->start) ? $writing->day : min($this->start, $writing->day);
+					$this->stop = !isset($this->stop) ? $writing->day : max($this->stop, $writing->day);
+
 					$writing_imported = new Writing_Imported();
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
@@ -414,6 +428,18 @@ class Writings_Data_File {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	
+	function filters_after_import() {
+		if (isset($this->start) and isset($this->stop)) {
+			return array (
+				'start' => strtotime("-7 days", $this->start),
+				'stop' => strtotime("+7 days", $this->stop),
+				'duplicate' => 1
+			);
+		} else {
+			return array();
 		}
 	}
 }

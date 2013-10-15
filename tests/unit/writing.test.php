@@ -455,7 +455,7 @@ Autre complément d'infos");
 	}
 	
 	function test_form() {
-		$_SESSION['start'] = time();
+		$_SESSION['filter']['start'] = time();
 		$writing = new Writing();
 		$form = $writing->form();
 		$this->assertPattern("/".date('m')."/", $form);

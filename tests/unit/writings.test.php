@@ -43,13 +43,7 @@ class tests_Writings extends TableTestCase {
 		$writing->save();
 		
 		$writings = new Writings();
-		$writings->set_filter_duplicate(mktime(0, 0, 0, 10, 14, 2013), mktime(0, 0, 0, 10, 16, 2013));
-		$this->assertTrue($writings->filters['duplicate'] == "(SELECT amount_inc_vat
-			FROM ".$this->db->config['table_writings']."
-			WHERE (day >= ".mktime(0, 0, 0, 10, 14, 2013)." AND day <= ".mktime(0, 0, 0, 10, 16, 2013).")
-			GROUP BY amount_inc_vat
-			HAVING (COUNT(amount_inc_vat) > 1 AND MIN(banks_id) = 0))");
-		
+		$writings->filter_with(array('start' => mktime(0, 0, 0, 10, 14, 2013), 'stop' => mktime(0, 0, 0, 10, 16, 2013), 'duplicate' => 1));
 		$writings->select();
 		$this->assertTrue(count($writings) == 2);
 		$this->truncateTable("writings");
@@ -78,8 +72,8 @@ class tests_Writings extends TableTestCase {
 	}
 	
 	function test_show() {
-		$_SESSION['start'] = mktime(0, 0, 0, 7, 1, 2013);
-		list($start, $stop) = determine_month($_SESSION['start']);
+		$_SESSION['filter']['start'] = mktime(0, 0, 0, 7, 1, 2013);
+		list($start, $stop) = determine_month($_SESSION['filter']['start']);
 		$category = new Category();
 		$category->name = "Category 1";
 		$category->save();
@@ -200,8 +194,8 @@ class tests_Writings extends TableTestCase {
 	}
 	
 	function test_get_where() {
-		$_SESSION['start'] = 1375308000;
-		list($start, $stop) = determine_month($_SESSION['start']);
+		$_SESSION['filter']['start'] = 1375308000;
+		list($start, $stop) = determine_month($_SESSION['filter']['start']);
 		$writings = new Writings();
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
 		$get_where = $writings->get_where();

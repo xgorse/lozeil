@@ -43,7 +43,6 @@ class tests_Writings_Followup extends TableTestCase {
 		$this->assertPattern("/aucune/", $timeseries);
 		$this->assertPattern("/90/", $timeseries);
 		$timeseries = $writingfollowup->show_timeseries_at(mktime(0, 0, 0, 11, 15, 2014));
-		$this->assertNoPattern("/category 1/", $timeseries);
 		$this->assertPattern("/aucune/", $timeseries);
 		$this->assertPattern("/-50/", $timeseries);
 	}

@@ -57,7 +57,7 @@ class Writing extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writings'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('writing'));
+		//$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
 	}
@@ -82,7 +82,7 @@ class Writing extends Record {
 				WHERE id = ".(int)$this->id
 			);
 		
-		$this->db->status($result[1], "u", __('writing'));
+		//$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
 	}
@@ -107,7 +107,7 @@ class Writing extends Record {
 			timestamp = ".time()
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('writing'));
+		//$this->db->status($result[1], "u", __('writing'));
 
 		return $this->id;
 	}
@@ -217,7 +217,7 @@ class Writing extends Record {
 	function display() {
 		$form = "<span class=\"button\" id=\"insert_writings_show\">".utf8_ucfirst(__('show form'))."</span>
 			<span class=\"button\" id=\"insert_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
-			<span class=\"button\" id=\"insert_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['start']),utf8_ucfirst(__('cancel record')))."</span>
+			<span class=\"button\" id=\"insert_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"insert_writings_form\">
 			<form method=\"post\" name=\"insert_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
@@ -231,7 +231,7 @@ class Writing extends Record {
 		$accountingcodes = new Accounting_Codes();
 		$accountingcodes->select();
 		
-		$datepicker = new Html_Input_Date("datepicker", $_SESSION['start']);
+		$datepicker = new Html_Input_Date("datepicker", $_SESSION['filter']['start']);
 		$category = new Html_Select("categories_id", $categories->names());
 		$source = new Html_Select("sources_id", $sources->names());
 		$accountingcode = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), $accountingcodes->numbers());
@@ -291,7 +291,7 @@ class Writing extends Record {
 	
 	function form_in_table() {
 		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"9\" ><div id=\"table_edit_writings\">
-			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['start']),utf8_ucfirst(__('cancel record')))."</span>
+			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
 			<div class=\"table_edit_writings_form\">
 			<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
@@ -433,7 +433,7 @@ class Writing extends Record {
 	}
 	
 	function form_modify() {
-		return "<div class=\"modify\">".Html_Tag::a(link_content("content=writings.php&startd=".$_SESSION['start']."&writings_id=".$this->id)," ")."</div>";
+		return "<div class=\"modify\">".Html_Tag::a(link_content("content=writings.php&startd=".$_SESSION['filter']['start']."&writings_id=".$this->id)," ")."</div>";
 	}
 	
 	function fill($hash) {

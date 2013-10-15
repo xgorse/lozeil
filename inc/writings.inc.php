@@ -96,19 +96,16 @@ class Writings extends Collector {
 			$query_where[] = $this->db->config['table_writings'].".categories_id >= ".(int)$this->filters['categories_id_min'];
 		}
 		if (isset($this->filters['duplicate'])) {
-			$query_where[] = $this->db->config['table_writings'].".amount_inc_vat IN ".$this->filters['duplicate'];
+			$query_where[] = $this->db->config['table_writings'].".amount_inc_vat IN (
+				SELECT amount_inc_vat
+				FROM ".$this->db->config['table_writings']."
+				WHERE (day >= ".$_SESSION['filter']['start']." AND day <= ".$_SESSION['filter']['stop'].")
+				GROUP BY amount_inc_vat
+				HAVING (COUNT(amount_inc_vat) > 1 AND MIN(banks_id) = 0)
+			)";
 		}
 		
 		return $query_where;
-	}
-	
-	function set_filter_duplicate($start, $stop) {
-		$query_duplicate = "(SELECT amount_inc_vat
-			FROM ".$this->db->config['table_writings']."
-			WHERE (day >= ".$start." AND day <= ".$stop.")
-			GROUP BY amount_inc_vat
-			HAVING (COUNT(amount_inc_vat) > 1 AND MIN(banks_id) = 0))";
-		$this->filter_with(array("duplicate" => $query_duplicate));
 	}
 	
 	function grid_header() {
@@ -189,8 +186,8 @@ class Writings extends Collector {
 	
 	function determine_table_header_class($header_column_name) {
 		$class = "sort";
-		if ($_SESSION['order_col_name'] == $header_column_name) {
-			if ($_SESSION['order_direction'] == "ASC") {
+		if ($_SESSION['order']['name'] == $header_column_name) {
+			if ($_SESSION['order']['direction'] == "ASC") {
 				$class .= " sortedup";
 			} else {
 				$class .= " sorteddown";
@@ -730,6 +727,9 @@ class Writings extends Collector {
 		}
 		if (!empty($post['comment'])) {
 			$cleaned['comment'] = $post['comment'];
+		}
+		if (isset($post['duplicate'])) {
+			$cleaned['duplicate'] = 1;
 		}
 		return $cleaned;
 	}

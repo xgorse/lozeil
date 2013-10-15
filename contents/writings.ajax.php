@@ -1,7 +1,7 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
+
 $writings = new Writings();
-list($start, $stop) = determine_month($_SESSION['start']);
 
 if (!empty($_FILES)) {
 	$file = new File();
@@ -66,21 +66,14 @@ switch ($_REQUEST['action']) {
 		if (is_datepicker_valid($_POST['filter_day_start']) and is_datepicker_valid($_POST['filter_day_stop'])) {
 			$cleaned = $writings->clean_filter_from_ajax($_POST);
 			$_SESSION['filter'] = $cleaned;
-			if (isset($_POST['duplicate'])) {
-				$_SESSION['filter']['duplicate'] = 1;
-			} else {
-				unset($_SESSION['filter']['duplicate']);
-			}
-		} else {
-			list($_SESSION['start'], $_SESSION['stop']) = determine_month($_SESSION['start']);
 		}
 		break;
 	
 	case "sort":
-		if ($_SESSION['order_col_name'] == $_REQUEST['order_col_name']) {
-			$_SESSION['order_direction'] = $_SESSION['order_direction'] == "ASC" ? "DESC" : "ASC";
+		if ($_SESSION['order']['name'] == $_REQUEST['order_col_name']) {
+			$_SESSION['order']['direction'] = $_SESSION['order']['direction'] == "ASC" ? "DESC" : "ASC";
 		} else {
-			$_SESSION['order_col_name'] = $_REQUEST['order_col_name'];
+			$_SESSION['order']['name'] = $_REQUEST['order_col_name'];
 		}
 		break;
 			
@@ -170,16 +163,9 @@ switch ($_REQUEST['action']) {
 		
 }
 $writings->set_limit($GLOBALS['param']['nb_max_writings']);
-if (isset($_SESSION['filter'])) {
-	$writings->filter_with($_SESSION['filter']);
-	if (isset($_SESSION['filter']['duplicate']) and $_SESSION['filter']['duplicate']) {
-		$writings->set_filter_duplicate($_SESSION['filter']['start'], $_SESSION['filter']['stop']);
-	}
-} else {
-	$writings->filter_with(array('start' => $_SESSION['start'], 'stop' => $_SESSION['stop']));
-}
+$writings->filter_with($_SESSION['filter']);
 
-$writings->add_order($_SESSION['order_col_name']." ".$_SESSION['order_direction']);
+$writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['direction']);
 $writings->add_order("amount_inc_vat DESC");
 $writings->select();
 
