@@ -107,7 +107,7 @@ class Writings extends Collector {
 			FROM ".$this->db->config['table_writings']."
 			WHERE (day >= ".$start." AND day <= ".$stop.")
 			GROUP BY amount_inc_vat
-			HAVING COUNT(*) > 1)";
+			HAVING (COUNT(amount_inc_vat) > 1 AND MIN(banks_id) = 0))";
 		$this->filter_with(array("duplicate" => $query_duplicate));
 	}
 	

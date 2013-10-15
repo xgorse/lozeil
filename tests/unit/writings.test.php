@@ -20,19 +20,24 @@ class tests_Writings extends TableTestCase {
 		$writing = new Writing();
 		$writing->amount_inc_vat = 250;
 		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->banks_id = 1;
 		$writing->save();
 		$writing = new Writing();
 		$writing->amount_inc_vat = 250;
 		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->banks_id = 0;
 		$writing->save();
 		$writing = new Writing();
 		$writing->amount_inc_vat = -250;
 		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->banks_id = 1;
 		$writing->save();
 		$writing = new Writing();
-		$writing->amount_inc_vat = 249;
+		$writing->amount_inc_vat = -250;
 		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
+		$writing->banks_id = 1;
 		$writing->save();
+		$writing = new Writing();
 		$writing->amount_inc_vat = 0;
 		$writing->day = mktime(0, 0, 0, 10, 15, 2013);
 		$writing->save();
@@ -43,8 +48,10 @@ class tests_Writings extends TableTestCase {
 			FROM ".$this->db->config['table_writings']."
 			WHERE (day >= ".mktime(0, 0, 0, 10, 14, 2013)." AND day <= ".mktime(0, 0, 0, 10, 16, 2013).")
 			GROUP BY amount_inc_vat
-			HAVING COUNT(*) > 1)");
+			HAVING (COUNT(amount_inc_vat) > 1 AND MIN(banks_id) = 0))");
 		
+		$writings->select();
+		$this->assertTrue(count($writings) == 2);
 		$this->truncateTable("writings");
 	}
 	
