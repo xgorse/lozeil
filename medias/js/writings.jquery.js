@@ -62,6 +62,7 @@ $(document).ready(function() {
 				function(data) {
 					$('#table_writings table').html(data);
 					refresh_balance();
+					make_drag_and_drop();
 				}
 			);
 			return false;
@@ -74,6 +75,7 @@ $(document).ready(function() {
 				function(data) {
 					refresh_balance();
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			);
 			return false;
@@ -86,6 +88,7 @@ $(document).ready(function() {
 				function(data) {
 					refresh_balance();
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			);
 			return false;
@@ -98,6 +101,7 @@ $(document).ready(function() {
 				function(data) {
 					refresh_balance();
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			);
 			return false;
@@ -111,6 +115,7 @@ $(document).ready(function() {
 					refresh_balance();
 					reload_insert_form();
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			);
 			return false;
@@ -145,6 +150,7 @@ $(document).ready(function() {
 				{action: "sort", order_col_name: order_col_name},
 				function(data) {
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			)
 		})
@@ -158,6 +164,7 @@ $(document).ready(function() {
 				{action: "split", table_writings_split_id: id, table_writings_split_amount: amount},
 				function(data) {
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			)
 		return false;
@@ -170,6 +177,7 @@ $(document).ready(function() {
 				function(data) {
 					refresh_balance();
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			)
 		return false;
@@ -202,6 +210,7 @@ $(document).ready(function() {
 					input.serialize(),
 					function(data){
 						$('#table_writings table').html(data);
+						make_drag_and_drop();
 					}
 				);
 			}, 200);
@@ -270,6 +279,7 @@ $(document).ready(function() {
 });
 
 function make_drag_and_drop() {
+	$(".dropzone-input").remove();
 	$(".droppable").each(function() {
 		$(this).dropzone({
 		url: "index.php?content=writings.ajax.php",
@@ -293,6 +303,7 @@ function make_drag_and_drop() {
 				function(data) {
 					$('#table_writings table tbody').remove();
 					$('#table_writings table').html(data);
+					make_drag_and_drop();
 				}
 			);
 		}
@@ -386,6 +397,7 @@ function confirm_modify(text) {
 				reload_select_modify_writings();
 				refresh_balance();
 				$('#table_writings table').html(data);
+				make_drag_and_drop();
 			}
 		);
 	}
@@ -394,7 +406,7 @@ function confirm_modify(text) {
 
 $(document).ajaxStop(function() {
 	changeColorLine();
-	make_drag_and_drop();
+	//make_drag_and_drop();
 })
 
 
