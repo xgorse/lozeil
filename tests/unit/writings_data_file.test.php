@@ -334,7 +334,7 @@ class tests_Writings_Data_File extends TableTestCase {
 				27 => 'aaaaaa',
 				28 => 'Telecollecte',
 				29 => '',
-				30 => '', 
+				30 => '109.190.127.105',
 				31 => ''
 			),
 			2 => array (
@@ -392,10 +392,12 @@ class tests_Writings_Data_File extends TableTestCase {
 				'sources_id' => 1,
 				'comment' => "opentime.fr PPPS->AutoDebitAbonne",
 				'information' => "ShopName : OPENTIME.FR
+TransactionId : 966899879
 Canal : Paybox Direct Plus
 Country : FRA
 Payment : CB-Visa
 Status : Telecollecte
+IP : 109.190.127.105
 "
 			)
 		);
@@ -407,6 +409,7 @@ Status : Telecollecte
 				'sources_id' => 1,
 				'comment' => "lozeil adrien.delannoy@noparking.net",
 				'information' => "ShopName : LOZEIL
+TransactionId : 966899879
 Canal : Paybox Direct Plus
 Country : FRA
 Payment : CB-Mastercard

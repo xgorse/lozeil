@@ -61,6 +61,7 @@ class Writings_Data_File {
 	function is_paybox($data) {
 		switch (true) {
 			case $data[0][6] != "Date":
+			case $data[0][7] != "TransactionId":
 			case $data[0][12] != "Reference":
 			case $data[0][13] != "Origin":
 			case $data[0][15] != "Canal":
@@ -116,11 +117,10 @@ class Writings_Data_File {
 		foreach ($this->csv_data as $line) {
 			if ($this->is_line_paybox($line)) {
 				$information = "";
-				if (!empty($line[4])) $information .= $row_names[4]." : ".$line[4]."\n";
-				if (!empty($line[15])) $information .= $row_names[15]." : ".$line[15]."\n";
-				if (!empty($line[21])) $information .= $row_names[21]." : ".$line[21]."\n";
-				if (!empty($line[23])) $information .= $row_names[23]." : ".$line[23]."\n";
-				if (!empty($line[28])) $information .= $row_names[28]." : ".$line[28]."\n";
+				$columns_for_information = array(4, 7, 15, 21, 23, 28, 30);
+				foreach ($columns_for_information as $nb) {
+					if (!empty($line[$nb])) $information .= $row_names[$nb]." : ".$line[$nb]."\n";
+				}
 				$writing = new Writing();
 				$time = explode("/", $line[6]);
 				$writing->day = mktime(0, 0, 0, $time[1], $time[0], $time[2]);
