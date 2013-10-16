@@ -30,6 +30,7 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 		echo $theme->head();
 		echo $theme->body_top($location, $content);
 
+		echo $theme->show_status();
 		echo $theme->content_top();
 
 		include("contents/".$content);
