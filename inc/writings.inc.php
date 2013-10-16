@@ -354,8 +354,9 @@ class Writings extends Collector {
 		}
 		$banks = new Banks();
 		$banks->select();
-		
-		$category = new Html_Select("filter_categories_id", $categories->names(), isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
+		$categories_names = $categories->names();
+		$categories_names['none'] = __('&#60none&#62');
+		$category = new Html_Select("filter_categories_id", $categories_names, isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
 		$source = new Html_Select("filter_sources_id", $sources->names(), isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
 		$bank = new Html_Select("filter_banks_id", $banks->names_of_selected_banks(), isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
 		$accountingcode_input = new Html_Input_Ajax("filter_accountingcodes_id", link_content("content=writings.ajax.php"), isset($_SESSION['filter']['accountingcodes_id']) ? array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname()) : array());
@@ -695,6 +696,9 @@ class Writings extends Collector {
 		}
 		list($cleaned['start'], $cleaned['stop']) = determine_start_stop($post['filter_day_start'], $post['filter_day_stop']);
 		if ($post['filter_categories_id']) {
+			if ($post['filter_categories_id'] == 'none') {
+				$post['filter_categories_id'] = 0;
+			}
 			$cleaned['categories_id'] = $post['filter_categories_id'];
 		}
 		if ($post['filter_sources_id']) {

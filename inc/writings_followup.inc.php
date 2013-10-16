@@ -25,7 +25,7 @@ class Writings_Followup  {
 			}
 				$writings->categories_id = 0;
 				$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, date('Y',$writings->month)));
-				$cubismchart->title = __('none');
+				$cubismchart->title = __('&#60none&#62');
 				$charts .= $cubismchart->display();
 		}
 		return "<div class=\"timeseries\">".$charts.$cubismchart->prepare_navigation()."</div>";

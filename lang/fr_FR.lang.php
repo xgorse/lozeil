@@ -97,6 +97,7 @@ $__['%s record(s) inserted for %s'] = "%s enregistrement(s) ajouté(s) pour %s";
 $__['no'] = "non";
 $__['no name'] = "sans nom";
 $__['none'] = "aucune";
+$__['&#60none&#62'] = "&#60aucune&#62";
 $__['not exisisting'] = "n'existe pas";
 $__['not matching'] = "ne correspond pas";
 $__['nothing to do'] = "rien à faire";
