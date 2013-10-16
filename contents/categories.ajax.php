@@ -38,4 +38,5 @@ if (isset($_POST) and !empty($_POST)) {
 
 	echo $category->vat;
 }
+
 exit(0);

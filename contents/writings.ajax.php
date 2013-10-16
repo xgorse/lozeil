@@ -6,6 +6,7 @@ $writings = new Writings();
 if (!empty($_FILES)) {
 	$file = new File();
 	$file->save_attachment($_FILES);
+	echo json_encode(array('status' => show_status()));
 	exit(0);
 }
 
@@ -14,7 +15,10 @@ switch ($_REQUEST['action']) {
 	case "delete_attachment" :
 		$file = new File();
 		$file->load((int)$_REQUEST['id']);
-		echo $file->delete_attachment();
+		$file->delete_attachment();
+		$writing = new Writing();
+		$writing->load($file->writings_id);
+		echo json_encode(array('status' => show_status(), 'link' => $writing->link_to_file_attached()));
 		exit(0);
 		break;
 	
@@ -22,11 +26,10 @@ switch ($_REQUEST['action']) {
 		$accounting_codes = new Accounting_Codes();
 		$accounting_codes->fullname = isset($_REQUEST['name']) ? $_REQUEST['name'] : "";
 		$accounting_codes->set_limit(10, 0);
+		$output = "";
 		if ($accounting_codes->fullname) {
 			$accounting_codes->select();
 			$output = json_encode($accounting_codes->fullnames());
-		} else {
-			$output = "";
 		}
 		echo $output;
 		exit(0);
@@ -133,10 +136,6 @@ switch ($_REQUEST['action']) {
 			$writing = new Writing($_POST['table_writings_delete_id']);
 			$writing->delete();
 		}
-		break;
-		
-	case 'cancel':
-		$writings->cancel_last_operation();
 		break;
 	
 	case 'form_options' :

@@ -158,7 +158,7 @@ class Writings_Data_File {
 				log_status(__('line %s of file %s is not in coop format', array(implode(' - ', $line), $this->file_name)));
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function import_as_cic() {
@@ -206,7 +206,7 @@ class Writings_Data_File {
 				log_status(__('line %s of file %s is not in cic format', array(implode(' - ', $line), $this->file_name)));
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function import_as_coop() {
@@ -267,7 +267,7 @@ class Writings_Data_File {
 				log_status(__('line %s of file %s is not in coop format', array(implode(' - ', $line), $this->file_name)));
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function import_as_ofx() {
@@ -336,7 +336,7 @@ class Writings_Data_File {
 				}
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
+		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function is_line_paybox($line) {

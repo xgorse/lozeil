@@ -84,11 +84,11 @@ class File extends Record {
 				$this->writings_id = (int)$writing_id;
 				$this->hash = $name_hashed;
 				$this->value = $file['name'];
-				$this->save();
 				if (!$writing->attachment) {
 					$writing->attachment = 1;
 					$writing->update();
 				}
+				$this->save();
 			}
 			else {
 				return false;
@@ -124,6 +124,5 @@ class File extends Record {
 			$writing->attachment = 0;
 			$writing->update();
 		}
-		return $writing->link_to_file_attached();
 	}
 }

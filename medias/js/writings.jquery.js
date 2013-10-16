@@ -59,7 +59,9 @@ $(document).ready(function() {
 				"index.php?content=writings.ajax.php",
 				$(this).serialize(),
 				function(data) {
-					$(".manage_writing_attachment").replaceWith(data);
+					var result = jQuery.parseJSON(data);
+					$(".manage_writing_attachment").replaceWith(result.link);
+					show_status(result.status);
 				}
 			);
 			return false;
@@ -315,8 +317,14 @@ function make_drag_and_drop() {
 	$(".dropzone-input").remove();
 	$(".droppable").each(function() {
 		$(this).dropzone({
-		url: "index.php?content=writings.ajax.php",
-		paramName: $(this).attr('id')
+			init: function() {
+				this.on("success", function(object, data) {
+					var result = jQuery.parseJSON(data);
+					show_status(result.status);
+				})
+			},
+			url: "index.php?content=writings.ajax.php",
+			paramName: $(this).attr('id')
 		})
 	});
 	$("#table_writings tr.draggable").droppable({

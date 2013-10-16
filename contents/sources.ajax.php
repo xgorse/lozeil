@@ -24,3 +24,5 @@ if (isset($_POST) and !empty($_POST)) {
 $sources = new Sources();
 $sources->select();
 echo json_encode(array('status' => show_status(), 'table' => $sources->show_form()));
+
+exit(0);
