@@ -355,14 +355,14 @@ class Writings extends Collector {
 		$banks = new Banks();
 		$banks->select();
 		
-		$category = new Html_Select("categories_id", $categories->names(), isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
-		$source = new Html_Select("sources_id", $sources->names(), isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
-		$bank = new Html_Select("banks_id", $banks->names_of_selected_banks(), isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
-		$accountingcode_input = new Html_Input_Ajax("accountingcodes_id", link_content("content=writings.ajax.php"), isset($_SESSION['filter']['accountingcodes_id']) ? array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname()) : array());
-		$number = new Html_Input("number", isset($_SESSION['filter']['number']) ? $_SESSION['filter']['number'] : "");
-		$amount_inc_vat = new Html_Input("amount_inc_vat", isset($_SESSION['filter']['amount_inc_vat']) ? $_SESSION['filter']['amount_inc_vat'] : "");
-		$comment = new Html_Textarea("comment", isset($_SESSION['filter']['comment']) ? $_SESSION['filter']['comment'] : "");
-		$checkbox = new Html_Checkbox("duplicate", "duplicate", isset($_SESSION['filter']['duplicate']) ? $_SESSION['filter']['duplicate'] : 0);
+		$category = new Html_Select("filter_categories_id", $categories->names(), isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
+		$source = new Html_Select("filter_sources_id", $sources->names(), isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
+		$bank = new Html_Select("filter_banks_id", $banks->names_of_selected_banks(), isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
+		$accountingcode_input = new Html_Input_Ajax("filter_accountingcodes_id", link_content("content=writings.ajax.php"), isset($_SESSION['filter']['accountingcodes_id']) ? array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname()) : array());
+		$number = new Html_Input("filter_number", isset($_SESSION['filter']['number']) ? $_SESSION['filter']['number'] : "");
+		$amount_inc_vat = new Html_Input("filter_amount_inc_vat", isset($_SESSION['filter']['amount_inc_vat']) ? $_SESSION['filter']['amount_inc_vat'] : "");
+		$comment = new Html_Textarea("filter_comment", isset($_SESSION['filter']['comment']) ? $_SESSION['filter']['comment'] : "");
+		$checkbox = new Html_Checkbox("filter_duplicate", "duplicate", isset($_SESSION['filter']['duplicate']) ? $_SESSION['filter']['duplicate'] : 0);
 		$submit = new Html_Input("submit_hidden", "", "submit");
 		
 		$grid = array(
@@ -694,28 +694,28 @@ class Writings extends Collector {
 			$cleaned['search_index'] = $post['extra_filter_writings_value'];
 		}
 		list($cleaned['start'], $cleaned['stop']) = determine_start_stop($post['filter_day_start'], $post['filter_day_stop']);
-		if ($post['categories_id']) {
-			$cleaned['categories_id'] = $post['categories_id'];
+		if ($post['filter_categories_id']) {
+			$cleaned['categories_id'] = $post['filter_categories_id'];
 		}
-		if ($post['sources_id']) {
-			$cleaned['sources_id'] = $post['sources_id'];
+		if ($post['filter_sources_id']) {
+			$cleaned['sources_id'] = $post['filter_sources_id'];
 		}
-		if ($post['banks_id']) {
-			$cleaned['banks_id'] = $post['banks_id'];
+		if ($post['filter_banks_id']) {
+			$cleaned['banks_id'] = $post['filter_banks_id'];
 		}
-		if (isset($post['accountingcodes_id'])) {
-			$cleaned['accountingcodes_id'] = $post['accountingcodes_id'];
+		if (isset($post['filter_accountingcodes_id'])) {
+			$cleaned['accountingcodes_id'] = $post['filter_accountingcodes_id'];
 		}
-		if (!empty($post['number'])) {
-			$cleaned['number'] = $post['number'];
+		if (!empty($post['filter_number'])) {
+			$cleaned['number'] = $post['filter_number'];
 		}
-		if (!empty($post['amount_inc_vat'])) {
-			$cleaned['amount_inc_vat'] = (float)str_replace(",", ".", $post['amount_inc_vat']);
+		if (!empty($post['filter_amount_inc_vat'])) {
+			$cleaned['amount_inc_vat'] = (float)str_replace(",", ".", $post['filter_amount_inc_vat']);
 		}
-		if (!empty($post['comment'])) {
-			$cleaned['comment'] = $post['comment'];
+		if (!empty($post['filter_comment'])) {
+			$cleaned['comment'] = $post['filter_comment'];
 		}
-		if (isset($post['duplicate'])) {
+		if (isset($post['filter_duplicate'])) {
 			$cleaned['duplicate'] = 1;
 		}
 		return $cleaned;
