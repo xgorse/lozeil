@@ -426,19 +426,6 @@ class Writings extends Collector {
 		}
 	}
 	
-	function form_cancel_last_operation() {
-		$form = "<div class=\"extra_cancel_writings\"><form method=\"post\" name=\"extra_cancel_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_action = new Html_Input("action", "cancel");
-		$submit = new Html_Input("extra_cancel_writings_value",__('cancel operation'), "submit");
-		$submit->properties = array(
-				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure that you want to cancel the operation? It will be irreversible'))."')"
-			);
-		$form .= $input_hidden_action->input_hidden().$submit->input();
-		$form .= "</form></div>";
-		
-		return $form;
-	}
-	
 	function cancel_last_operation() {
 		$writings = new Writings();
 		$max = $writings->db->Value("SELECT MAX(timestamp) FROM ".$this->db->config['table_writings']);

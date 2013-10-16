@@ -17,6 +17,8 @@ class tests_Writings extends TableTestCase {
 	}
 	
 	function test_select_duplicate() {
+		$_SESSION['filter']['start'] = mktime(0, 0, 0, 10, 14, 2013);
+		$_SESSION['filter']['stop'] = mktime(0, 0, 0, 10, 16, 2013);
 		$writing = new Writing();
 		$writing->amount_inc_vat = 250;
 		$writing->day = mktime(0, 0, 0, 10, 15, 2013);

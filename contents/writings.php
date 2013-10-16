@@ -42,7 +42,7 @@ if (isset($_GET['start']) and isset($_GET['stop'])) {
 $writings->filter_with($_SESSION['filter']);
 $writings->select();
 
-$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['filter']['start']), $writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop']).$writings->form_cancel_last_operation());
+$heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['filter']['start']), $writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop']));
 echo $heading->show();
 
 echo $writings->display();
