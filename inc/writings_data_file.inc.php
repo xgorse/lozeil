@@ -432,7 +432,8 @@ class Writings_Data_File {
 			return array (
 				'start' => strtotime("-7 days", $this->start),
 				'stop' => strtotime("+7 days", $this->stop),
-				'duplicate' => 1
+				'sources_id' => $this->sources_id,
+				'banks_id' => $this->banks_id,
 			);
 		} else {
 			return array();

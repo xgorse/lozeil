@@ -5,10 +5,11 @@ $(document).ready(function() {
 	timerstatus = setTimeout(function(){
 		$('.layout_status').slideUp(200);
 	},3000);
-	$(".extra_filter_item input[type=\"checkbox\"]").each(function () {
-		if (this.checked) {
+	$("#filter_sources_id, #filter_banks_id").each(function () {
+		if ($(this).val() != 0) {
 			$(this).closest(".extra_filter_item").show();
 			$(".input-date").closest(".extra_filter_item").show();
+			$(".extra_filter_item input[type=\"checkbox\"]").closest(".extra_filter_item").show();
 		}
 	})
 	$("body")
