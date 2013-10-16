@@ -49,7 +49,7 @@ class Writing_Imported extends Record {
 				sources_id = ".(int)$this->sources_id
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('writings imported'));
+		$this->db->status($result[1], "i", __('writings imported'));
 
 		return $this->id;
 	}
@@ -70,7 +70,7 @@ class Writing_Imported extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writingsimported'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('writings imported'));
+		$this->db->status($result[1], "d", __('writings imported'));
 
 		return $this->id;
 	}

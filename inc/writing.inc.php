@@ -57,7 +57,7 @@ class Writing extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writings'].
 			" WHERE id = '".$this->id."'"
 		);
-		//$this->db->status($result[1], "u", __('writing'));
+		$this->db->status($result[1], "d", __('line'));
 
 		return $this->id;
 	}
@@ -82,7 +82,7 @@ class Writing extends Record {
 				WHERE id = ".(int)$this->id
 			);
 		
-		//$this->db->status($result[1], "u", __('writing'));
+		$this->db->status($result[1], "u", __('line'));
 
 		return $this->id;
 	}
@@ -107,7 +107,7 @@ class Writing extends Record {
 			timestamp = ".time()
 		);
 		$this->id = $result[2];
-		//$this->db->status($result[1], "u", __('writing'));
+		$this->db->status($result[1], "i", __('line'));
 
 		return $this->id;
 	}
@@ -170,8 +170,8 @@ class Writing extends Record {
 				$this->number = !empty($this->number) ? $this->number : $to_merge->number;
 				$this->accountingcodes_id = $this->accountingcodes_id > 0 ? (int)$this->accountingcodes_id : $to_merge->accountingcodes_id;
 				$this->search_index = $this->search_index();
-				$this->save();
 				$to_merge->delete();
+				$this->save();
 			} else {
 				$this->categories_id = $to_merge->categories_id > 0 ? (int)$to_merge->categories_id : $this->categories_id;
 				$this->banks_id = $to_merge->banks_id > 0 ? (int)$to_merge->banks_id : $this->banks_id;
@@ -186,10 +186,11 @@ class Writing extends Record {
 				$this->accountingcodes_id = $to_merge->accountingcodes_id > 0 ? (int)$to_merge->accountingcodes_id : $this->accountingcodes_id;
 				$this->paid = $to_merge->paid;
 				$this->search_index = $this->search_index();
-				$this->save();
 				$to_merge->delete();
+				$this->save();
 			}
 		} else {
+			$this->db->status(0, "u", __('line'));
 			return false;
 		}
 	}

@@ -47,7 +47,7 @@ class Accounting_Code extends Record {
 				number = ".$this->db->quote($this->number)
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('accounting plan'));
+		$this->db->status($result[1], "i", __('accounting plan'));
 
 		return $this->id;
 	}
@@ -67,7 +67,7 @@ class Accounting_Code extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_accountingcodes'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('accounting plan'));
+		$this->db->status($result[1], "d", __('accounting plan'));
 
 		return $this->id;
 	}

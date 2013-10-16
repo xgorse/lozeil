@@ -9,6 +9,8 @@ class Writings_Data_File {
 	public $sources_id = 0;
 	public $start;
 	public $stop;
+	public $nb_new_records = 0;
+	public $nb_ignored_records = 0;
 	public $csv_data = array();
 	public $unique_keys = array();
 	
@@ -117,7 +119,6 @@ class Writings_Data_File {
 			$this->unique_keys[] = $writing_imported->hash;
 		}
 		
-		$nb_records = 0;
 		$row_names = $this->csv_data[0];
 		unset($this->csv_data[0]);
 
@@ -135,7 +136,7 @@ class Writings_Data_File {
 				$writing->information = utf8_encode($information);
 				$writing->amount_inc_vat = (float)(substr($line[17], 0, -2).".".substr($line[17], -2));
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->comment.$writing->sources_id.$writing->amount_inc_vat.$writing->information);
+				$hash = hash('md5', $writing->day.$writing->sources_id.$writing->amount_inc_vat.$writing->information);
 				
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
@@ -147,15 +148,17 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
 					$writing->save();
-					$nb_records++;
+					$this->nb_new_records++;
 				} else {
-					//log_status(__('line %s of file %s already exists', array(implode(' - ', $line), $this->file_name)));
+					$this->nb_ignored_records++;
+					log_status(__('line %s of file %s already exists', array(implode(' - ', $line), $this->file_name)));
 				}
 			} else {
+				$this->nb_ignored_records++;
 				log_status(__('line %s of file %s is not in coop format', array(implode(' - ', $line), $this->file_name)));
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
+		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function import_as_cic() {
@@ -172,7 +175,6 @@ class Writings_Data_File {
 			$this->unique_keys[] = $writing_imported->hash;
 		}
 		
-		$nb_records = 0;
 		unset($this->csv_data[0]);
 		foreach ($this->csv_data as $line) {
 			if ($this->is_line_cic($line)) {
@@ -183,7 +185,7 @@ class Writings_Data_File {
 				$writing->banks_id = $this->banks_id;
 				$writing->amount_inc_vat = !empty($line[2]) ? (float)str_replace(",", ".", $line[2]) : (float)str_replace(",", ".", $line[3]);
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
+				$hash = hash('md5', $writing->day.$writing->banks_id.$writing->amount_inc_vat);
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
 
@@ -194,15 +196,17 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
 					$writing->save();
-					$nb_records++;
+					$this->nb_new_records++;
 				} else {
-					//log_status(__('line %s of file %s already exists', array(implode(' - ', $line), $this->file_name)));
+					$this->nb_ignored_records++;
+					log_status(__('line %s of file %s already exists', array(implode(' - ', $line), $this->file_name)));
 				}
 			} else {
+				$this->nb_ignored_records++;
 				log_status(__('line %s of file %s is not in cic format', array(implode(' - ', $line), $this->file_name)));
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
+		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function import_as_coop() {
@@ -219,7 +223,6 @@ class Writings_Data_File {
 			$this->unique_keys[] = $writing_imported->hash;
 		}
 		
-		$nb_records = 0;
 		$row_names = $this->csv_data[0];
 		unset($this->csv_data[0]);
 
@@ -242,7 +245,7 @@ class Writings_Data_File {
 				}
 				$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
+				$hash = hash('md5', $writing->day.$writing->banks_id.$writing->amount_inc_vat);
 				
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
@@ -254,15 +257,17 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
 					$writing->save();
-					$nb_records++;
+					$this->nb_new_records++;
 				} else {
-					//log_status(__('line %s of file %s already exists', array(implode(' - ', $line), $this->file_name)));
+					$this->nb_ignored_records++;
+					log_status(__('line %s of file %s already exists', array(implode(' - ', $line), $this->file_name)));
 				}
 			} else {
+				$this->nb_ignored_records++;
 				log_status(__('line %s of file %s is not in coop format', array(implode(' - ', $line), $this->file_name)));
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
+		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function import_as_ofx() {
@@ -279,7 +284,6 @@ class Writings_Data_File {
 			$this->unique_keys[] = $writing_imported->hash;
 		}
 		
-		$nb_records = 0;
 		$blocks = preg_split("/<STMTTRN>/", file_get_contents($this->tmp_name));
 		
 		foreach($blocks as $block) {
@@ -313,7 +317,7 @@ class Writings_Data_File {
 				$writing->information = $information;
 				$writing->banks_id = $this->banks_id;
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
+				$hash = hash('md5', $writing->day.$writing->banks_id.$writing->amount_inc_vat);
 
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
@@ -325,13 +329,14 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
 					$writing->save();
-					$nb_records++;
+					$this->nb_new_records++;
 				} else {
-					//log_status(__('line %s of file %s already exists', array(implode(' - ', $lines), $this->file_name)));
+					$this->nb_ignored_records++;
+					log_status(__('line %s of file %s already exists', array(implode(' - ', $lines), $this->file_name)));
 				}
 			}
 		}
-		log_status(__(('%s new records for %s'), array(strval($nb_records), $this->file_name)));
+		log_status(__(('%s new records for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
 	function is_line_paybox($line) {

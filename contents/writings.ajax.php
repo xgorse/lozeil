@@ -169,5 +169,5 @@ $writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['directio
 $writings->add_order("number DESC, amount_inc_vat DESC");
 $writings->select();
 
-echo $writings->show();
+echo json_encode(array('status' => show_status(), 'table' => $writings->show()));
 exit(0);

@@ -13,6 +13,7 @@ if (isset($_FILES) and $_FILES['menu_actions_import_file']['error'] == 0) {
 		$data->import();
 		$_SESSION['filter'] = $data->filters_after_import();
 	}
+	success_status(__(('%s new records, %s ignored'), array(strval($data->nb_new_records), strval($data->nb_ignored_records))));
 }
 
 header("Location: ".link_content("content=writings.php"));

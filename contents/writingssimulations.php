@@ -47,8 +47,9 @@ $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
 $writings_simulation = new Writings_Simulations();
+$start = isset($_GET['start']) ? $_GET['start'] : $_SESSION['filter']['start'];
 $timestamp_selected = determine_integer_from_post_get_session(null, "start");
-$heading = new Heading_Area(utf8_ucfirst(__('make a simulation')), $writings_simulation->display_timeline_at($timestamp_selected));
+$heading = new Heading_Area(utf8_ucfirst(__('make a simulation')), $writings_simulation->display_timeline_at($start));
 echo $heading->show();
 
 $simulations = new Writings_Simulations();

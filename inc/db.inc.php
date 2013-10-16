@@ -180,6 +180,8 @@ class db {
 			} else {
 				error_status($record." -> ".__('error while updating'));
 			}
+		} elseif($type == "p") {
+				success_status($record);
 		} else {
 			if ($result_id == 1) {
 				success_status($record." -> ".__('seems OK'));

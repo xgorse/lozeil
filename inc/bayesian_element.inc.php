@@ -51,7 +51,7 @@ class Bayesian_Element extends Record {
 			occurrences = ".(int)$this->occurrences
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('bayesian dictionary'));
+		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 
 		return $this->id;
 	}
@@ -65,7 +65,7 @@ class Bayesian_Element extends Record {
 			occurrences = ".(int)$this->occurrences." 
 			WHERE id = ".(int)$this->id
 		);
-		$this->db->status($result[1], "u", __('bayesian dictionary'));
+		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 
 		return $this->id;
 	}
@@ -74,7 +74,7 @@ class Bayesian_Element extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_bayesianelements'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('bayesian dictionary'));
+		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 
 		return $this->id;
 	}
@@ -95,7 +95,7 @@ class Bayesian_Element extends Record {
 				table_id = ".(int)$this->table_id.",
 				occurrences = 1");
 		}
-		$this->db->status($result[1], "u", __('bayesian dictionary'));
+		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 	}
 	
 	function decrement() {
@@ -106,11 +106,11 @@ class Bayesian_Element extends Record {
 				table_name = ".$this->db->quote($this->table_name)." AND
 				table_id = ".(int)$this->table_id." AND
 				occurrences > 0");
-		$this->db->status($result[1], "u", __('bayesian dictionary'));
+		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 	}
 	
 	function truncateTable() {
 		$result = $this->db->query("TRUNCATE TABLE ".$this->db->config['table_bayesianelements']);
-		$this->db->status($result[1], "u", __('bayesian dictionary'));
+		//$this->db->status($result[1], "u", __('bayesian dictionary'));
 	}
 }

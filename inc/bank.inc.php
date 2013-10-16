@@ -45,7 +45,7 @@ class Bank extends Record {
 			"selected = ".$this->selected
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('bank'));
+		$this->db->status($result[1], "i", __('bank'));
 
 		return $this->id;
 	}
@@ -65,7 +65,7 @@ class Bank extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_banks'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('bank'));
+		$this->db->status($result[1], "d", __('bank'));
 
 		return $this->id;
 	}

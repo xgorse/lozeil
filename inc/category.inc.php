@@ -45,7 +45,7 @@ class Category extends Record {
 				vat = ".(float)$this->vat
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('category'));
+		$this->db->status($result[1], "i", __('category'));
 
 		return $this->id;
 	}
@@ -66,7 +66,7 @@ class Category extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_categories'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('category'));
+		$this->db->status($result[1], "d", __('category'));
 
 		return $this->id;
 	}

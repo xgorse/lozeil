@@ -45,7 +45,7 @@ class Source extends Record {
 			SET name = ".$this->db->quote($this->name)
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('source'));
+		$this->db->status($result[1], "i", __('source'));
 
 		return $this->id;
 	}
@@ -64,7 +64,7 @@ class Source extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_sources'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('source'));
+		$this->db->status($result[1], "d", __('source'));
 
 		return $this->id;
 	}

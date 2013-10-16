@@ -126,7 +126,6 @@ input[type="submit"]:hover {
 	display: inline-block;
 }
 
-
 /* Itemsform */
 
 .itemsform li{
@@ -144,6 +143,25 @@ input[type="submit"]:hover {
 	display: block;
 	text-align: right;
 	float: left;
+}
+
+/* --- Layout Status --- */
+
+.layout_status {
+	position:fixed;
+    top:0;
+	text-align: center;
+	width: 100%;
+    z-index:100;
+	display: none;
+}
+
+.layout_status ul{
+	display: inline-block;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-color: black;
+	color: white;
 }
 
 /* --- Table writings --- */
@@ -496,7 +514,6 @@ tr.modified {
 	background-color: black;
 	color: white;
 	border: solid black thin;
-	z-index: 9999;
 }
 
 .menu_actions input[type="submit"],

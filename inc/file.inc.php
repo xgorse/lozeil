@@ -48,7 +48,7 @@ class File extends Record {
 			"value = ".$this->db->quote($this->value)
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('file'));
+		$this->db->status($result[1], "i", __('file'));
 
 		return $this->id;
 	}
@@ -68,7 +68,7 @@ class File extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_files'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('file'));
+		$this->db->status($result[1], "d", __('file'));
 
 		return $this->id;
 	}

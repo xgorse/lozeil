@@ -56,7 +56,7 @@ class Writings_Simulation extends Record {
 		$result = $this->db->query("DELETE FROM ".$this->db->config['table_writingssimulations'].
 			" WHERE id = '".$this->id."'"
 		);
-		$this->db->status($result[1], "u", __('writings simulations'));
+		$this->db->status($result[1], "d", __('writings simulations'));
 
 		return $this->id;
 	}
@@ -90,7 +90,7 @@ class Writings_Simulation extends Record {
 			evolution = ".$this->db->quote($this->evolution)
 		);
 		$this->id = $result[2];
-		$this->db->status($result[1], "u", __('writings simulations'));
+		$this->db->status($result[1], "i", __('writings simulations'));
 
 		return $this->id;
 	}

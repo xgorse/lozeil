@@ -73,6 +73,15 @@ class Theme_Default {
 		if ($GLOBALS['content'] == "login.php") {
 			$js_files[] = "medias/js/login.jquery.js";
 		}
+		if ($GLOBALS['content'] == "categories.php") {
+			$js_files[] = "medias/js/categories.jquery.js";
+		}
+		if ($GLOBALS['content'] == "sources.php") {
+			$js_files[] = "medias/js/sources.jquery.js";
+		}
+		if ($GLOBALS['content'] == "banks.php") {
+			$js_files[] = "medias/js/banks.jquery.js";
+		}
 		
 		$html = "";
 
@@ -84,6 +93,18 @@ class Theme_Default {
 		}
 
 		return $html;
+	}
+	
+	function show_status() {
+		$menu = "<div class=\"layout_status\">";
+		$menu .= $this->status();
+		$menu .= "</div>";
+	
+		return $menu;
+	}
+		
+	function status() {
+		return show_status();
 	}
 	
 	function content_top() {
