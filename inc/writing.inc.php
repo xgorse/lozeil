@@ -159,36 +159,21 @@ class Writing extends Record {
 	
 	function merge_from(Writing $to_merge) {
 		if ($this->banks_id == 0 or $to_merge->banks_id == 0) {
-			if ($this->banks_id != 0) {
-				$this->categories_id = $this->categories_id > 0 ? (int)$this->categories_id : $to_merge->categories_id;
-				$this->banks_id = $this->banks_id > 0 ? (int)$this->banks_id : $to_merge->banks_id;
-				$this->sources_id = $this->sources_id > 0 ? (int)$this->sources_id : $to_merge->sources_id;
-				$this->vat = $to_merge->vat > 0 ? $to_merge->vat : $this->vat;
-				$this->amount_excl_vat =  $this->calculate_amount_excl_vat();
-				$this->information = !empty($to_merge->comment) ? $to_merge->information."\n".$this->comment."\n".$this->information : $this->information;
-				$this->comment = !empty($to_merge->comment) ? $to_merge->comment : $this->comment;
-				$this->number = !empty($this->number) ? $this->number : $to_merge->number;
-				$this->accountingcodes_id = $this->accountingcodes_id > 0 ? (int)$this->accountingcodes_id : $to_merge->accountingcodes_id;
-				$this->search_index = $this->search_index();
-				$to_merge->delete();
-				$this->save();
-			} else {
-				$this->categories_id = $to_merge->categories_id > 0 ? (int)$to_merge->categories_id : $this->categories_id;
+			if ($this->banks_id == 0) {
 				$this->banks_id = $to_merge->banks_id > 0 ? (int)$to_merge->banks_id : $this->banks_id;
-				$this->sources_id = $to_merge->sources_id > 0 ? (int)$to_merge->sources_id : $this->sources_id;
-				$this->vat = $to_merge->vat > 0 ? $to_merge->vat : $this->vat;
 				$this->amount_inc_vat = $to_merge->amount_inc_vat;
-				$this->amount_excl_vat = $this->calculate_amount_excl_vat();
-				$this->information = !empty($to_merge->information) ? $to_merge->information."\n".$this->comment."\n".$this->information : $this->information;
-				$this->comment = !empty($to_merge->comment) ? $to_merge->comment : $this->comment;
 				$this->day = $to_merge->day;
-				$this->number = !empty($to_merge->number) ? $to_merge->number : $this->number;
-				$this->accountingcodes_id = $to_merge->accountingcodes_id > 0 ? (int)$to_merge->accountingcodes_id : $this->accountingcodes_id;
 				$this->paid = $to_merge->paid;
-				$this->search_index = $this->search_index();
-				$to_merge->delete();
-				$this->save();
 			}
+			$this->information = !empty($to_merge->information) ? $to_merge->information."\n".$this->comment."\n".$this->information : $this->information;
+			$this->comment = !empty($to_merge->comment) ? $to_merge->comment : $this->comment;
+			$this->categories_id = $to_merge->categories_id > 0 ? (int)$to_merge->categories_id : $this->categories_id;
+			$this->sources_id = $to_merge->sources_id > 0 ? (int)$to_merge->sources_id : $this->sources_id;
+			$this->vat = $to_merge->vat > 0 ? $to_merge->vat : $this->vat;
+			$this->number = !empty($to_merge->number) ? $to_merge->number : $this->number;
+			$this->accountingcodes_id = $to_merge->accountingcodes_id > 0 ? (int)$to_merge->accountingcodes_id : $this->accountingcodes_id;
+			$to_merge->delete();
+			$this->save();
 		} else {
 			$this->db->status(0, "u", __('line'));
 			return false;
@@ -197,16 +182,12 @@ class Writing extends Record {
 	
 	function split($amount = 0) {
 		$this->amount_inc_vat = ($this->amount_inc_vat - $amount);
-		$this->amount_excl_vat = $this->calculate_amount_excl_vat();
-		$this->search_index = $this->search_index();
 		$this->save();
 		
 		$writing = new Writing();
 		$writing->load($this->id);
 		$writing->id = 0;
 		$writing->amount_inc_vat = $amount;
-		$writing->amount_excl_vat = $writing->calculate_amount_excl_vat();
-		$writing->search_index = $this->search_index();
 		
 		return $writing->save();
 	}

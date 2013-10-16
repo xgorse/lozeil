@@ -179,6 +179,8 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge->search_index = $writing_to_merge->search_index();
 		
 		$writing->merge_from($writing_to_merge);
+		$writing->save();
+		$writing->load(1);
 		
 		$this->assertTrue($writing_to_merge->categories_id == $writing->categories_id);
 		$this->assertTrue($writing_to_merge->amount_excl_vat == $writing->amount_excl_vat);
@@ -218,6 +220,8 @@ class tests_Writing extends TableTestCase {
 		$writing_to_merge_3->search_index = $writing_to_merge_3->search_index();
 		
 		$writing->merge_from($writing_to_merge_2);
+		$writing->save();
+		$writing->load(1);
 		$this->assertTrue($writing_to_merge_3->categories_id == $writing->categories_id);
 		$this->assertTrue($writing_to_merge_3->amount_excl_vat == $writing->amount_excl_vat);
 		$this->assertTrue($writing_to_merge_3->amount_inc_vat == $writing->amount_inc_vat);
@@ -288,7 +292,7 @@ class tests_Writing extends TableTestCase {
 		$this->assertTrue($writing2_loaded->load(1));
 		$this->assertFalse($writing_loaded->load(2));
 		
-		$this->assertEqual($writing2_loaded->categories_id, 1);
+		$this->assertEqual($writing2_loaded->categories_id, 2);
 		$this->assertEqual($writing2_loaded->amount_excl_vat, 236.966825);
 		$this->assertEqual($writing2_loaded->amount_inc_vat, 250);
 		$this->assertEqual($writing2_loaded->banks_id, 4);
@@ -296,9 +300,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing2_loaded->day, mktime(10, 0, 0, 7, 29, 2013));
 		$this->assertEqual($writing2_loaded->information, "Autre complément d'infos\nCeci est un test\nComplément d'infos");
 		$this->assertEqual($writing2_loaded->paid, 0);
-		$this->assertEqual($writing2_loaded->sources_id, 2);
-		$this->assertEqual($writing2_loaded->accountingcodes_id, 5);
-		$this->assertEqual($writing2_loaded->number, 1);
+		$this->assertEqual($writing2_loaded->sources_id, 1);
+		$this->assertEqual($writing2_loaded->accountingcodes_id, 2);
+		$this->assertEqual($writing2_loaded->number, 2);
 		$this->assertEqual($writing2_loaded->vat, 5.5);
 		
 		$this->truncateTable("writings");
@@ -317,10 +321,13 @@ class tests_Writing extends TableTestCase {
 		$writing2->vat = 19.6;
 		
 		$writing->merge_from($writing2);
+		$writing->save();
+		$writing->load(1);
+		
 		$this->assertTrue($writing->amount_inc_vat == 250);
 		$this->assertTrue($writing->vat == 19.6);
 		$this->assertTrue($writing->amount_excl_vat == 209.030100);
-		$this->assertTrue($writing->accountingcodes_id == 5);
+		$this->assertTrue($writing->accountingcodes_id == 2);
 		
 		$this->truncateTable("writings");
 		
@@ -337,6 +344,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing2->merge_from($writing);
 		
+		$writing2->save();
+		$writing2->load(1);
 		$this->assertTrue($writing2->amount_inc_vat == 250);
 		$this->assertTrue($writing2->vat == 19.6);
 		$this->assertTrue($writing2->amount_excl_vat == 209.030100);
@@ -409,6 +418,7 @@ Autre complément d'infos");
 		$writing->save();
 		
 		$writing->split(250);
+		$writing->load(1);
 		$writing_splited = new Writing();
 		$writing_splited->load(2);
 		$this->assertEqual($writing->amount_inc_vat, -50);
@@ -438,6 +448,7 @@ Autre complément d'infos");
 		$writing->save();
 		
 		$writing->split(225);
+		$writing->load(1);
 		$writing_splited = new Writing();
 		$writing_splited->load(2);
 		$this->assertEqual($writing->amount_inc_vat, 0);
