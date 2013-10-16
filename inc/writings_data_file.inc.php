@@ -136,7 +136,7 @@ class Writings_Data_File {
 				$writing->information = utf8_encode($information);
 				$writing->amount_inc_vat = (float)(substr($line[17], 0, -2).".".substr($line[17], -2));
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->sources_id.$writing->amount_inc_vat.$writing->information);
+				$hash = hash('md5', $writing->day.$writing->comment.$writing->sources_id.$writing->amount_inc_vat.$writing->information);
 				
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
@@ -185,7 +185,7 @@ class Writings_Data_File {
 				$writing->banks_id = $this->banks_id;
 				$writing->amount_inc_vat = !empty($line[2]) ? (float)str_replace(",", ".", $line[2]) : (float)str_replace(",", ".", $line[3]);
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->banks_id.$writing->amount_inc_vat);
+				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
 
@@ -245,7 +245,7 @@ class Writings_Data_File {
 				}
 				$writing->amount_inc_vat = (float)str_replace(",", ".", $line[3]);
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->banks_id.$writing->amount_inc_vat);
+				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 				
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
@@ -317,7 +317,7 @@ class Writings_Data_File {
 				$writing->information = $information;
 				$writing->banks_id = $this->banks_id;
 				$writing->paid = 1;
-				$hash = hash('md5', $writing->day.$writing->banks_id.$writing->amount_inc_vat);
+				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
 
 				if (!in_array($hash, $this->unique_keys)) {
 					$this->determine_start_stop($writing->day);
