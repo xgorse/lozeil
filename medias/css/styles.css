@@ -60,6 +60,14 @@ img { border: none; }
 	min-height: 600px;
 }
 
+.content_copyright {
+	margin: 8px auto 5px auto;
+	text-align: left;
+	color: #999;
+	text-shadow: 0 1px 0 #FFF;
+	font-size: 0.8em;
+}
+
 td, th {
 	padding: 5px 10px;
 	border-bottom: 1px solid #efefef;

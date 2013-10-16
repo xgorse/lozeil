@@ -112,7 +112,14 @@ class Theme_Default {
 	}
 
 	function content_bottom() {
-		return "</div>";
+		return "</div>
+		<div class=\"content_copyright\">
+		<div>
+		<ul>
+		<li class=\"\">&copy; No Parking 2013 - 2013 v.".$GLOBALS['config']['version']."</li>
+		</ul>
+		</div>
+		</div>";
 	}
 	
 	function body_bottom() {
