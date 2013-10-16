@@ -356,9 +356,13 @@ class Writings extends Collector {
 		$banks->select();
 		$categories_names = $categories->names();
 		$categories_names['none'] = __('&#60none&#62');
+		$banks_names = $banks->names_of_selected_banks();
+		$banks_names['none'] = __('&#60none&#62');
+		$sources_names = $sources->names();
+		$sources_names['none'] = __('&#60none&#62');
 		$category = new Html_Select("filter_categories_id", $categories_names, isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
-		$source = new Html_Select("filter_sources_id", $sources->names(), isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
-		$bank = new Html_Select("filter_banks_id", $banks->names_of_selected_banks(), isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
+		$source = new Html_Select("filter_sources_id", $sources_names, isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
+		$bank = new Html_Select("filter_banks_id", $banks_names, isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
 		$accountingcode_input = new Html_Input_Ajax("filter_accountingcodes_id", link_content("content=writings.ajax.php"), isset($_SESSION['filter']['accountingcodes_id']) ? array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname()) : array());
 		$number = new Html_Input("filter_number", isset($_SESSION['filter']['number']) ? $_SESSION['filter']['number'] : "");
 		$amount_inc_vat = new Html_Input("filter_amount_inc_vat", isset($_SESSION['filter']['amount_inc_vat']) ? $_SESSION['filter']['amount_inc_vat'] : "");
@@ -702,9 +706,15 @@ class Writings extends Collector {
 			$cleaned['categories_id'] = $post['filter_categories_id'];
 		}
 		if ($post['filter_sources_id']) {
+			if ($post['filter_sources_id'] == 'none') {
+				$post['filter_sources_id'] = 0;
+			}
 			$cleaned['sources_id'] = $post['filter_sources_id'];
 		}
 		if ($post['filter_banks_id']) {
+			if ($post['filter_banks_id'] == 'none') {
+				$post['filter_banks_id'] = 0;
+			}
 			$cleaned['banks_id'] = $post['filter_banks_id'];
 		}
 		if (isset($post['filter_accountingcodes_id'])) {
