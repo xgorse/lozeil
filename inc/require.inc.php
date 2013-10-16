@@ -58,6 +58,7 @@ require $current_directory."/writing.inc.php";
 require $current_directory."/writing_imported.inc.php";
 require $current_directory."/writings.inc.php";
 require $current_directory."/writings_data_file.inc.php";
+require $current_directory."/writings_export.inc.php";
 require $current_directory."/writings_followup.inc.php";
 require $current_directory."/writings_imported.inc.php";
 require $current_directory."/writings_simulation.inc.php";

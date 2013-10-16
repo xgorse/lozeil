@@ -417,5 +417,5 @@ function determine_start_stop($start, $stop) {
 }
 
 function timestamp_from_datepicker($datepicker) {
-	return mktime(0, 0, 0, $datepicker['m'], $datepicker['d'], $datepicker['Y']);
+	return mktime(0, 0, 0, (int)$datepicker['m'], (int)$datepicker['d'], (int)$datepicker['Y']);
 }
