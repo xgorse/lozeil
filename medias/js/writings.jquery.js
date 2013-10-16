@@ -281,7 +281,7 @@ $(document).ready(function() {
 			var form = $(this);
 			$.post(
 				"index.php?content=categories.ajax.php",
-				{ method: "json", action: "filter", value: $(this).val() },
+				{ method: "json", action: "fill_vat", value: $(this).val() },
 				function(data){
 					form.parent().parent().parent().find("#vat").val(data).change();
 				}
@@ -324,7 +324,10 @@ function make_drag_and_drop() {
 				})
 			},
 			url: "index.php?content=writings.ajax.php",
-			paramName: $(this).attr('id')
+			paramName: $(this).attr('id'),
+			fallback : function () {
+				return false;
+			}
 		})
 	});
 	$("#table_writings tr.draggable").droppable({
