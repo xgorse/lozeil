@@ -4,6 +4,7 @@
 class Html_Cubismchart {
 	public $name = "";
 	public $data = array();
+	public $data_per_category = array();
 	public $width = 1095;
 	public $height = 55;
 	public $start = 0;

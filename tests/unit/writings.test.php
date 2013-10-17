@@ -256,7 +256,57 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
-	function test_balance_per_day_in_a_year_in_array() {
+	function test_get_balance_per_category() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 1;
+		$writing->categories_id = 2;
+		$writing->day = mktime(0, 0, 0, 1, 1, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 15;
+		$writing->categories_id = 2;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 16;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 10, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -15;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 2, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->day = mktime(10, 0, 0, 2, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 10;
+		$writing->day = mktime(10, 0, 0, 1, 5, 2013);
+		$writing->save();
+		$writings = new Writings();
+		$writings->select();
+		$balance_per_day = $writings->get_balance_per_category(mktime(0, 0, 0, 1, 1, 2013));
+		$this->assertTrue(count($balance_per_day[0]) == 365);
+		$this->assertTrue(count($balance_per_day[1]) == 365);
+		$this->assertTrue(count($balance_per_day[2]) == 365);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 1, 2013)] == 0);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 5, 2013)] == 10);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 2, 21, 2013)] == -2);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 1, 2013)] == 0);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 11, 2013)] == 16);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 2, 21, 2013)] == 1);
+		$this->assertTrue($balance_per_day[2][mktime(0, 0, 0, 1, 1, 2013)] == 1);
+		$this->assertTrue($balance_per_day[2][mktime(0, 0, 0, 1, 21, 2013)] == 16);
+		$this->truncateTable("writings");
+	}
+	
+	function test_get_balance_all_categories() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 1;
+		$writing->day = mktime(10, 0, 0, 1, 1, 2012);
+		$writing->save();
 		$writing = new Writing();
 		$writing->amount_inc_vat = 15;
 		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
@@ -279,13 +329,14 @@ class tests_Writings extends TableTestCase {
 		$writing->save();
 		$writings = new Writings();
 		$writings->select();
-		$balance_per_day = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, 2013));
+		$balance_per_day = $writings->get_balance_all_categories(mktime(0, 0, 0, 1, 1, 2013));
+		
 		$this->assertTrue(count($balance_per_day) == 365);
-		$this->assertTrue($balance_per_day[0] == 0);
-		$this->assertTrue($balance_per_day[4] == 10);
-		$this->assertTrue($balance_per_day[9] == 26);
-		$this->assertTrue($balance_per_day[19] == 41);
-		$this->assertTrue($balance_per_day[50] == 38);
+		$this->assertTrue($balance_per_day[mktime(0, 0, 0, 1, 1, 2013)] == 1);
+		$this->assertTrue($balance_per_day[mktime(0, 0, 0, 1, 6, 2013)] == 11);
+		$this->assertTrue($balance_per_day[mktime(0, 0, 0, 1, 12, 2013)] == 27);
+		$this->assertTrue($balance_per_day[mktime(0, 0, 0, 1, 25, 2013)] == 42);
+		$this->assertTrue($balance_per_day[mktime(0, 0, 0, 2, 25, 2013)] == 39);
 		$this->truncateTable("writings");
 	}
 
@@ -295,22 +346,6 @@ class tests_Writings extends TableTestCase {
 		$this->assertEqual($writings->filters['start'], 1362783600);
 		$this->assertEqual($writings->filters['stop'], 1362870000);
 		$this->assertEqual($writings->filters['search_index'], "fullsearch");
-		$this->truncateTable("writings");
-	}
-	
-	function test_cancel_last_operation() {
-		$writing = new Writing();
-		$writing->save();
-		$writing = new Writing();
-		$writing->save();
-		$writing = new Writing();
-		$writing->save();
-		$writing = new Writing();
-		$writing->save();
-		$writings = new Writings();
-		$writings->cancel_last_operation();
-		$writings->select();
-		$this->assertTrue(count($writings) == 0);
 		$this->truncateTable("writings");
 	}
 	

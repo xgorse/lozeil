@@ -299,7 +299,7 @@ class Writings extends Collector {
 		$writings->select();
 		
 		$cubismchart = new Html_Cubismchart("writings");
-		$cubismchart->data = $writings->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, date('Y',$writings->month)));
+		$cubismchart->data = $writings->get_balance_all_categories($timestamp);
 		$cubismchart->start = $writings->month;
 		return $cubismchart->show();
 	}
@@ -317,25 +317,12 @@ class Writings extends Collector {
 	function show_balance_at($timestamp_max) {
 		$amount = 0;
 		foreach ($this->instances as $writing) {
-			if (($writing->day < $timestamp_max) and ((int)$writing->categories_id == $this->categories_id)) {
+			if ($writing->day < $timestamp_max) {
 				$amount += $writing->amount_inc_vat;
 			}
 		}
 		
 		return round($amount, 2);
-	}
-	
-	function balance_per_day_in_a_year_in_array($timestamp_start) {
-		$values = array();
-		$nb_day = is_leap(date('Y',$timestamp_start) + 1) ? 366 : 365;
-		
-		for ($i = 0; $i < $nb_day; $i++) {
-			$timestamp_start = strtotime('+1 day', $timestamp_start);
-			$value = $this->show_balance_at($timestamp_start);
-			$values[] = $value;
-		}
-		
-		return $values;
 	}
 	
 	function form_filter($start, $stop, $value = "") {
@@ -428,16 +415,6 @@ class Writings extends Collector {
 			foreach ($element as $key => $value) {
 				$this->filters[$key] = $value;
 			}
-		}
-	}
-	
-	function cancel_last_operation() {
-		$writings = new Writings();
-		$max = $writings->db->Value("SELECT MAX(timestamp) FROM ".$this->db->config['table_writings']);
-		$writings->filter_with(array('timestamp_start' => ($max - 1), 'timestamp_stop' => ($max)));
-		$writings->select();
-		foreach ($writings as $instance) {
-			$instance->delete();
 		}
 	}
 	
@@ -733,5 +710,57 @@ class Writings extends Collector {
 			$cleaned['duplicate'] = 1;
 		}
 		return $cleaned;
+	}
+	
+	function get_balance_per_category($timestamp) {
+		$balance = array();
+		foreach ($this as $writing) {
+			$balance[$writing->categories_id][mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day))] = isset($balance[$writing->categories_id][$writing->day]) ? $balance[$writing->categories_id][$writing->day] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+		}
+		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		foreach($balance as $id => $category) {
+			$timestamp_start = determine_first_day_of_year($timestamp);
+			$previous = 0;
+			for ($i = 0; $i < $nb_day; $i++) {
+				if (!isset($category[$timestamp_start])) {
+					$category[$timestamp_start] = 0 + $previous;
+				} else {
+					$category[$timestamp_start] += $previous;
+				}
+				$previous = $category[$timestamp_start];
+				$timestamp_start = strtotime('+1 day', $timestamp_start);
+			}
+			ksort($category);
+			$balance[$id] = $category;
+		}
+		ksort($balance);
+		return $balance;
+	}
+	
+	function get_balance_all_categories($timestamp) {
+		$balance = array();
+		$start = determine_first_day_of_year($timestamp);
+		foreach ($this as $writing) {
+			$day = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day));
+			if ($day < $start) {
+				$balance[$start] = isset($balance[$start]) ? $balance[$start] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+			} else {
+				$balance[$day] = isset($balance[$day]) ? ($balance[$day] + $writing->amount_inc_vat) : $writing->amount_inc_vat;
+			}
+		}
+		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		$previous = 0;
+		$timestamp_start = $start;
+		for ($i = 0; $i < $nb_day; $i++) {
+			if (!isset($balance[$timestamp_start])) {
+				$balance[$timestamp_start] = 0 + $previous;
+			} else {
+				$balance[$timestamp_start] += $previous;
+			}
+			$previous = $balance[$timestamp_start];
+			$timestamp_start = strtotime('+1 day', $timestamp_start);
+		}
+		ksort($balance);
+		return $balance;
 	}
 }
