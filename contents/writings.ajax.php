@@ -141,6 +141,10 @@ switch ($_REQUEST['action']) {
 	case 'form_options' :
 		if ($_POST['option'] == 'delete') {
 			$writings->delete_from_ids(json_decode($_POST['ids']));
+		} elseif ($_POST['option'] == 'estimate_accounting_code') {
+			$writings->estimate_accounting_code_from_ids(json_decode($_POST['ids']));
+		} elseif ($_POST['option'] == 'estimate_category') {
+			$writings->estimate_category_from_ids(json_decode($_POST['ids']));
 		} else {
 			echo $writings->determine_show_form_modify($_POST['option']);
 			exit(0);

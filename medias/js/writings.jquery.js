@@ -394,7 +394,7 @@ function reload_select_modify_writings() {
 function confirm_option(text) {
 	var select = $("#options_modify_writings");
 	
-	if (select.val() == 'delete') {
+	if (select.val() == 'delete' || select.val() == 'estimate_accounting_code' || select.val() == 'estimate_category') {
 		if(confirm(text)) {
 			var ids = get_checked_values();
 			$.post(

@@ -434,6 +434,8 @@ class Writings extends Collector {
 			"change_vat" => __('change vat to')." ...",
 			"change_day" => __('change date to')." ...",
 			"duplicate" => __('duplicate over')." ...",
+			"estimate_accounting_code" => __('estimate accounting code'),
+			"estimate_category" => __('estimate category'),
 			"delete" => __('delete')
 		);
 		$select = new Html_Select("options_modify_writings", $options);
@@ -857,5 +859,28 @@ class Writings extends Collector {
 		ksort($balance);
 		
 		return $balance;
+	}
+	
+	function estimate_accounting_code_from_ids($ids) {
+		$bayesianelements_accounting_codes_id = new Bayesian_Elements();
+		$bayesianelements_accounting_codes_id->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
+			$writing->update();
+		}
+	}
+	
+	function estimate_category_from_ids($ids) {
+		$bayesianelements_categories_id = new Bayesian_Elements();
+		$bayesianelements_categories_id->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		foreach($ids as $id) {
+			$writing = new Writing();
+			$writing->load($id);
+			$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
+			$writing->update();
+		}
 	}
 }
