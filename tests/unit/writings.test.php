@@ -256,7 +256,7 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
-	function test_get_balance_per_category() {
+	function test_get_balance_per_day_per_category() {
 		$writing = new Writing();
 		$writing->amount_inc_vat = 1;
 		$writing->categories_id = 2;
@@ -287,7 +287,7 @@ class tests_Writings extends TableTestCase {
 		$writing->save();
 		$writings = new Writings();
 		$writings->select();
-		$balance_per_day = $writings->get_balance_per_category(mktime(0, 0, 0, 1, 1, 2013));
+		$balance_per_day = $writings->get_balance_per_day_per_category(mktime(0, 0, 0, 1, 1, 2013));
 		$this->assertTrue(count($balance_per_day[0]) == 365);
 		$this->assertTrue(count($balance_per_day[1]) == 365);
 		$this->assertTrue(count($balance_per_day[2]) == 365);
@@ -302,7 +302,7 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
-	function test_get_balance_all_categories() {
+	function test_get_balance_per_day_all_categories() {
 		$writing = new Writing();
 		$writing->amount_inc_vat = 1;
 		$writing->day = mktime(10, 0, 0, 1, 1, 2012);
@@ -329,7 +329,7 @@ class tests_Writings extends TableTestCase {
 		$writing->save();
 		$writings = new Writings();
 		$writings->select();
-		$balance_per_day = $writings->get_balance_all_categories(mktime(0, 0, 0, 1, 1, 2013));
+		$balance_per_day = $writings->get_balance_per_day_all_categories(mktime(0, 0, 0, 1, 1, 2013));
 		
 		$this->assertTrue(count($balance_per_day) == 365);
 		$this->assertTrue($balance_per_day[mktime(0, 0, 0, 1, 1, 2013)] == 1);
@@ -766,5 +766,100 @@ class tests_Writings extends TableTestCase {
 		);
 		$writings = new Writings();
 		$this->assertEqual($expected, $writings->clean_filter_from_ajax($post));
+	}
+	
+	function test_get_amount_monthly_per_category() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = 1;
+		$writing->categories_id = 2;
+		$writing->day = mktime(0, 0, 0, 1, 1, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 15;
+		$writing->categories_id = 2;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 16;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 10, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -15;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 2, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->day = mktime(10, 0, 0, 2, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 10;
+		$writing->day = mktime(10, 0, 0, 1, 5, 2013);
+		$writing->save();
+		$writings = new Writings();
+		$writings->select();
+		$balance_per_day = $writings->get_amount_monthly_per_category(mktime(0, 0, 0, 1, 1, 2013));
+		$this->assertTrue(count($balance_per_day[0]) == 365);
+		$this->assertTrue(count($balance_per_day[1]) == 365);
+		$this->assertTrue(count($balance_per_day[2]) == 365);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 1, 2013)] == 10);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 5, 2013)] == 10);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 2, 21, 2013)] == -12);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 3, 1, 2013)] == 0);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 1, 2013)] == 16);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 11, 2013)] == 16);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 2, 21, 2013)] == -15);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 3, 1, 2013)] == 0);
+		$this->assertTrue($balance_per_day[2][mktime(0, 0, 0, 1, 1, 2013)] == 16);
+		$this->assertTrue($balance_per_day[2][mktime(0, 0, 0, 1, 21, 2013)] == 16);
+		$this->assertTrue($balance_per_day[2][mktime(0, 0, 0, 2, 1, 2013)] == 0);
+		$this->truncateTable("writings");
+	}
+	
+	function test_get_amount_weekly_per_category() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 10;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 7, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 10;
+		$writing->day = mktime(10, 0, 0, 1, 7, 2013);
+		$writing->save();
+		$writings = new Writings();
+		$writings->select();
+		$balance_per_day = $writings->get_amount_weekly_per_category(mktime(0, 0, 0, 1, 1, 2013));
+		$this->assertTrue(count($balance_per_day[0]) == 365);
+		$this->assertTrue(count($balance_per_day[1]) == 365);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 6, 2013)] == 0);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 7, 2013)] == 10);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 13, 2013)] == 10);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 14, 2013)] == -24);
+		$this->assertTrue($balance_per_day[0][mktime(0, 0, 0, 1, 21, 2013)] == 0);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 6, 2013)] == 0);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 7, 2013)] == 10);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 13, 2013)] == 10);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 14, 2013)] == -24);
+		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 21, 2013)] == 0);
+		$this->truncateTable("writings");
 	}
 }

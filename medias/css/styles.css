@@ -977,6 +977,10 @@ canvas {
 	padding-bottom: 30px;
 }
 
+.timeseries label {
+	margin-right: 5px;
+}
+
 /* --- update dictionary --- */
 
 .writings_update_bayesian_element {

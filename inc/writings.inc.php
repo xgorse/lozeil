@@ -299,7 +299,7 @@ class Writings extends Collector {
 		$writings->select();
 		
 		$cubismchart = new Html_Cubismchart("writings");
-		$cubismchart->data = $writings->get_balance_all_categories($timestamp);
+		$cubismchart->data = $writings->get_balance_per_day_all_categories($timestamp);
 		$cubismchart->start = $writings->month;
 		return $cubismchart->show();
 	}
@@ -712,10 +712,11 @@ class Writings extends Collector {
 		return $cleaned;
 	}
 	
-	function get_balance_per_category($timestamp) {
+	function get_balance_per_day_per_category($timestamp) {
 		$balance = array();
 		foreach ($this as $writing) {
-			$balance[$writing->categories_id][mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day))] = isset($balance[$writing->categories_id][$writing->day]) ? $balance[$writing->categories_id][$writing->day] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+			$day = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day));
+			$balance[$writing->categories_id][$day] = isset($balance[$writing->categories_id][$day]) ? $balance[$writing->categories_id][$day] + $writing->amount_inc_vat : $writing->amount_inc_vat;
 		}
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
 		foreach($balance as $id => $category) {
@@ -737,7 +738,7 @@ class Writings extends Collector {
 		return $balance;
 	}
 	
-	function get_balance_all_categories($timestamp) {
+	function get_balance_per_day_all_categories($timestamp) {
 		$balance = array();
 		$start = determine_first_day_of_year($timestamp);
 		foreach ($this as $writing) {
@@ -759,6 +760,66 @@ class Writings extends Collector {
 			}
 			$previous = $balance[$timestamp_start];
 			$timestamp_start = strtotime('+1 day', $timestamp_start);
+		}
+		ksort($balance);
+		return $balance;
+	}
+	
+	function get_amount_monthly_per_category($timestamp) {
+		$balance = array();
+		foreach ($this as $writing) {
+			$month = mktime(0, 0, 0, date('m', $writing->day), 1, date('Y', $writing->day));
+			$balance[$writing->categories_id][$month] = isset($balance[$writing->categories_id][$month]) ? $balance[$writing->categories_id][$month] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+		}
+		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		foreach($balance as $id => $category) {
+			$timestamp_start = determine_first_day_of_year($timestamp);
+			$previous_month = 0;
+			for ($i = 0; $i < $nb_day; $i++) {
+				if ($previous_month != date('m', $timestamp_start)) {
+					$previous = 0;
+				}
+				if (!isset($category[$timestamp_start])) {
+					$category[$timestamp_start] = 0 + $previous;
+				} else {
+					$category[$timestamp_start] += $previous;
+				}
+				$previous = $category[$timestamp_start];
+				$previous_month = date('m', $timestamp_start);
+				$timestamp_start = strtotime('+1 day', $timestamp_start);
+			}
+			ksort($category);
+			$balance[$id] = $category;
+		}
+		ksort($balance);
+		return $balance;
+	}
+	
+	function get_amount_weekly_per_category($timestamp) {
+		$balance = array();
+		foreach ($this as $writing) {
+			$week = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day) - date('N', $writing->day) + 1, date('Y', $writing->day));
+			$balance[$writing->categories_id][$week] = isset($balance[$writing->categories_id][$week]) ? $balance[$writing->categories_id][$week] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+		}
+		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		foreach($balance as $id => $category) {
+			$timestamp_start = determine_first_day_of_year($timestamp);
+			$previous_month = 0;
+			for ($i = 0; $i < $nb_day; $i++) {
+				if ($previous_month != date('W', $timestamp_start)) {
+					$previous = 0;
+				}
+				if (!isset($category[$timestamp_start])) {
+					$category[$timestamp_start] = 0 + $previous;
+				} else {
+					$category[$timestamp_start] += $previous;
+				}
+				$previous = $category[$timestamp_start];
+				$previous_month = date('W', $timestamp_start);
+				$timestamp_start = strtotime('+1 day', $timestamp_start);
+			}
+			ksort($category);
+			$balance[$id] = $category;
 		}
 		ksort($balance);
 		return $balance;
