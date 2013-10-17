@@ -114,9 +114,11 @@ class Writing extends Record {
 	
 	function clean($post) {
 		$cleaned = array();
+		
 		if (isset($post['datepicker'])) {
 			$cleaned['day'] = timestamp_from_datepicker($post['datepicker']);
 		}
+		
 		if (isset($post['accountingcodes_id'])) {
 			if ($post['accountingcodes_id'] != 0) {
 				$cleaned['accountingcodes_id'] = (int)$post['accountingcodes_id'];
@@ -124,18 +126,22 @@ class Writing extends Record {
 		} else {
 			$cleaned['accountingcodes_id'] = 0;
 		}
-		$cleaned['categories_id'] = (int)$post['categories_id'];
-		$cleaned['sources_id'] = (int)$post['sources_id'];
+		
 		if (isset($post['paid'])) {
 			$cleaned['paid'] = (int)$post['paid'];
 		}
+		
 		if (isset($post['amount_inc_vat'])) {
 			$cleaned['amount_inc_vat'] = str_replace(",", ".", $post['amount_inc_vat']);
 		}
+		
+		$cleaned['categories_id'] = (int)$post['categories_id'];
+		$cleaned['sources_id'] = (int)$post['sources_id'];
 		$cleaned['comment'] = $post['comment'];
 		$cleaned['amount_excl_vat'] = str_replace(",", ".", $post['amount_excl_vat']);
 		$cleaned['vat'] = str_replace(",", ".", $post['vat']);
 		$cleaned['number'] = $post['number'];
+		
 		return $cleaned;
 	}
 	
@@ -186,10 +192,8 @@ class Writing extends Record {
 		
 		$writing = new Writing();
 		$writing->load($this->id);
-		$writing->id = 0;
 		$writing->amount_inc_vat = $amount;
-		
-		return $writing->save();
+		$writing->insert();
 	}
 	
 	function form() {
@@ -272,25 +276,19 @@ class Writing extends Record {
 	}
 	
 	function form_in_table() {
-		$form = "<tr class=\"table_writings_form_modify\"><td colspan=\"9\" ><div id=\"table_edit_writings\">
-			<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
-			<div class=\"table_edit_writings_form\">
-			<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
-		
-		$input_hidden = new Html_Input("action", "edit", "submit");
-		$input_hidden_id = new Html_Input("writings_id", $this->id);
-		$form .= $input_hidden->input_hidden().$input_hidden_id->input_hidden();
-		
 		$categories = new Categories();
 		$categories->select();
 		$sources = new Sources();
 		$sources->select();
-		$currentcode = array();
+		
 		$accountingcode = new Accounting_Code();
+		$currentcode = array();
 		if($accountingcode->load($this->accountingcodes_id)) {
-			$currentcode[] = $accountingcode->number." - ".$accountingcode->name;
+			$currentcode[] = $accountingcode->fullname();
 		}
 		
+		$input_hidden = new Html_Input("action", "edit", "submit");
+		$input_hidden_id = new Html_Input("writings_id", $this->id);
 		$datepicker = new Html_Input_Date("datepicker", $this->day);
 		$category = new Html_Select("categories_id", $categories->names(), $this->categories_id);
 		$source = new Html_Select("sources_id", $sources->names(), $this->sources_id);
@@ -302,10 +300,8 @@ class Writing extends Record {
 		$comment = new Html_Textarea("comment", $this->comment);
 		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
 		$submit = new Html_Input("submit", __('save'), "submit");
-		$link = "";
-		if ($this->attachment) {
-			$link = $this->link_to_file_attached();
-		}
+		
+		$link = $this->attachment ? $this->link_to_file_attached() : "";
 		
 		if ($this->banks_id > 0) {
 			$disabled = array('disabled' => 'disabled');
@@ -353,69 +349,104 @@ class Writing extends Record {
 			)
 		);				
 		$list = new Html_List($grid);
-		$form .= $list->show();
 		
-		$form .= "</form></div></div></td><td colspan=\"2\" >".$link."</td></tr>";
+		$form = "<tr class=\"table_writings_form_modify\">
+					<td colspan=\"9\" >
+						<div id=\"table_edit_writings\">
+						<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
+							<div class=\"table_edit_writings_form\">
+								<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
+								$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
+								"</form>
+							</div>
+						</div>
+					</td>
+					<td colspan=\"2\" >".
+					$link."
+					</td>
+				</tr>";
 
 		return $form;
 	}
 	
 	function form_duplicate() {
-		$form = "<div class=\"duplicate\"><form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "duplicate");
 		$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
 		$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
-		$form .= "</form></div>";
+		
+		$form = "<div class=\"duplicate\">
+					<form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden()."
+					</form>
+				</div>";
 		
 		return $form;
 	}
 	
 	function form_delete() {
 		if ($this->banks_id == 0) {
-			$form = "<div class=\"delete\"><form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">";
 			$input_hidden_id = new Html_Input("table_writings_delete_id", $this->id);
 			$input_hidden_action = new Html_Input("action", "delete");
 			$submit = new Html_Input("table_writings_delete_submit", "", "submit");
 			$submit->properties = array(
 				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
 			);
-			$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input();
-			$form .= "</form></div>";
+			
+			$form = "<div class=\"delete\">
+						<form method=\"post\" name=\"table_writings_delete\" action=\"\" enctype=\"multipart/form-data\">".
+							$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
+						</form>
+					</div>";
 			
 			return $form;
 		}
 	}
 	
 	function form_split() {
-		$form = "<div class=\"split\"><form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_id = new Html_Input("table_writings_split_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "split");
 		$submit = new Html_Input("table_writings_split_submit", "", "submit");
 		$input_hidden_value = new Html_Input("table_writings_split_amount", "");
-		$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
-		$form .= "</form></div>";
+
+		$form = "<div class=\"split\">
+					<form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden()."
+					</form>
+				</div>";
 		
 		return $form;
 	}
 	
 	function form_forward() {
 		if ($this->banks_id == 0) {
-			$form = "<div class=\"forward\"><form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">";
 			$input_hidden_id = new Html_Input("table_writings_forward_id", $this->id);
 			$input_hidden_action = new Html_Input("action", "forward");
 			$submit = new Html_Input("table_writings_forward_submit", "", "submit");
 			$input_hidden_value = new Html_Input("table_writings_forward_amount", "");
-			$form .= $input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden();
-			$form .= "</form></div>";
+			
+			$form = "<div class=\"forward\">
+						<form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">".
+							$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden()."
+						</form>
+					</div>";
 		
 			return $form;
 		}
 	}
 	
 	function form_modify() {
-		return "<div class=\"modify\">".Html_Tag::a(link_content("content=writings.php&startd=".$_SESSION['filter']['start']."&writings_id=".$this->id)," ")."</div>";
+		$input_hidden_id = new Html_Input("table_writings_modify_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "form_edit");
+		$submit = new Html_Input("table_writings_modify_submit", "", "submit");
+		
+		$form = "<div class=\"modify\">
+					<form method=\"post\" name=\"table_writings_modify\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
+					</form>
+				</div>";
+			
+		return $form;
 	}
 	
 	function fill($hash) {
@@ -508,7 +539,7 @@ class Writing extends Record {
 	}
 	
 	function is_recently_modified(){
-		if($this->timestamp > (time() - 10)) {
+		if ($this->timestamp > (time() - 10)) {
 			return true;
 		}
 		return false;
@@ -549,15 +580,16 @@ class Writing extends Record {
 		$files = new Files();
 		$files->filter_with(array('writings_id' => $this->id));
 		$files->select();
+		
 		$link = "<div class=\"manage_writing_attachment\">";
 		foreach ($files as $file) {
 			$input_hidden_id = new Html_Input("id", $file->id);
 			$link .= "<form method=\"post\" name=\"open_writing_attachment\" action=\"\" enctype=\"multipart/form-data\">";
 			$input_name = new Html_Input("open_writing_attachment", $file->value, "submit");
 			$action = new Html_Input("action", "open_attachment");
-			$link .= $input_hidden_id->input_hidden().$action->input_hidden().$input_name->input();
-			$link .= "</form>";
-			$link .= "<form method=\"post\" name=\"delete_writing_attachment\" action=\"\" enctype=\"multipart/form-data\">";
+			$link .= $input_hidden_id->input_hidden().$action->input_hidden().$input_name->input()."
+					</form>
+					<form method=\"post\" name=\"delete_writing_attachment\" action=\"\" enctype=\"multipart/form-data\">";
 			$input_delete = new Html_Input("delete_writing_attachment", "X", "submit");
 			$action = new Html_Input("action", "delete_attachment");
 			$input_delete->properties = array(

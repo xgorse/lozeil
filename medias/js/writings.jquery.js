@@ -27,9 +27,9 @@ $(document).ready(function() {
 			$("#insert_writings_show").show();
 		})
 		
-		.on("click", "#table_writings .modify a", function() {
-			var row = $(this).parent().parent().parent();
-			var id = row.attr("id").substr(6);
+		.on("submit", "form[name=\"table_writings_modify\"]", function() {
+			var row = $(this).closest(".draggable");
+			var id = row.attr('id').substr(6);
 			if (row.next().hasClass("table_writings_form_modify")) {
 				$("#table_edit_writings").slideUp(400, function() {
 					$(".table_writings_form_modify").remove();
@@ -37,17 +37,18 @@ $(document).ready(function() {
 			} else {
 				$.post(
 					"index.php?content=writings.ajax.php",
-					{action: "form_edit", id: id},
+					$(this).serialize(),
 					function(data) {
 						$(".table_writings_form_modify").remove();
 						$(data).insertAfter(row);
 						$("#table_edit_writings").slideDown();
-						$("html, body").animate({ scrollTop: $("#table_"+id).offset().top }, "slow");
+						$("html, body").animate({ scrollTop: $("#table_"+id).offset().top - 18 }, "slow");
 					}
 				);
 			}
 			return false;
 		})
+		
 		.on("click", "#table_edit_writings_cancel", function() {
 			$("#table_edit_writings").slideUp(400, function() {
 				$(".table_writings_form_modify").remove();

@@ -326,27 +326,29 @@ class Writings extends Collector {
 	}
 	
 	function form_filter($start, $stop, $value = "") {
-		$form = "<div class=\"extra_filter_writings\"><form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
-		$input_hidden_action = new Html_Input("action", "filter");
-		$input = new Html_Input("extra_filter_writings_value",$value);
-		$date_start = new Html_Input_Date("filter_day_start", $start);
-		$date_stop = new Html_Input_Date("filter_day_stop", $stop);
+		
 		$categories = new Categories();
 		$categories->select();
 		$sources = new Sources();
 		$sources->select();
+		$banks = new Banks();
+		$banks->select();
 		if (isset($_SESSION['filter']['accountingcodes_id'])) {
 			$accountingcode = new Accounting_Code();
 			$accountingcode->load((int)$_SESSION['filter']['accountingcodes_id']);
 		}
-		$banks = new Banks();
-		$banks->select();
+		
 		$categories_names = $categories->names();
 		$categories_names['none'] = __('&#60none&#62');
 		$banks_names = $banks->names_of_selected_banks();
 		$banks_names['none'] = __('&#60none&#62');
 		$sources_names = $sources->names();
 		$sources_names['none'] = __('&#60none&#62');
+		
+		$input_hidden_action = new Html_Input("action", "filter");
+		$input = new Html_Input("extra_filter_writings_value",$value);
+		$date_start = new Html_Input_Date("filter_day_start", $start);
+		$date_stop = new Html_Input_Date("filter_day_stop", $stop);
 		$category = new Html_Select("filter_categories_id", $categories_names, isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
 		$source = new Html_Select("filter_sources_id", $sources_names, isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
 		$bank = new Html_Select("filter_banks_id", $banks_names, isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
@@ -402,9 +404,13 @@ class Writings extends Collector {
 			)
 		);				
 		$list = new Html_List($grid);
-		$form .= "<div class=\"extra_filter_writings\">".
-			$list->show().$submit->input()."</div>";
-		$form .= "</form></div>";
+		$form = "<div class=\"extra_filter_writings\">
+					<form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">
+						<div class=\"extra_filter_writings\">".
+							$list->show().$submit->input()."
+						</div>
+					</form>
+				</div>";
 		
 		return $form;
 	}
@@ -435,8 +441,12 @@ class Writings extends Collector {
 				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
 			);
 		$checkbox = new Html_Checkbox("checkbox_all_down", "check");
-		$form = "<div id=\"select_modify_writings\">".$checkbox->input().$select->item("")."<div id=\"form_modify_writings\"></div></div>";
 		
+		$form = "<div id=\"select_modify_writings\">".
+					$checkbox->input().$select->item("")."
+					<div id=\"form_modify_writings\">
+					</div>
+				</div>";
 		return $form;
 	}
 	
@@ -658,14 +668,17 @@ class Writings extends Collector {
 	}
 	
 	function form_update_bayesian_code() {
-		$form = "<div class=\"writings_update_bayesian_element\"><form method=\"post\" name=\"writings_update_bayesian_element_form\" action=\"\" enctype=\"multipart/form-data\">";
 		$input_hidden_action = new Html_Input("action", "update_bayesian_element");
 		$submit = new Html_Input("writings_update_bayesian_element_submit",__('update dictionary'), "submit");
 		$submit->properties = array(
 				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
 			);
-		$form .= $input_hidden_action->input_hidden().$submit->input();
-		$form .= "</form></div>";
+		
+		$form = "<div class=\"writings_update_bayesian_element\">
+					<form method=\"post\" name=\"writings_update_bayesian_element_form\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$submit->input()."
+					</form>
+				</div>";
 		
 		return $form;
 	}
@@ -714,11 +727,14 @@ class Writings extends Collector {
 	
 	function get_balance_per_day_per_category($timestamp) {
 		$balance = array();
+		
 		foreach ($this as $writing) {
 			$day = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day));
 			$balance[$writing->categories_id][$day] = isset($balance[$writing->categories_id][$day]) ? $balance[$writing->categories_id][$day] + $writing->amount_inc_vat : $writing->amount_inc_vat;
 		}
+		
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		
 		foreach($balance as $id => $category) {
 			$timestamp_start = determine_first_day_of_year($timestamp);
 			$previous = 0;
@@ -734,13 +750,17 @@ class Writings extends Collector {
 			ksort($category);
 			$balance[$id] = $category;
 		}
+		
 		ksort($balance);
+		
 		return $balance;
 	}
 	
 	function get_balance_per_day_all_categories($timestamp) {
 		$balance = array();
+		
 		$start = determine_first_day_of_year($timestamp);
+		
 		foreach ($this as $writing) {
 			$day = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day));
 			if ($day < $start) {
@@ -749,9 +769,11 @@ class Writings extends Collector {
 				$balance[$day] = isset($balance[$day]) ? ($balance[$day] + $writing->amount_inc_vat) : $writing->amount_inc_vat;
 			}
 		}
+		
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
 		$previous = 0;
 		$timestamp_start = $start;
+		
 		for ($i = 0; $i < $nb_day; $i++) {
 			if (!isset($balance[$timestamp_start])) {
 				$balance[$timestamp_start] = 0 + $previous;
@@ -761,17 +783,22 @@ class Writings extends Collector {
 			$previous = $balance[$timestamp_start];
 			$timestamp_start = strtotime('+1 day', $timestamp_start);
 		}
+		
 		ksort($balance);
+		
 		return $balance;
 	}
 	
 	function get_amount_monthly_per_category($timestamp) {
 		$balance = array();
+		
 		foreach ($this as $writing) {
 			$month = mktime(0, 0, 0, date('m', $writing->day), 1, date('Y', $writing->day));
 			$balance[$writing->categories_id][$month] = isset($balance[$writing->categories_id][$month]) ? $balance[$writing->categories_id][$month] + $writing->amount_inc_vat : $writing->amount_inc_vat;
 		}
+		
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		
 		foreach($balance as $id => $category) {
 			$timestamp_start = determine_first_day_of_year($timestamp);
 			$previous_month = 0;
@@ -791,17 +818,22 @@ class Writings extends Collector {
 			ksort($category);
 			$balance[$id] = $category;
 		}
+		
 		ksort($balance);
+		
 		return $balance;
 	}
 	
 	function get_amount_weekly_per_category($timestamp) {
 		$balance = array();
+		
 		foreach ($this as $writing) {
 			$week = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day) - date('N', $writing->day) + 1, date('Y', $writing->day));
 			$balance[$writing->categories_id][$week] = isset($balance[$writing->categories_id][$week]) ? $balance[$writing->categories_id][$week] + $writing->amount_inc_vat : $writing->amount_inc_vat;
 		}
+		
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		
 		foreach($balance as $id => $category) {
 			$timestamp_start = determine_first_day_of_year($timestamp);
 			$previous_month = 0;
@@ -821,7 +853,9 @@ class Writings extends Collector {
 			ksort($category);
 			$balance[$id] = $category;
 		}
+		
 		ksort($balance);
+		
 		return $balance;
 	}
 }

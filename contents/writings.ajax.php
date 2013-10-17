@@ -59,7 +59,7 @@ switch ($_REQUEST['action']) {
 			
 	case "form_edit":
 		$writing = new Writing();
-		$writing->load((int)$_REQUEST['id']);
+		$writing->load((int)$_REQUEST['table_writings_modify_id']);
 		echo $writing->form_in_table();
 		
 		exit(0);
