@@ -102,6 +102,7 @@ $__['no'] = "non";
 $__['no name'] = "sans nom";
 $__['none'] = "aucune";
 $__['&#60none&#62'] = "&#60aucune&#62";
+$__['not any'] = "aucun";
 $__['not exisisting'] = "n'existe pas";
 $__['not matching'] = "ne correspond pas";
 $__['nothing to do'] = "rien à faire";

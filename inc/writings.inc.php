@@ -353,6 +353,7 @@ class Writings extends Collector {
 		$source = new Html_Select("filter_sources_id", $sources_names, isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
 		$bank = new Html_Select("filter_banks_id", $banks_names, isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
 		$accountingcode_input = new Html_Input_Ajax("filter_accountingcodes_id", link_content("content=writings.ajax.php"), isset($_SESSION['filter']['accountingcodes_id']) ? array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname()) : array());
+		$accountingcode_checkbox = new Html_Checkbox("filter_accountingcodes_none", "1", (isset($_SESSION['filter']['accountingcodes_id']) and $_SESSION['filter']['accountingcodes_id'] == 0)  ? 1 : 0);
 		$number = new Html_Input("filter_number", isset($_SESSION['filter']['number']) ? $_SESSION['filter']['number'] : "");
 		$amount_inc_vat = new Html_Input("filter_amount_inc_vat", isset($_SESSION['filter']['amount_inc_vat']) ? $_SESSION['filter']['amount_inc_vat'] : "");
 		$comment = new Html_Textarea("filter_comment", isset($_SESSION['filter']['comment']) ? $_SESSION['filter']['comment'] : "");
@@ -383,7 +384,7 @@ class Writings extends Collector {
 				),
 				'accountingcode' => array(
 					'class' => "extra_filter_item",
-					'value' => $accountingcode_input->item(__('accounting code')),
+					'value' => $accountingcode_input->item(__('accounting code'), "", $accountingcode_checkbox->item(__('not any'))),
 				),
 				'number' => array(
 					'class' => "extra_filter_item",
@@ -711,6 +712,9 @@ class Writings extends Collector {
 		}
 		if (isset($post['filter_accountingcodes_id'])) {
 			$cleaned['accountingcodes_id'] = $post['filter_accountingcodes_id'];
+		}
+		if (isset($post['filter_accountingcodes_none'])) {
+			$cleaned['accountingcodes_id'] = 0;
 		}
 		if (!empty($post['filter_number'])) {
 			$cleaned['number'] = $post['filter_number'];

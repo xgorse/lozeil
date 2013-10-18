@@ -753,13 +753,15 @@ class tests_Writings extends TableTestCase {
 			"filter_sources_id" => "none",
 			"filter_banks_id" => "none",
 			"e243c26543db4bd701a1f3563acf584b" => 512,
+			"filter_accountingcodes_none" => 1,
 			"filter_number" => "",
 			"filter_amount_inc_vat" => "",
 			"filter_comment" => ""
-			);
+		);
 		$expected = array(
 			"stop" => mktime(0, 0, 0, 10, 31, 2013),
 			"start" => mktime(0, 0, 0, 10, 01, 2013),
+			"accountingcodes_id" => 0,
 			"categories_id" => 0,
 			"sources_id" => 0,
 			"banks_id" => 0

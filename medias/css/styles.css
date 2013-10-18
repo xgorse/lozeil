@@ -498,6 +498,17 @@ tr.modified {
 	margin-top: 4px;
 }
 
+.field_complement {
+	display: inline-block;
+}
+
+label[for="filter_accountingcodes_none"] {
+	width: 55px;
+	padding: 1px 2px 0 0;
+	height: 18px;
+	vertical-align: middle;
+}
+
 #submit_hidden {
 	position: absolute;
 	left: -9999px;

@@ -247,6 +247,14 @@ $(document).ready(function() {
 				);
 			}, 200);
 		})
+		
+		.on("change", "#filter_accountingcodes_none", function () {
+			$(this).closest(".extra_filter_item").find(".input-ajax-content").toggle();
+		})
+		
+		.on("change", ".extra_filter_item input[name='filter_accountingcodes_id']", function () {
+			$(this).closest(".extra_filter_item").find(".field_complement").toggle();
+		})
 
 		.on("submit", "form[name=\"extra_filter_writings_form\"]", function() {
 			var tohide = $(this).find(".extra_filter_item input[type=\"text\"]");
