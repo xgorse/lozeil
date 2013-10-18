@@ -162,68 +162,93 @@ class Bayesian_Elements extends Collector  {
 	function element_probabilities($element, $table_id) {
 		$occurrences = isset($this->elements[$table_id]) ? array_sum($this->elements[$table_id]) : 0;
 		$element_occurrence = isset($this->elements[$table_id][$element]) ? $this->elements[$table_id][$element] : 0;
-		if ($occurrences == 0) return 0;
-		return $element_occurrence/$occurrences;
+		
+		if ($occurrences == 0) {
+			return 0;
+		} else {
+			return $element_occurrence / $occurrences;
+		}
 	}
 	
-	function element_weighted_probabilities($element, $table_elements, $weight = 1.0, $assumed_probability = 0.5) {
-		$basic_probability = $this->element_probabilities($element, $table_elements);
-
+	function fisher_element_probabilities($element, $table_id) {
+		$element_probability = $this->element_probabilities($element, $table_id);
+		
+		if ($element_probability == 0) {
+			return 0;
+		} else {
+			$sum = 0;
+			
+			foreach ($this->elements as $table_id => $table_element) {
+				$sum += $this->element_probabilities($element, $table_id);
+			}
+			
+			return $element_probability / $sum;
+		}
+	}
+	
+	function fisher_element_weighted_probabilities($element, $table_id, $weight = 1.0, $assumed_probability = 0.5) {
+		$basic_probability = $this->fisher_element_probabilities($element, $table_id);
 		$total = 0;
+		
 		foreach ($this->elements as $table_element) {
 			if (isset($table_element[$element])) {
 				$total += $table_element[$element];
 			}
 		}
 		
-		return (($weight * $assumed_probability) + ($total * $basic_probability)) / ($weight + $total);
+		return ((($weight * $assumed_probability) + ($total * $basic_probability)) / ($weight + $total));
 	}
 	
-	function data_probability(Writing $writing, $table_elements) {
+	function fisher_data_probability(Writing $writing, $table_id) {
 		$probabilities = 1;
 		$data = $writing->get_data();
 		
 		foreach($data['classification_data']['comment'] as $element) {
-			$probabilities *= $this->element_weighted_probabilities($element, $table_elements, $GLOBALS['param']['comment_weight']);
+			$probabilities *= $this->fisher_element_weighted_probabilities($element, $table_id, $GLOBALS['param']['comment_weight']);
 		}
+		$probabilities *= $this->fisher_element_weighted_probabilities(number_format($data['classification_data']['amount_inc_vat'][0],6), $table_id, $GLOBALS['param']['amount_inc_vat_weight']);
 		
-		$probabilities *= $this->element_weighted_probabilities($data['classification_data']['amount_inc_vat'][0], $table_elements, $GLOBALS['param']['amount_inc_vat_weight']);
-		
-		return $probabilities;
+		$fisher_score = - 2 * log($probabilities);
+		return $this->inverse_chi2($fisher_score, (count($data['classification_data']['comment']) + 1) * 2);
 	}
 	
-	function probability(Writing $writing, $table_elements) {
-		$proba = $this->data_probability($writing, $table_elements);
-		if (!isset($this->elements[$table_elements])) {
-			return 0;
+	function inverse_chi2($fisher_score, $length) {
+		$m = $fisher_score / 2;
+		$sum = exp(-$m);
+		$term = $sum;
+		for ($i = 1; $i <= floor($length / 2); $i++) {
+			$term *= $m / $i;
+			$sum += $term;
 		}
-		$sum = 0;
-		foreach($this->elements as $table_element) {
-			$sum += array_sum($table_element);
-		}
-		return (count($this->elements[$table_elements])/$sum) * $proba;
+		return min(array($sum, 1));
 	}
 	
-	function element_id_estimated(Writing $writing, $table_element_id_default = 0) {
-		$threshold = $GLOBALS['param']['threshold'];
+	function fisher_element_id_estimated(Writing $writing, $table_element_id_default = 0) {
+		$threshold = $GLOBALS['param']['fisher_threshold'];
 		$probabilities = array();
-		$probability_max = 0;
 		$table_element_id_best = $table_element_id_default;
+		
 		foreach ($this->table_elements as $table_element) {
-			$probabilities[$table_element->id] = $this->probability($writing, $table_element->id);
-			if ($probabilities[$table_element->id] > $probability_max) {
-				$probability_max = $probabilities[$table_element->id];
-				$table_element_id_best = $table_element->id;
+			$probabilities[$table_element->id] = $this->fisher_data_probability($writing, $table_element->id);
+		}
+		
+		$max = 0;
+		foreach ($probabilities as $table_element_id => $probability) {
+			if ($probability > $threshold and $probability > $max) {
+					$table_element_id_best = $table_element_id;
+					$max = $probability;
 			}
 		}
-		foreach ($probabilities as $table_element_id => $probability) {
-			if ($table_element_id != $table_element_id_best) {
-				if (isset($probabilities[$table_element_id_best]) and $probability * $threshold > $probabilities[$table_element_id_best]) {
-					return $table_element_id_default;
+		
+		if (isset($probabilities[$table_element_id_best])) {
+			for ($i = 1; $i <= count($probabilities); $i++) {
+				if ($i != $table_element_id_best) {
+					if (abs($probabilities[$i] - $max) < 0.2) {
+						$table_element_id_best = 0;
+					}
 				}
 			}
 		}
-		
 		return $table_element_id_best;
 	}
 }

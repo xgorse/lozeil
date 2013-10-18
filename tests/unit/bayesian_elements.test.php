@@ -14,6 +14,161 @@ class tests_Bayesian_Elements extends TableTestCase {
 		);
 	}
 	
+	function test_get_distinct_table_id() {
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 1;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 4;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		
+		$bayesianelements = new Bayesian_Elements();
+		$ids = $bayesianelements->get_distinct_table_id("categories");
+		$this->assertTrue($ids == array(3, 1, 2));
+		$ids = $bayesianelements->get_distinct_table_id("accountingcodes");
+		$this->assertTrue($ids == array(4));
+		$this->truncateTable("bayesianelements");
+	}
+	
+	function test_get_accounting_codes_in_use() {
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 1;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 4;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		
+		$bayesianelements = new Bayesian_Elements();
+		$accounting_codes_in_use = $bayesianelements->get_accounting_codes_in_use();
+		$this->assertEqual(count($accounting_codes_in_use), 3);
+		$this->truncateTable("bayesianelements");
+	}
+	
+	function test_get_categories_in_use() {
+		$category = new Category();
+		$category->save();
+		$category = new Category();
+		$category->save();
+		$category = new Category();
+		$category->save();
+		$category = new Category();
+		$category->save();
+		$category = new Category();
+		$category->save();
+		$category = new Category();
+		$category->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 1;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 4;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->element = "autre";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		
+		$bayesianelements = new Bayesian_Elements();
+		$accounting_codes_in_use = $bayesianelements->get_categories_in_use();
+		$this->assertEqual(count($accounting_codes_in_use), 3);
+		$this->truncateTable("bayesianelements");
+	}
+	
 	function test_stuff_with() {
 		$writing = new Writing();
 		$writing->amount_inc_vat = 50;
@@ -204,6 +359,11 @@ class tests_Bayesian_Elements extends TableTestCase {
 	}
 	
 	function test_element_probabilities() {
+		$bayesianelements = new Bayesian_Elements();
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$this->assertEqual($bayesianelements->element_probabilities("virement", 3), 0);
+		
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 3;
 		$bayesianelement->field = "comment";
@@ -232,83 +392,30 @@ class tests_Bayesian_Elements extends TableTestCase {
 		$bayesianelement->element = "autre";
 		$bayesianelement->occurrences = 2;
 		$bayesianelement->save();
-		$bayesianelements = new Bayesian_Elements();
-		$categories = new Categories();
-		$categories->select();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
+		
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$this->assertEqual($bayesianelements->element_probabilities("inexistant", 3), 0);
+		
 		$this->assertEqual($bayesianelements->element_probabilities("virement", 3), 10/17);
+		
 		$this->truncateTable("categories");
 		$this->truncateTable("bayesianelements");
 	}
 	
-	function test_element_weighted_probabilities() {
-		$category = new Category();
-		$category->name = "cat 1";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 2";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 3";
-		$category->save();
+	function test_fisher_element_probabilities() {
+		$bayesianelements = new Bayesian_Elements();
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 3;
 		$bayesianelement->field = "comment";
 		$bayesianelement->element = "virement";
 		$bayesianelement->table_name = "categories";
 		$bayesianelement->occurrences = 10;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "autre";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "amount_inc_vat";
-		$bayesianelement->element = "autre";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 5;
 		$bayesianelement->save();
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 2;
 		$bayesianelement->field = "comment";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->save();
-		$bayesianelements = new Bayesian_Elements();
-		$categories = new Categories();
-		$categories->select();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
-		$this->assertEqual($bayesianelements->element_weighted_probabilities("virement", 3), (0.5 + 10*10/17)/11);
-		$this->truncateTable("categories");
-		$this->truncateTable("bayesianelements");
-	}
-	
-	function test_data_probability() {
-		$category = new Category();
-		$category->name = "cat 1";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 2";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 3";
-		$category->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
 		$bayesianelement->element = "virement";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 10;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "autre";
 		$bayesianelement->table_name = "categories";
 		$bayesianelement->occurrences = 2;
 		$bayesianelement->save();
@@ -322,434 +429,251 @@ class tests_Bayesian_Elements extends TableTestCase {
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 2;
 		$bayesianelement->field = "comment";
-		$bayesianelement->element = "autre";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->save();
-		
-		$writing = new Writing();
-		$writing->amount_inc_vat = 50;
-		$writing->comment = "virement en banque";
-		
-		$bayesianelements = new Bayesian_Elements();
-		$categories = new Categories();
-		$categories->select();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
-		
-		$this->assertEqual(round($bayesianelements->data_probability($writing, 2), 6), 0.011364);
-		$this->assertEqual(round($bayesianelements->data_probability($writing, 3), 6), 0.145053);
-		$this->truncateTable("categories");
-		$this->truncateTable("bayesianelements");
-	}
-	
-	function test_probability() {
-		$category = new Category();
-		$category->name = "cat 1";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 2";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 3";
-		$category->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 10;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
 		$bayesianelement->table_name = "categories";
 		$bayesianelement->element = "autre";
 		$bayesianelement->occurrences = 2;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "amount_inc_vat";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 5;
 		$bayesianelement->save();
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 2;
 		$bayesianelement->field = "comment";
-		$bayesianelement->element = "autre";
 		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->save();
-		
-		$writing = new Writing();
-		$writing->amount_inc_vat = 50;
-		$writing->comment = "virement en banque";
-		
-		$bayesianelements = new Bayesian_Elements();
-		$categories = new Categories();
-		$categories->select();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
-		
-		$this->assertEqual(round($bayesianelements->probability($writing, 3), 6), 0.015269);
-		$this->assertEqual(round($bayesianelements->probability($writing, 2), 6), 0.000598);
-		$this->truncateTable("categories");
-		$this->truncateTable("bayesianelements");
-	}
-	
-	function test_element_id_estimated() {
-		$GLOBALS['param']['comment_weight'] = 1;
-		$GLOBALS['param']['amount_inc_vat_weight'] = 3;
-		
-		$category = new Category();
-		$category->name = "cat 1";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 2";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 3";
-		$category->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 25;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
 		$bayesianelement->element = "test";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 10;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "amount_inc_vat";
-		$bayesianelement->element = "50";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 10;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "autre";
-		$bayesianelement->table_name = "categories";
 		$bayesianelement->occurrences = 2;
 		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->save();
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
 		
-		$writing = new Writing();
-		$writing->amount_inc_vat = 50;
-		$writing->comment = "virement en banque";
+		$this->assertEqual($bayesianelements->fisher_element_probabilities("virement", 4), 0);
 		
-		$bayesianelements = new Bayesian_Elements();
-		$categories = new Categories();
-		$categories->select();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
-		$this->assertEqual($bayesianelements->element_id_estimated($writing), 3);
-		$this->truncateTable("bayesianelements");
+		$this->assertEqual($bayesianelements->fisher_element_probabilities("virement", 3), (10/15) / ((10/15) + (2/6)));
 		
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 80;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "amount_inc_vat";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 5;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->element = "OVH";
-		$bayesianelement->occurrences = 250;
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->save();
+		$this->assertEqual($bayesianelements->fisher_element_probabilities("test", 2), (2/4) / (2/4));
 		
-		$writing = new Writing();
-		$writing->amount_inc_vat = 50;
-		$writing->comment = "ceci est un telecom OVH";
-		
-		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
-		$this->assertEqual($bayesianelements->element_id_estimated($writing), 2);
-		$this->truncateTable("bayesianelements");
-		
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 80;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "amount_inc_vat";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 5;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "OVH";
-		$bayesianelement->occurrences = 250;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		
-		$writing = new Writing();
-		$writing->amount_inc_vat = 50;
-		$writing->comment = "ceci est un telecom OVH";
-		
-		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
-		$this->assertEqual($bayesianelements->element_id_estimated($writing), 2);
-		$this->truncateTable("bayesianelements");
-		
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 10;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 10;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "OVH";
-		$bayesianelement->occurrences = 12;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 10;
-		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		
-		$writing = new Writing();
-		$writing->amount_inc_vat = 50;
-		$writing->comment = "ceci est un telecom OVH";
-		
-		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories'], $categories);
-		$this->assertEqual($bayesianelements->element_id_estimated($writing), 0);
-		$this->truncateTable("bayesianelements");
-		
-		$accounting_code = new Accounting_Code();
-		$accounting_code->number = 512;
-		$accounting_code->save();
-		$accounting_code = new Accounting_Code();
-		$accounting_code->number = 12;
-		$accounting_code->save();
-		$accounting_code = new Accounting_Code();
-		$accounting_code->number = 45;
-		$accounting_code->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 80;
-		$bayesianelement->table_name = "accountingcodes";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "accountingcodes";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "accountingcodes";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 3;
-		$bayesianelement->field = "amount_inc_vat";
-		$bayesianelement->element = "autre";
-		$bayesianelement->occurrences = 5;
-		$bayesianelement->table_name = "accountingcodes";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "OVH";
-		$bayesianelement->occurrences = 250;
-		$bayesianelement->table_name = "accountingcodes";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 2;
-		$bayesianelement->table_name = "accountingcodes";
-		$bayesianelement->save();
-		
-		$writing = new Writing();
-		$writing->amount_inc_vat = 50;
-		$writing->comment = "ceci est un telecom OVH";
-		
-		$bayesianelements = new Bayesian_Elements();
-		$accounting_codes = new Accounting_Codes();
-		$accounting_codes->select();
-		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes'], $accounting_codes);
-		$this->assertEqual($bayesianelements->element_id_estimated($writing), 2);
-		$this->truncateTable("bayesianelements");
-		$this->truncateTable("accountingcodes");
 		$this->truncateTable("categories");
+		$this->truncateTable("bayesianelements");
 	}
 	
-	function test_get_accounting_codes_in_use() {
-		$accounting_code = new Accounting_Code();
-		$accounting_code->number = 512;
-		$accounting_code->save();
-		$accounting_code = new Accounting_Code();
-		$accounting_code->number = 12;
-		$accounting_code->save();
-		$accounting_code = new Accounting_Code();
-		$accounting_code->number = 45;
-		$accounting_code->save();
-		$accounting_code = new Accounting_Code();
-		$accounting_code->number = 20;
-		$accounting_code->save();
+	
+	function test_fisher_element_weighted_probabilities() {
+		$bayesianelements = new Bayesian_Elements();
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 3;
 		$bayesianelement->field = "comment";
 		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 80;
-		$bayesianelement->table_name = "accountingcodes";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 10;
 		$bayesianelement->save();
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 3;
 		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->element = "autre";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 2;
 		$bayesianelement->save();
-		
-		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements_in_use = $bayesianelements->get_accounting_codes_in_use();
-		$this->assertTrue(count($bayesianelements_in_use) == 2);
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->element = "autre";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "virement";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		$this->assertEqual($bayesianelements->fisher_element_weighted_probabilities("virement", 3), (1 * 0.5 + 12 * ((10/17) / ((10/17) + (2/2)))) / (1 + 12));
+		$this->assertEqual($bayesianelements->fisher_element_weighted_probabilities("virement", 2), (1 * 0.5 + 12 * ((2/2) / ((2/2) + (10/17)))) / (1 + 12));
+		$this->assertEqual($bayesianelements->fisher_element_weighted_probabilities("virement", 4), (1 * 0.5 + 12 * (0)) / (1 + 12));
+		$this->assertEqual($bayesianelements->fisher_element_weighted_probabilities("inexistant", 4), 0.5);
+		$this->truncateTable("categories");
 		$this->truncateTable("bayesianelements");
-		$this->truncateTable("accountingcodes");
 	}
 	
-	function test_get_categories_in_use() {
-		$category = new Category();
-		$category->name = "cat 1";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 2";
-		$category->save();
-		$category = new Category();
-		$category->name = "cat 3";
-		$category->save();
+	function test_fisher_data_probabilities() {
+		$GLOBALS['param']['comment_weight'] = 1;
+		$GLOBALS['param']['amount_inc_vat_weight'] = 0.3;
+		
+		$bayesianelements = new Bayesian_Elements();
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 3;
 		$bayesianelement->field = "comment";
 		$bayesianelement->element = "virement";
-		$bayesianelement->occurrences = 80;
 		$bayesianelement->table_name = "categories";
-		$bayesianelement->save();
-		$bayesianelement = new Bayesian_Element();
-		$bayesianelement->table_id = 2;
-		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 20;
-		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 10;
 		$bayesianelement->save();
 		$bayesianelement = new Bayesian_Element();
 		$bayesianelement->table_id = 3;
 		$bayesianelement->field = "comment";
-		$bayesianelement->element = "telecom";
-		$bayesianelement->occurrences = 20;
+		$bayesianelement->element = "autre";
 		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 2;
 		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->element = "autre";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 5;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "virement";
+		$bayesianelement->occurrences = 2;
+		$bayesianelement->save();
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		$writing = new Writing();
+		$writing->amount_inc_vat = 2;
+		$writing->comment = "virement";
+		$this->assertEqual($bayesianelements->fisher_data_probability($writing, 3),
+				$bayesianelements->inverse_chi2(- 2 * log(((1 * 0.5) + (12 * ((10/17) / ((10/17) + (2/2))))) / (1 + 12) * (((3 * 0.5) + (0 * 0)) / (3 + 0))), 4)
+			);
+		$this->assertEqual($bayesianelements->fisher_data_probability($writing, 2),
+				$bayesianelements->inverse_chi2(- 2 * log(((1 * 0.5) + (12 * ((2/2) / ((10/17) + (2/2))))) / (1 + 12) * (((3 * 0.5) + (0 * 0)) / (3 + 0))), 4)
+			);
+		$this->assertEqual($bayesianelements->fisher_data_probability($writing, 1),
+				$bayesianelements->inverse_chi2(- 2 * log(((1 * 0.5) + (12 * 0)) / (1 + 12) * (((3 * 0.5) + (0 * 0)) / (3 + 0))), 4)
+			);
+		$this->truncateTable("bayesianelements");
+	}
+	
+	function test_inverse_chi2() {
+		$bayesianelements = new Bayesian_Elements();
+		$m = 0.95 / 2;
+		$sum = exp(-$m);
+		$term = $sum;
+		for ($i = 1; $i <= floor(10 / 2); $i++) {
+			$term *= $m / $i;
+			$sum += $term;
+		}
+		$value = min(array($sum, 1));
+		$this->assertEqual($bayesianelements->inverse_chi2(0.95, 10), $value);
+	}
+	
+	function test_fisher_element_id_estimated() {
+		$GLOBALS['param']['comment_weight'] = 1;
+		$GLOBALS['param']['amount_inc_vat_weight'] = 0.3;
+		$GLOBALS['param']['fisher_threshold'] = 0.4;
+		
+		$category = new Category();
+		$category->save();
+		$category = new Category();
+		$category->save();
+		$category = new Category();
+		$category->save();
 		
 		$bayesianelements = new Bayesian_Elements();
-		$bayesianelements_in_use = $bayesianelements->get_categories_in_use();
-		$this->assertTrue(count($bayesianelements_in_use) == 2);
-		$this->truncateTable("bayesianelements");
-		$this->truncateTable("accountingcodes");
-		$this->truncateTable("writings");
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 1;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "CARTE";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 14;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "CARTE";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 62;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->element = "CARTE";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->occurrences = 13;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "SNCF";
+		$bayesianelement->occurrences = 28;
+		$bayesianelement->save();
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$writing = new Writing();
+		$writing->comment = "CARTE";
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 0);
+		$writing->comment = "CARTE SNCF";
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 2);
+		$writing->comment = "commentaire inconnu";
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 0);
+		
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "520.200000";
+		$bayesianelement->occurrences = 8;
+		$bayesianelement->save();
+		
+		$writing->amount_inc_vat = 520.200000;
+		$writing->comment = "CARTE";
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 2);
+		
+		
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$accounting_code = new Accounting_Code();
+		$accounting_code->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 1;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "CARTE";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->occurrences = 14;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "CARTE";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->occurrences = 62;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 3;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->element = "CARTE";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->occurrences = 13;
+		$bayesianelement->save();
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "comment";
+		$bayesianelement->element = "SNCF";
+		$bayesianelement->table_name = "accountingcodes";
+		$bayesianelement->occurrences = 28;
+		$bayesianelement->save();
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		
+		$writing = new Writing();
+		$writing->comment = "CARTE";
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 0);
+		$writing->comment = "CARTE SNCF";
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 2);
+		$writing->comment = "commentaire inconnu";
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 0);
+		
+		$bayesianelement = new Bayesian_Element();
+		$bayesianelement->table_id = 2;
+		$bayesianelement->field = "amount_inc_vat";
+		$bayesianelement->table_name = "categories";
+		$bayesianelement->element = "520.200000";
+		$bayesianelement->occurrences = 8;
+		$bayesianelement->save();
+		
+		$writing->amount_inc_vat = 520.200000;
+		$writing->comment = "CARTE";
+		$bayesianelements->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		$this->assertEqual($bayesianelements->fisher_element_id_estimated($writing), 2);
 	}
 }

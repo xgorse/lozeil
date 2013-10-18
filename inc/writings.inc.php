@@ -868,7 +868,7 @@ class Writings extends Collector {
 		foreach($ids as $id) {
 			$writing = new Writing();
 			$writing->load($id);
-			$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
+			$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 			$writing->update();
 		}
 	}
@@ -879,7 +879,7 @@ class Writings extends Collector {
 		foreach($ids as $id) {
 			$writing = new Writing();
 			$writing->load($id);
-			$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
+			$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 			$writing->update();
 		}
 	}

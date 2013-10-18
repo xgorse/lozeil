@@ -1,9 +1,10 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-$param['nb_max_writings'] = 100;
+$param['nb_max_writings'] = "100";
 
 //Probabilities bayesian filter
-$param['comment_weight'] = 1;
-$param['amount_inc_vat_weight'] = 3;
-$param['threshold'] = 3;
+$param['comment_weight'] = "1";
+$param['amount_inc_vat_weight'] = "0.3";
+$param['threshold'] = "3";
+$param['fisher_threshold'] = "0.4";

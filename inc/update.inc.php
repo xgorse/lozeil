@@ -11,8 +11,19 @@ class Update {
 		}
 		$this->db = $db;
 		$this->config = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "config");
-		$this->param = new Config_File(dirname(__FILE__)."/../cfg/param.inc.php", "param");
+		$this->param = new Param_File(dirname(__FILE__)."/../cfg/param.inc.php", "param");
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
+	}
+	
+	function to_20() {
+		$this->param->add("fisher_threshold", "0.4");
+		$this->param->update(array(
+				'param' => array(
+					'param' => array(
+						"amount_inc_vat_weight" => "0.3"
+					)
+				)
+		));
 	}
 	
 	function to_19() {

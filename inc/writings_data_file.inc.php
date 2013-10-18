@@ -145,8 +145,8 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->sources_id = $this->sources_id;
 					$writing_imported->save();
-					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
-					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
+					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
 				} else {
@@ -193,8 +193,8 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
-					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
-					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
+					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
 				} else {
@@ -254,8 +254,8 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
-					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
-					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
+					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
 				} else {
@@ -326,8 +326,8 @@ class Writings_Data_File {
 					$writing_imported->hash = $hash;
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
-					$writing->categories_id = $bayesianelements_categories_id->element_id_estimated($writing);
-					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->element_id_estimated($writing);
+					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
 				} else {
