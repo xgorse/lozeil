@@ -250,7 +250,7 @@ $(document).ready(function() {
 			$(this).closest(".extra_filter_item").find("#filter_number").toggle();
 		})
 		
-		.on("change remove", ".extra_filter_item input[name=\"filter_accountingcodes_id\"]", function () {
+		.on("change", ".extra_filter_item input[name=\"filter_accountingcodes_id\"]", function () {
 			$(this).closest(".extra_filter_item").find(".field_complement").toggle();
 		})
 
@@ -293,7 +293,19 @@ $(document).ready(function() {
 			if ($(".extra_filter_item:first").css("display") == "none") {
 				$(".extra_filter_item").slideDown(200);
 			} else {
-				$(".extra_filter_item").slideUp(200);
+				var flag = 0;
+				$(".extra_filter_item").each(function() {
+					if ($(this).hasClass("filter_hide")) {
+						$(this).removeClass("filter_hide");
+						$(this).addClass("filter_show");
+						flag = 1;
+					}
+				})
+				if (flag) {
+					$(".extra_filter_item").slideDown(200);
+				} else {
+					$(".extra_filter_item").slideUp(200);
+				}
 			}
 		})
 		

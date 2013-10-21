@@ -3,9 +3,8 @@ $(document)
 		$("body")
 			.on("click", "input.input-ajax-checkbox", function() {
 				if ($(this).is(':checked') == false) {
-					$(this).hide();
+					$(this).parent().hide();
 					$(this).parent().parent().parent().children("input:first").show();
-					$(this).parent().empty();
 				} else {
 					$(this).parent().parent().parent().find(".input-ajax-dynamic").hide();
 				}
@@ -77,7 +76,7 @@ $(document)
 						if ($(this).parent().attr("id") == input.attr("id")+'-dynamic') {
 							$(this).detach();
 							$(this).children("input").attr('checked', "checked");
-							$(input_static).prepend($(this));
+							$(input_static).html($(this));
 							$(input_dynamic).empty();
 							input.hide();
 						}
