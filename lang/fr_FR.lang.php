@@ -132,6 +132,7 @@ $__['Start updating SVN'] = "Début de la mise à jour du SVN";
 $__['Stop building up demo'] = "Fin de la mise en place de la démo";
 $__['stop date'] = "date de fin";
 $__['success'] = "succès";
+$__['to be modified'] = "à modifier";
 $__['type'] = "type";
 $__['types'] = "types";
 $__['unknown error'] = "erreur inconnue";

@@ -385,4 +385,36 @@ class Bot {
 			}
 		}
 	}
+	
+	function test_extensions() {
+		$comment = "";
+
+		$extensions = array(
+			"bcmath",
+			"calendar",
+			"mcrypt",
+		);
+		foreach ($extensions as $extension) {
+			if (extension_loaded($extension)) {
+				$comment .= $extension." - ".__('ok')."\n";
+			} else {
+				$comment .= $extension." - ".__('to be modified')."\n";
+			}
+		}
+		
+		$settings = array(
+			"get_magic_quotes_gpc" => false,
+		);
+		foreach ($settings as $setting => $value) {
+			if (call_user_func($setting) == $value) {
+				$comment .= $setting." - ".__('ok')."\n";
+			} else {
+				$comment .= $setting." - ".__('to be modified')."\n";
+			}
+		}
+
+		echo $comment;
+		
+		return true;
+	}
 }
