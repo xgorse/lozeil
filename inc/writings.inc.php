@@ -209,6 +209,10 @@ class Writings extends Collector {
 		
 		$grid = array();
 		
+		if (isset($this->filters['duplicate']) and $_SESSION['order']['name'] == 'day') {
+			$duplicate = $this->get_duplicate_color_classes();
+		}
+		
 		foreach ($this as $writing) {
 			$class = "draggable droppable";
 			if ($writing->is_recently_modified()) {
@@ -216,6 +220,12 @@ class Writings extends Collector {
 			}
 			if ($writing->attachment) {
 				$class .= " file_attached";
+			}
+			
+			if (isset($this->filters['duplicate']) and $_SESSION['order']['name'] == 'day') {
+				if (isset($duplicate[$writing->day][$writing->amount_inc_vat]) and $duplicate[$writing->day][$writing->amount_inc_vat]) {
+					$class .= $duplicate[$writing->day][$writing->amount_inc_vat];
+				}
 			}
 			$informations = $writing->show_further_information();
 			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
@@ -886,5 +896,24 @@ class Writings extends Collector {
 			$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 			$writing->update();
 		}
+	}
+	
+	function get_duplicate_color_classes() {
+		$duplicate = array();
+		foreach ($this as $writing) {
+			if (isset($duplicate[$writing->day][$writing->amount_inc_vat])) {
+				$duplicate[$writing->day][$writing->amount_inc_vat] = 1;
+			} else {
+				$duplicate[$writing->day][$writing->amount_inc_vat] = 0;
+			}
+		}
+		$color_class = " duplicate_brown";
+		foreach ($duplicate as $timestamp => $amount) {
+			if (array_shift(array_values($amount))) {
+				$duplicate[$timestamp][array_shift(array_keys($amount))] = $color_class;
+				$color_class = ($color_class == " duplicate_brown") ? " duplicate_green" : " duplicate_brown";
+			}
+		}
+		return $duplicate;
 	}
 }

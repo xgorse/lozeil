@@ -864,4 +864,62 @@ class tests_Writings extends TableTestCase {
 		$this->assertTrue($balance_per_day[1][mktime(0, 0, 0, 1, 21, 2013)] == 0);
 		$this->truncateTable("writings");
 	}
+	
+	function test_get_duplicate_color_classes() {
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 10;
+		$writing->categories_id = 1;
+		$writing->day = mktime(10, 0, 0, 1, 7, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -12;
+		$writing->day = mktime(10, 0, 0, 1, 21, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -10;
+		$writing->day = mktime(10, 0, 0, 1, 21, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 10;
+		$writing->day = mktime(10, 0, 0, 1, 7, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 25;
+		$writing->day = mktime(10, 0, 0, 2, 21, 2013);
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 25;
+		$writing->day = mktime(10, 0, 0, 2, 21, 2013);
+		$writing->save();
+		
+		$writings = new Writings();
+		$writings->add_order("day ASC");
+		$writings->select();
+		$this->assertEqual($writings->get_duplicate_color_classes(), array(
+			1357549200 => array (
+					'10.000000' => ' duplicate_brown'
+				), 
+			1358672400 => array (
+					'-12.000000' => ' duplicate_green'
+				),
+			1358758800 => array (
+					'-12.000000' => 0,
+					'-10.000000' => 0
+				),
+			1361437200 => array (
+					'25.000000' => ' duplicate_brown'
+				)
+			)
+		);
+	}
 }
