@@ -510,11 +510,13 @@ tr.modified {
 	display: inline-block;
 }
 
-label[for="filter_accountingcodes_none"] {
-	width: 55px;
+label[for="filter_accountingcodes_none"],
+label[for="filter_number_duplicate"] {
+	width: 70px;
 	padding: 1px 2px 0 0;
 	height: 18px;
 	vertical-align: middle;
+	text-align: center;
 }
 
 #submit_hidden {
@@ -1023,4 +1025,12 @@ canvas {
 
 .duplicate_brown {
 	background-color: rgba(163, 96, 41, 0.07);
+}
+
+.filter_show {
+	display: block;
+}
+
+.filter_hide {
+	display: none;
 }

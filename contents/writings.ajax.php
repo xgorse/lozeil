@@ -2,6 +2,7 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 $writings = new Writings();
+$extra = "";
 
 if (!empty($_FILES)) {
 	$file = new File();
@@ -70,6 +71,7 @@ switch ($_REQUEST['action']) {
 			$cleaned = $writings->clean_filter_from_ajax($_POST);
 			$_SESSION['filter'] = $cleaned;
 		}
+		$extra = $writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop'], isset($_SESSION['filter']['search_index']) ? $_SESSION['filter']['search_index'] : "");
 		break;
 	
 	case "sort":
@@ -165,6 +167,7 @@ switch ($_REQUEST['action']) {
 		break;
 		
 }
+
 $writings->set_limit($GLOBALS['param']['nb_max_writings']);
 $writings->filter_with($_SESSION['filter']);
 
@@ -172,5 +175,5 @@ $writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['directio
 $writings->add_order("number DESC, amount_inc_vat DESC");
 $writings->select();
 
-echo json_encode(array('status' => show_status(), 'table' => $writings->show()));
+echo json_encode(array('status' => show_status(), 'table' => $writings->show(), 'extra' => $extra));
 exit(0);

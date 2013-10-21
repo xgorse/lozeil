@@ -197,6 +197,7 @@ class tests_Writings extends TableTestCase {
 	
 	function test_get_where() {
 		$_SESSION['filter']['start'] = 1375308000;
+		$_SESSION['filter']['stop'] = 1385308000;
 		list($start, $stop) = determine_month($_SESSION['filter']['start']);
 		$writings = new Writings();
 		$writings->filter_with(array('start' => $start, 'stop' => $stop));
@@ -755,6 +756,7 @@ class tests_Writings extends TableTestCase {
 			"e243c26543db4bd701a1f3563acf584b" => 512,
 			"filter_accountingcodes_none" => 1,
 			"filter_number" => "",
+			"filter_number_duplicate" => "1",
 			"filter_amount_inc_vat" => "",
 			"filter_comment" => ""
 		);
@@ -764,7 +766,8 @@ class tests_Writings extends TableTestCase {
 			"accountingcodes_id" => 0,
 			"categories_id" => 0,
 			"sources_id" => 0,
-			"banks_id" => 0
+			"banks_id" => 0,
+			"number" => 'duplicate'
 		);
 		$writings = new Writings();
 		$this->assertEqual($expected, $writings->clean_filter_from_ajax($post));

@@ -87,7 +87,17 @@ class Writings extends Collector {
 			$query_where[] = $this->db->config['table_writings'].".amount_inc_vat = ".(float)$this->filters['amount_inc_vat'];
 		}
 		if (isset($this->filters['number'])) {
-			$query_where[] = $this->db->config['table_writings'].".number LIKE ".$this->db->quote("%".$this->filters['number']."%");
+			if ($this->filters['number'] == 'duplicate') {
+				$query_where[] = $this->db->config['table_writings'].".number IN (
+					SELECT number
+					FROM ".$this->db->config['table_writings']."
+					WHERE (day >= ".$_SESSION['filter']['start']." AND day <= ".$_SESSION['filter']['stop'].")
+					GROUP BY number
+					HAVING (COUNT(number) > 1 and number <> '')
+				)";
+			} else {
+				$query_where[] = $this->db->config['table_writings'].".number LIKE ".$this->db->quote("%".$this->filters['number']."%");
+			}
 		}
 		if (isset($this->filters['comment'])) {
 			$query_where[] = $this->db->config['table_writings'].".comment LIKE ".$this->db->quote("%".$this->filters['comment']."%");
@@ -357,17 +367,100 @@ class Writings extends Collector {
 		
 		$input_hidden_action = new Html_Input("action", "filter");
 		$input = new Html_Input("extra_filter_writings_value",$value);
+		
+		$category = new Html_Select("filter_categories_id", $categories_names);
+		if (isset($_SESSION['filter']['categories_id'])) {
+			$category->selected = $_SESSION['filter']['categories_id'];
+			$category_class = "filter_show";
+		} else {
+			$category_class = "filter_hide";
+		}
+		
+		$source = new Html_Select("filter_sources_id", $sources_names);
+		if (isset($_SESSION['filter']['sources_id'])) {
+			$source->selected = $_SESSION['filter']['sources_id'];
+			$source_class = "filter_show";
+		} else {
+			$source_class = "filter_hide";
+		}
+		
+		$bank = new Html_Select("filter_banks_id", $banks_names);
+		if (isset($_SESSION['filter']['banks_id'])) {
+			$bank->selected = $_SESSION['filter']['banks_id'];
+			$bank_class = "filter_show";
+		} else {
+			$bank_class = "filter_hide";
+		}
+		
+		$accountingcode_input = new Html_Input_Ajax("filter_accountingcodes_id", link_content("content=writings.ajax.php"));
+		$accountingcode_checkbox = new Html_Checkbox("filter_accountingcodes_none", "1");
+		if (!isset($_SESSION['filter']['accountingcodes_id'])) {
+			$accountingcode_input_class = "filter_hide";
+			$accountingcode_checkbox_class = "";
+		} else {
+			$accountingcode_input_class = "filter_show";
+			if ($_SESSION['filter']['accountingcodes_id']) {
+				$accountingcode_input->element = array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname());
+				$accountingcode_input_class = "filter_show";
+				$accountingcode_checkbox_class = "filter_hide";
+			} else {
+				$accountingcode_input->properties = array('class' => 'filter_hide');
+				$accountingcode_checkbox_class = "filter_sow";
+				$accountingcode_checkbox->selected = 1;
+			}
+		}
+		
+		$number = new Html_Input("filter_number");
+		$number_checkbox = new Html_Checkbox("filter_number_duplicate", "1");
+		if (!isset($_SESSION['filter']['number'])) {
+			$number_class = "filter_hide";
+			$number_checkbox_class = "";
+		} elseif ($_SESSION['filter']['number'] == 'duplicate') {
+			$number_class = "filter_show";
+			$number->properties = array('class' => 'filter_hide');
+			$number_checkbox_class = "filter_show";
+			$number_checkbox->selected = 1;
+			
+		} else {
+			$number_class = "filter_show";
+			$number->properties = array('class' => 'filter_show');
+			$number->value = $_SESSION['filter']['number'];
+			$number_checkbox_class = "filter_hide";
+			$number_checkbox->selected = 0;
+		}
+		
+		$amount_inc_vat = new Html_Input("filter_amount_inc_vat");
+		if (isset($_SESSION['filter']['amount_inc_vat'])) {
+			$amount_inc_vat->value = $_SESSION['filter']['amount_inc_vat'];
+			$amount_inc_vat_class = "filter_show";
+		} else {
+			$amount_inc_vat_class = "filter_hide";
+		}
+		
+		$comment = new Html_Textarea("filter_comment");
+		if (isset($_SESSION['filter']['comment'])) {
+			$comment->value = $_SESSION['filter']['comment'];
+			$comment_class = "filter_show";
+		} else {
+			$comment_class = "filter_hide";
+		}
+		
+		$checkbox = new Html_Checkbox("filter_duplicate", "duplicate");
+		if (isset($_SESSION['filter']['duplicate'])) {
+			$checkbox->selected = $_SESSION['filter']['duplicate'];
+			$checkbox_class = "filter_show";
+		} else {
+			$checkbox_class = "filter_hide";
+		}
+		
 		$date_start = new Html_Input_Date("filter_day_start", $start);
 		$date_stop = new Html_Input_Date("filter_day_stop", $stop);
-		$category = new Html_Select("filter_categories_id", $categories_names, isset($_SESSION['filter']['categories_id']) ? $_SESSION['filter']['categories_id'] : "");
-		$source = new Html_Select("filter_sources_id", $sources_names, isset($_SESSION['filter']['sources_id']) ? $_SESSION['filter']['sources_id'] : "");
-		$bank = new Html_Select("filter_banks_id", $banks_names, isset($_SESSION['filter']['banks_id']) ? $_SESSION['filter']['banks_id'] : "");
-		$accountingcode_input = new Html_Input_Ajax("filter_accountingcodes_id", link_content("content=writings.ajax.php"), isset($_SESSION['filter']['accountingcodes_id']) ? array($_SESSION['filter']['accountingcodes_id'] => $accountingcode->fullname()) : array());
-		$accountingcode_checkbox = new Html_Checkbox("filter_accountingcodes_none", "1", (isset($_SESSION['filter']['accountingcodes_id']) and $_SESSION['filter']['accountingcodes_id'] == 0)  ? 1 : 0);
-		$number = new Html_Input("filter_number", isset($_SESSION['filter']['number']) ? $_SESSION['filter']['number'] : "");
-		$amount_inc_vat = new Html_Input("filter_amount_inc_vat", isset($_SESSION['filter']['amount_inc_vat']) ? $_SESSION['filter']['amount_inc_vat'] : "");
-		$comment = new Html_Textarea("filter_comment", isset($_SESSION['filter']['comment']) ? $_SESSION['filter']['comment'] : "");
-		$checkbox = new Html_Checkbox("filter_duplicate", "duplicate", isset($_SESSION['filter']['duplicate']) ? $_SESSION['filter']['duplicate'] : 0);
+		if (preg_match("/show/", $category_class.$source_class.$bank_class.$accountingcode_input_class.$number_class.$amount_inc_vat_class.$comment_class.$checkbox_class)) {
+			$date_class = "filter_show";
+		} else {
+			$date_class = "filter_hide";
+		}
+		
 		$submit = new Html_Input("submit_hidden", "", "submit");
 		
 		$grid = array(
@@ -377,39 +470,39 @@ class Writings extends Collector {
 					'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
 				),
 				'date' => array(
-					'class' => "extra_filter_item",
+					'class' => "extra_filter_item ".$date_class,
 					'value' => $date_start->item(__('date')).$date_stop->input()
 				),
 				'category' => array(
-					'class' => "extra_filter_item",
+					'class' => "extra_filter_item ".$category_class,
 					'value' => $category->item(__('category'))
 				),
 				'source' => array(
-					'class' => "extra_filter_item",
+					'class' => "extra_filter_item ".$source_class,
 					'value' => $source->item(__('source')),
 				),
 				'bank' => array(
-					'class' => "extra_filter_item",
+					'class' => "extra_filter_item ".$bank_class,
 					'value' => $bank->item(__('bank')),
 				),
 				'accountingcode' => array(
-					'class' => "extra_filter_item",
-					'value' => $accountingcode_input->item(__('accounting code'), "", $accountingcode_checkbox->item(__('not any'))),
+					'class' => "extra_filter_item ".$accountingcode_input_class,
+					'value' => $accountingcode_input->item(__('accounting code'), "", "<span class=\"".$accountingcode_checkbox_class."\">".$accountingcode_checkbox->item(__('not any'))."</span>"),
 				),
 				'number' => array(
-					'class' => "extra_filter_item",
-					'value' => $number->item(__('piece nb')),
+					'class' => "extra_filter_item ".$number_class,
+					'value' => $number->item(__('piece nb'), "", "<span class=\"".$number_checkbox_class."\">".$number_checkbox->item(__('duplicates'))."</span>"),
 				),
 				'amount_inc_vat' => array(
-					'class' => "extra_filter_item",
+					'class' => "extra_filter_item ".$amount_inc_vat_class,
 					'value' => $amount_inc_vat->item(__('amount including vat')),
 				),
 				'comment' => array(
-					'class' => "extra_filter_item",
+					'class' => "extra_filter_item ".$comment_class,
 					'value' => $comment->item(__('comment')),
 				),
 				'checkbox' => array(
-					'class' => "extra_filter_item",
+					'class' => "extra_filter_item ".$checkbox_class,
 					'value' => $checkbox->item(__('duplicates')),
 				),
 			)
@@ -720,13 +813,17 @@ class Writings extends Collector {
 			}
 			$cleaned['banks_id'] = $post['filter_banks_id'];
 		}
-		if (isset($post['filter_accountingcodes_id'])) {
+		if (isset($post['filter_accountingcodes_none'])) {
+			$cleaned['accountingcodes_id'] = 0;
+		} elseif (isset($post['filter_accountingcodes_id'])) {
 			$cleaned['accountingcodes_id'] = $post['filter_accountingcodes_id'];
 		}
 		if (isset($post['filter_accountingcodes_none'])) {
 			$cleaned['accountingcodes_id'] = 0;
 		}
-		if (!empty($post['filter_number'])) {
+		if (isset($post['filter_number_duplicate'])) {
+			$cleaned['number'] = 'duplicate';
+		} elseif (!empty($post['filter_number'])) {
 			$cleaned['number'] = $post['filter_number'];
 		}
 		if (!empty($post['filter_amount_inc_vat'])) {

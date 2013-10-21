@@ -1,17 +1,11 @@
-$(document).ready(function() {
+$(document).ready(function() {	
 	var timer;
 	make_drag_and_drop();
 	$('.layout_status').slideDown(400);
 	timerstatus = setTimeout(function(){
 		$('.layout_status').slideUp(200);
 	},3000);
-	$("#filter_sources_id, #filter_banks_id").each(function () {
-		if ($(this).val() != 0) {
-			$(this).closest(".extra_filter_item").show();
-			$(".input-date").closest(".extra_filter_item").show();
-			$(".extra_filter_item input[type=\"checkbox\"]").closest(".extra_filter_item").show();
-		}
-	})
+	
 	$("body")
 		.on("click", "#insert_writings_show", function() {
 			$(".insert_writings_form").slideDown(1, function() {
@@ -252,30 +246,24 @@ $(document).ready(function() {
 			$(this).closest(".extra_filter_item").find(".input-ajax-content").toggle();
 		})
 		
-		.on("change", ".extra_filter_item input[name='filter_accountingcodes_id']", function () {
+		.on("change", "#filter_number_duplicate", function () {
+			$(this).closest(".extra_filter_item").find("#filter_number").toggle();
+		})
+		
+		.on("change remove", ".extra_filter_item input[name=\"filter_accountingcodes_id\"]", function () {
 			$(this).closest(".extra_filter_item").find(".field_complement").toggle();
 		})
 
 		.on("submit", "form[name=\"extra_filter_writings_form\"]", function() {
-			var tohide = $(this).find(".extra_filter_item input[type=\"text\"]");
-			tohide.each( function() {
-				if ($(this).val() == "" && $(this).attr("class") != "input-date") {
-					$(this).closest(".extra_filter_item").hide();
+			var input = $(this);
+			$.post(
+				"index.php?content=writings.ajax.php",
+				input.serialize(),
+				function(data){
+					var result = jQuery.parseJSON(data);
+					$(".extra_filter_writings").replaceWith(result.extra);
 				}
-			})
-			$(".extra_filter_item select").each(function () {
-				if ($(this).val() == 0) {
-					$(this).closest(".extra_filter_item").hide();
-				}
-			})
-			$(".extra_filter_item input[type=\"checkbox\"]").each(function () {
-				if (!this.checked) {
-					$(this).closest(".extra_filter_item").hide();
-				}
-			})
-			if ($(".extra_filter_item textarea").val() == "") {
-				$(".extra_filter_item textarea").closest(".extra_filter_item").hide();
-			}
+			);
 			return false;
 		})
 		
