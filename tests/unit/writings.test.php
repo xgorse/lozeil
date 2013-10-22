@@ -959,7 +959,7 @@ class tests_Writings extends TableTestCase {
 		$writings->calculate_quarterly_vat(mktime(0, 0, 0, 4, 15, 2013));
 		$this->assertRecordExists("writings", 
 				array(
-					"amount_inc_vat" => ($writing->amount_inc_vat - $writing->calculate_amount_excl_vat()) + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"amount_inc_vat" => (- $writing->amount_inc_vat + $writing->calculate_amount_excl_vat()) + (- $writing2->amount_inc_vat + $writing2->calculate_amount_excl_vat()),
 					"categories_id" => 1,
 					"banks_id" => 0
 				)
@@ -973,14 +973,14 @@ class tests_Writings extends TableTestCase {
 		$this->assertRecordExists("writings", 
 				array(
 					"day" => mktime(0, 0, 0, 4, 15, 2013),
-					"amount_inc_vat" => (($writing->amount_inc_vat - $writing->calculate_amount_excl_vat())) * 2 + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"amount_inc_vat" => ((- $writing->amount_inc_vat + $writing->calculate_amount_excl_vat())) * 2 + (- $writing2->amount_inc_vat + $writing2->calculate_amount_excl_vat()),
 					"categories_id" => 1,
 					"banks_id" => 0
 				)
 			);
 		$this->assertRecordNotExists("writings", 
 				array(
-					"amount_inc_vat" => (($writing->amount_inc_vat - $writing->calculate_amount_excl_vat())) + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"amount_inc_vat" => ((- $writing->amount_inc_vat + $writing->calculate_amount_excl_vat())) + (- $writing2->amount_inc_vat + $writing2->calculate_amount_excl_vat()),
 					"categories_id" => 1,
 					"banks_id" => 0
 				)
@@ -989,7 +989,7 @@ class tests_Writings extends TableTestCase {
 		$this->assertRecordExists("writings", 
 				array(
 					"day" => mktime(0, 0, 0, 4, 15, 2013),
-					"amount_inc_vat" => (($writing->amount_inc_vat - $writing->calculate_amount_excl_vat())) * 2 + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"amount_inc_vat" => ((- $writing->amount_inc_vat + $writing->calculate_amount_excl_vat())) * 2 + (- $writing2->amount_inc_vat + $writing2->calculate_amount_excl_vat()),
 					"categories_id" => 1,
 					"banks_id" => 0
 				)
@@ -997,10 +997,12 @@ class tests_Writings extends TableTestCase {
 		$this->assertRecordExists("writings", 
 				array(
 					"day" => mktime(0, 0, 0, 7, 15, 2013),
-					"amount_inc_vat" => (($writing3->amount_inc_vat - $writing3->calculate_amount_excl_vat())) + ($writing4->amount_inc_vat - $writing4->calculate_amount_excl_vat()),
+					"amount_inc_vat" => ((- $writing3->amount_inc_vat + $writing3->calculate_amount_excl_vat())) + (- $writing4->amount_inc_vat + $writing4->calculate_amount_excl_vat()),
 					"categories_id" => 1,
 					"banks_id" => 0
 				)
 			);
-	}
+//		$this->truncateTable("writings");
+//		$this->truncateTable("categories");
+	}	
 }

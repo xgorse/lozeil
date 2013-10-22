@@ -48,7 +48,6 @@ echo $heading->show();
 
 echo $writings->display();
 echo $writings->modify_options();
-echo $writings->form_update_bayesian_code();
 
 $writing = new Writing();
 echo $writing->form();

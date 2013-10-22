@@ -785,23 +785,7 @@ class Writings extends Collector {
 			$writing->duplicate($amount);
 		}
 	}
-	
-	function form_update_bayesian_code() {
-		$input_hidden_action = new Html_Input("action", "update_bayesian_element");
-		$submit = new Html_Input("writings_update_bayesian_element_submit",__('update dictionary'), "submit");
-		$submit->properties = array(
-				'onclick' => "javascript:return confirm('".utf8_ucfirst(__('are you sure?'))."')"
-			);
 		
-		$form = "<div class=\"writings_update_bayesian_element\">
-					<form method=\"post\" name=\"writings_update_bayesian_element_form\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$submit->input()."
-					</form>
-				</div>";
-		
-		return $form;
-	}
-	
 	function clean_filter_from_ajax($post) {
 		$cleaned = array ();
 		if (!empty($post['extra_filter_writings_value'])) {
