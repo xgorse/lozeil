@@ -146,6 +146,11 @@ class Writings_Data_File {
 					$writing_imported->sources_id = $this->sources_id;
 					$writing_imported->save();
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					if ($writing->categories_id > 0) {
+						$category = new Category();
+						$category->load($writing->categories_id);
+						$writing->vat = $category->vat;
+					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
@@ -194,6 +199,11 @@ class Writings_Data_File {
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					if ($writing->categories_id > 0) {
+						$category = new Category();
+						$category->load($writing->categories_id);
+						$writing->vat = $category->vat;
+					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
@@ -255,6 +265,11 @@ class Writings_Data_File {
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					if ($writing->categories_id > 0) {
+						$category = new Category();
+						$category->load($writing->categories_id);
+						$writing->vat = $category->vat;
+					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
@@ -327,6 +342,11 @@ class Writings_Data_File {
 					$writing_imported->banks_id = $this->banks_id;
 					$writing_imported->save();
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					if ($writing->categories_id > 0) {
+						$category = new Category();
+						$category->load($writing->categories_id);
+						$writing->vat = $category->vat;
+					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 					$writing->save();
 					$this->nb_new_records++;
