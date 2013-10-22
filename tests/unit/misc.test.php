@@ -44,4 +44,15 @@ class tests_misc extends TableTestCase {
 	function test_determine_last_day_of_year() {
 		$this->assertEqual(determine_last_day_of_year(mktime(0, 0, 0, 10, 10, 2013)), mktime(23, 59, 59, 12, 31, 2013));
 	}
+	
+	function test_determine_vat_date() {
+		$date = mktime(0, 0, 0, 10, 22, 2013);
+		$this->assertEqual(determine_vat_date($date), mktime(0, 0, 0, 1, 15, 2014));
+		$date = mktime(0, 0, 0, 1, 1, 2013);
+		$this->assertEqual(determine_vat_date($date), mktime(0, 0, 0, 4, 15, 2013));
+		$date = mktime(0, 0, 0, 3, 15, 2013);
+		$this->assertEqual(determine_vat_date($date), mktime(0, 0, 0, 7, 15, 2013));
+		$date = mktime(0, 0, 0, 6, 1, 2013);
+		$this->assertEqual(determine_vat_date($date), mktime(0, 0, 0, 10, 15, 2013));
+	}
 }

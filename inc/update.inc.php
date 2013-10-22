@@ -15,6 +15,10 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_21() {
+		$this->db->query("ALTER TABLE `categories` ADD `vat_category` TINYINT(1)  NOT NULL  DEFAULT 0  AFTER `vat`;");
+	}
+	
 	function to_20() {
 		$this->param->add("fisher_threshold", "0.4");
 		$this->param->update(array(

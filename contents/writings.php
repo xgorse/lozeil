@@ -1,14 +1,16 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
+$writings = new Writings();
 if (!isset($_SESSION['order']['name']) or !isset($_SESSION['order']['direction'])) {
 	$_SESSION['order']['name'] = 'day';
 	$_SESSION['order']['direction'] = 'ASC';
 }
 
-if (isset($_POST['action']) and $_POST['action'] == "update_bayesian_element") {
-	$bayesianelements = new Bayesian_Elements();
-	$bayesianelements->train();
+if (isset($_POST)) {
+	if (isset($_POST['vat_date']) and is_datepicker_valid($_POST['vat_date'])) {
+		$writings->calculate_quarterly_vat(timestamp_from_datepicker($_POST['vat_date']));
+	}
 }
 
 if (isset($_REQUEST['action'])) {
@@ -28,7 +30,6 @@ $menu = new Menu_Area();
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
-$writings = new Writings();
 $writings->add_order($_SESSION['order']['name']." ".$_SESSION['order']['direction']);
 $writings->add_order("number DESC, amount_inc_vat DESC");
 

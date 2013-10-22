@@ -164,10 +164,14 @@ input[type="submit"]:hover {
 /* --- Layout Status --- */
 
 .layout_status {
+	width: 550px;
 	position:fixed;
+	right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
     top:0;
 	text-align: center;
-	width: 100%;
     z-index:100;
 	display: none;
 }
@@ -599,7 +603,10 @@ label[for="filter_number_duplicate"] {
 	display: none;
 }
 
-#menu_actions_export, #menu_actions_export form, .show {
+#menu_actions_export,
+#menu_actions_export form,
+.show,
+.menu_actions form[name="menu_actions_other"] {
 	display: inline-block;
 }
 
@@ -622,6 +629,10 @@ label[for="filter_number_duplicate"] {
 	color: white;
 	font-size: 0.7em;
 	text-decoration: none;
+}
+
+.menu_actions li ul {
+	display : none;
 }
 
 /* --- Button --- */

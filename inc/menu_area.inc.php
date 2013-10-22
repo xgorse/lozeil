@@ -68,6 +68,9 @@ class Menu_Area {
 				),
 				array(
 					'value' =>  "<a id=\"menu_actions_export_label\" href=\"\">".utf8_ucfirst(__("export writings"))."</a>".$data->form_export()
+				),
+				array(
+					'value' =>  "<a id=\"menu_actions_other\" href=\"\">".utf8_ucfirst(__("other actions"))."</a>".$writings->form_other_actions()
 				)
 			)
 		);	

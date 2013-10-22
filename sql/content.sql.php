@@ -6,6 +6,7 @@ $queries = array(
 		  id INT(21) NOT NULL AUTO_INCREMENT,
 		  name VARCHAR(100) NOT NULL DEFAULT '',
 		  vat DECIMAL(5,2) NOT NULL DEFAULT 0,
+		  vat_category TINYINT(1) NOT NULL DEFAULT 0,
 		  PRIMARY KEY (`id`)
 		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
 	

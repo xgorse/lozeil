@@ -24,8 +24,20 @@ class Categories extends Collector  {
 			}
 			$where[] = $this->db->config['table_categories'].".id IN ".array_2_list($this->id);
 		}
+		if (isset($this->filters['vat_category'])) {
+			$where[] = $this->db->config['table_categories'].".vat_category = ".(int)$this->filters['vat_category'];
+		}
 		
 		return $where;
+	}
+	
+	function filter_with() {
+		$elements = func_get_args();
+		foreach ($elements as $element) {
+			foreach ($element as $key => $value) {
+				$this->filters[$key] = $value;
+			}
+		}
 	}
 	
 	function names() {
@@ -49,6 +61,10 @@ class Categories extends Collector  {
 						'type' => "th",
 						'value' => __('default VAT')
 					),
+					array(
+						'type' => "th",
+						'value' => __('VAT category')
+					),
 				)
 			)
 		);
@@ -59,6 +75,7 @@ class Categories extends Collector  {
 	function grid_body() {
 		$input = new Html_Input("name_new");
 		$input_vat = new Html_Input("vat_new");
+		$checkbox_category_vat = new Html_Checkbox("vat_category", 1);
 		$grid[0] =  array(
 			'id' => 0,
 			'cells' => array(
@@ -70,12 +87,17 @@ class Categories extends Collector  {
 					'type' => "td",
 					'value' => $input_vat->item(""),
 				),
+				array(
+					'type' => "td",
+					'value' => $checkbox_category_vat->item(""),
+				),
 			)
 		);
 		
 		foreach ($this as $category) {
 			$input = new Html_Input("category[".$category->id."][name]", $category->name);
 			$input_vat = new Html_Input("category[".$category->id."][vat]", $category->vat);
+			$checkbox_category_vat = new Html_Checkbox("category[".$category->id."][vat_category]", 1, $category->vat_category);
 			$grid[$category->id] =  array(
 				'cells' => array(
 					array(
@@ -85,6 +107,10 @@ class Categories extends Collector  {
 					array(
 						'type' => "td",
 						'value' => $input_vat->item(""),
+					),
+					array(
+						'type' => "td",
+						'value' => $checkbox_category_vat->item(""),
 					),
 				)
 			);

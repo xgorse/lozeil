@@ -118,6 +118,19 @@ class Writings extends Collector {
 		return $query_where;
 	}
 	
+	function get_vat_amount($start, $stop) {
+		$result = $this->db->query("
+			SELECT SUM(amount_inc_vat) as sum_amount_inc_vat, SUM(amount_excl_vat) as sum_amount_excl_vat
+			FROM ".$this->db->config['table_writings']."
+			WHERE day >= ".$start." AND day <= ".$stop
+		);
+		
+		$sum = $this->db->fetchArray($result[0]);
+		
+		return $sum['sum_amount_excl_vat'] - $sum['sum_amount_inc_vat'];
+	}
+	
+	
 	function grid_header() {
 		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
 		$grid = array(
@@ -521,7 +534,7 @@ class Writings extends Collector {
 	
 	function filter_with() {
 		$elements = func_get_args();
-		foreach ($elements as  $element) {
+		foreach ($elements as $element) {
 			foreach ($element as $key => $value) {
 				$this->filters[$key] = $value;
 			}
@@ -843,7 +856,7 @@ class Writings extends Collector {
 		
 		foreach ($this as $writing) {
 			$day = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day));
-			$balance[$writing->categories_id][$day] = isset($balance[$writing->categories_id][$day]) ? $balance[$writing->categories_id][$day] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+			$balance[$writing->categories_id][$day] = isset($balance[$writing->categories_id][$day]) ? $balance[$writing->categories_id][$day] + round($writing->amount_inc_vat, 2) : round($writing->amount_inc_vat, 2);
 		}
 		
 		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
@@ -877,9 +890,9 @@ class Writings extends Collector {
 		foreach ($this as $writing) {
 			$day = mktime(0, 0, 0, date('m', $writing->day), date('d', $writing->day), date('Y', $writing->day));
 			if ($day < $start) {
-				$balance[$start] = isset($balance[$start]) ? $balance[$start] + $writing->amount_inc_vat : $writing->amount_inc_vat;
+				$balance[$start] = isset($balance[$start]) ? $balance[$start] + round($writing->amount_inc_vat, 2) : round($writing->amount_inc_vat, 2);
 			} else {
-				$balance[$day] = isset($balance[$day]) ? ($balance[$day] + $writing->amount_inc_vat) : $writing->amount_inc_vat;
+				$balance[$day] = isset($balance[$day]) ? ($balance[$day] + round($writing->amount_inc_vat, 2)) : round($writing->amount_inc_vat, 2);
 			}
 		}
 		
@@ -1012,5 +1025,51 @@ class Writings extends Collector {
 			}
 		}
 		return $duplicate;
+	}
+	
+	function form_other_actions() {
+		$date = new Html_Input_Date("vat_date", determine_vat_date());
+		$date->img_src = "medias/images/link_calendar_white.png";
+		$submit = new Html_Input("submit_calculate_vat", __('ok'), "submit");
+		$form = "<form method=\"post\" name=\"menu_actions_other\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">".
+					$date->item("")." ".$submit->input()
+				."</form>";
+		
+		$grid = array(
+			'leaves' => array(
+				'calculate_vat' => array(
+					'value' => utf8_ucfirst(__("automatically calculate vat to"))." ".$form
+				),
+			)
+		);				
+		$list = new Html_List($grid);
+		return $list->show();
+	}
+	
+	function calculate_quarterly_vat($timestamp) {
+		list($start, $stop) = determine_month(strtotime("-1 month", $timestamp));
+		$start = strtotime("-2 month", $start);
+		$writings = new Writings();
+		$vat = $writings->get_vat_amount($start, $stop);
+		
+		$categories = new Categories();
+		$categories->filter_with(array('vat_category' => 1));
+		$categories->select();
+		if (count($categories) == 1) {
+			$category = $categories[0];
+			list($month_start, $month_stop) = determine_month($timestamp);
+			$writings->filter_with(array('start' => $month_start, 'stop' => $month_stop, 'categories_id' => $category->id, 'banks_id' => 0));
+			$writings->select();
+			
+			$writing = new Writing();
+			if (count($writings) == 1) {
+				$writing->load($writings[0]->id);
+			}
+			$writing->categories_id = $category->id;
+			$writing->day = $timestamp;
+			$writing->amount_inc_vat = $vat;
+			$writing->comment = utf8_ucfirst(__("automatically calculated vat"))." ".__('from')." ".date('d/m/Y', $start)." ".__('to')." ".date('d/m/Y', $stop);
+			$writing->save();
+		}
 	}
 }

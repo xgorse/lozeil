@@ -419,3 +419,9 @@ function determine_start_stop($start, $stop) {
 function timestamp_from_datepicker($datepicker) {
 	return mktime(0, 0, 0, (int)$datepicker['m'], (int)$datepicker['d'], (int)$datepicker['Y']);
 }
+
+function determine_vat_date($timestamp = 0) {
+	$timestamp = !$timestamp ? time() : $timestamp;
+	$month = date('n', $timestamp);
+	return mktime(0, 0, 0, $month + 4 - $month % 3, 15, date('Y', $timestamp));
+}

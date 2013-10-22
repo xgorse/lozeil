@@ -49,7 +49,7 @@ $(document)
 			$("#menu_actions_export").toggle();
 			return false;
 		})
-		$(".menu_actions_import_label").on("click", function() {
+		$(".menu_actions_import_label, #menu_actions_other").on("click", function() {
 			$(this).nextAll().toggle();
 			return false;
 		})

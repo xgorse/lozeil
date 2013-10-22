@@ -5,6 +5,7 @@ class Category extends Record {
 	public $id = 0;
 	public $name = "";
 	public $vat = 0;
+	public $vat_category = 0;
 	
 	function __construct($id = 0, db $db = null) {
 		parent::__construct($db);
@@ -42,7 +43,8 @@ class Category extends Record {
 		$result = $this->db->id("
 			INSERT INTO ".$this->db->config['table_categories']."
 			SET name = ".$this->db->quote($this->name).",
-				vat = ".(float)$this->vat
+				vat = ".(float)$this->vat.",
+				vat_category = ".(float)$this->vat_category
 		);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('category'));
@@ -53,7 +55,8 @@ class Category extends Record {
 	function update() {
 		$result = $this->db->query("UPDATE ".$this->db->config['table_categories']." 
 			SET name = ".$this->db->quote($this->name).", 
-				vat = ".(float)$this->vat."
+				vat = ".(float)$this->vat.",
+				vat_category = ".(float)$this->vat_category."
 				WHERE id = ".(int)$this->id
 		);
 		$this->db->status($result[1], "u", __('category'));
@@ -63,11 +66,13 @@ class Category extends Record {
 
 
 	function delete() {
-		$result = $this->db->query("DELETE FROM ".$this->db->config['table_categories'].
-			" WHERE id = '".$this->id."'"
-		);
-		$this->db->status($result[1], "d", __('category'));
-
+		if (is_numeric($this->id) and $this->id != 0) {
+			$result = $this->db->query("DELETE FROM ".$this->db->config['table_categories'].
+				" WHERE id = '".$this->id."'"
+			);
+			$this->db->status($result[1], "d", __('category'));
+		}
+		
 		return $this->id;
 	}
 	
@@ -83,5 +88,40 @@ class Category extends Record {
 			" WHERE categories_id = '".$this->id."'"
 		);
 		return $result;
+	}
+	
+	function clean($post) {
+		$vat_category = 0;
+		$cleaned = array();
+		if (!empty($post['name_new'])) {
+			$cleaned[0] = array (
+				'name' => $post['name_new'],
+				'vat' => str_replace(",", ".", $post['vat_new']),
+				'vat_category' => 0
+			);
+			if (isset($post['vat_category'])) {
+				$cleaned[0]['vat_category'] = 1;
+				$vat_category++;
+			}
+		}
+		
+		if (isset($post['category'])) {
+			foreach ($post['category'] as $id => $values) {
+				$cleaned[$id] = array (
+					'name' => $values['name'],
+					'vat' => str_replace(",", ".", $values['vat']),
+					'vat_category' => 0
+				);
+				if (isset($values['vat_category'])) {
+					$cleaned[$id]['vat_category'] = 1;
+					$vat_category++;
+				}
+			}
+		}
+		if ($vat_category > 1) {
+			return false;
+		} else {
+			return $cleaned;
+		}
 	}
 }

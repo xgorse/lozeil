@@ -924,5 +924,83 @@ class tests_Writings extends TableTestCase {
 				)
 			)
 		);
+		$this->truncateTable("writings");
+		$this->truncateTable("categories");
+	}
+	
+	function test_calculate_quarterly_vat() {
+		$category = new Category();
+		$category->vat_category = 1;
+		$category->save();
+		$category = new Category();
+		$category->save();
+		
+		$writing = new Writing();
+		$writing->amount_inc_vat = 12;
+		$writing->vat = 10;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writing2 = new Writing();
+		$writing2->amount_inc_vat = 20;
+		$writing2->vat = 10;
+		$writing2->day = mktime(10, 0, 0, 3, 0, 2013);
+		$writing2->save();
+		$writing3 = new Writing();
+		$writing3->amount_inc_vat = -12;
+		$writing3->vat = 10;
+		$writing3->day = mktime(10, 0, 0, 4, 20, 2013);
+		$writing3->save();
+		$writing4 = new Writing();
+		$writing4->amount_inc_vat = 20;
+		$writing4->vat = 10;
+		$writing4->day = mktime(10, 0, 0, 6, 0, 2013);
+		$writing4->save();
+		$writings = new Writings();
+		$writings->calculate_quarterly_vat(mktime(0, 0, 0, 4, 15, 2013));
+		$this->assertRecordExists("writings", 
+				array(
+					"amount_inc_vat" => ($writing->amount_inc_vat - $writing->calculate_amount_excl_vat()) + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"categories_id" => 1,
+					"banks_id" => 0
+				)
+			);
+		$writing = new Writing();
+		$writing->amount_inc_vat = 12;
+		$writing->vat = 10;
+		$writing->day = mktime(10, 0, 0, 1, 20, 2013);
+		$writing->save();
+		$writings->calculate_quarterly_vat(mktime(0, 0, 0, 4, 15, 2013));
+		$this->assertRecordExists("writings", 
+				array(
+					"day" => mktime(0, 0, 0, 4, 15, 2013),
+					"amount_inc_vat" => (($writing->amount_inc_vat - $writing->calculate_amount_excl_vat())) * 2 + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"categories_id" => 1,
+					"banks_id" => 0
+				)
+			);
+		$this->assertRecordNotExists("writings", 
+				array(
+					"amount_inc_vat" => (($writing->amount_inc_vat - $writing->calculate_amount_excl_vat())) + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"categories_id" => 1,
+					"banks_id" => 0
+				)
+			);
+		$writings->calculate_quarterly_vat(mktime(0, 0, 0, 7, 15, 2013));
+		$this->assertRecordExists("writings", 
+				array(
+					"day" => mktime(0, 0, 0, 4, 15, 2013),
+					"amount_inc_vat" => (($writing->amount_inc_vat - $writing->calculate_amount_excl_vat())) * 2 + ($writing2->amount_inc_vat - $writing2->calculate_amount_excl_vat()),
+					"categories_id" => 1,
+					"banks_id" => 0
+				)
+			);
+		$this->assertRecordExists("writings", 
+				array(
+					"day" => mktime(0, 0, 0, 7, 15, 2013),
+					"amount_inc_vat" => (($writing3->amount_inc_vat - $writing3->calculate_amount_excl_vat())) + ($writing4->amount_inc_vat - $writing4->calculate_amount_excl_vat()),
+					"categories_id" => 1,
+					"banks_id" => 0
+				)
+			);
 	}
 }
