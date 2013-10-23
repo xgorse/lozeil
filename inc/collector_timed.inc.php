@@ -10,7 +10,7 @@ class Collector_Timed extends Collector {
 		$this->set_up_timed();
 		list($records) = $this->db->query($query);
 		if ($this->limit_row_count) {
-			$this->found_rows = !$this->calc_found_rows ? count($this) : $this->db->getValue("SELECT FOUND_ROWS()");
+			$this->found_rows = !$this->calc_found_rows ? count($this) : $this->db->value("SELECT FOUND_ROWS()");
 		}
 		$this->tear_down_timed();
 		
@@ -108,5 +108,19 @@ class Collector_Timed extends Collector {
 	
 	function get_drop_temporary_table() {
 		return "DROP TABLE tmp;";
+	}
+	
+	function get_order() {
+		$order = "";
+
+		if ($this->order_col_name !== null) {
+			$order = " ORDER BY ".$this->order_col_name;
+
+			if ($this->order_direction !== null) {
+				$order .= " ".$this->order_direction;
+			}
+		}
+
+		return $order;
 	}
 }

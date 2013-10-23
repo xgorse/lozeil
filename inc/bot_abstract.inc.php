@@ -1,12 +1,5 @@
 <?php
-/*
-	application ofr
-	$Author: frank $
-	$URL: svn://svn.noparking.net/var/repos/projets/opentime.fr/applications/ofr/inc/bot.inc.php $
-	$Revision: 937 $
-
-	Copyright (C) No Parking 2010 - 2012
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 abstract class Bot_Abstract {
 	function execute($argv, $get) {

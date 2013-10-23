@@ -1,12 +1,5 @@
 <?php
-/*
-	opentime
-	$Author: jeff $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/html_input_ajax.inc.php $
-	$Revision: 5533 $
-
-	Copyright (C) No Parking 2011 - 2011
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Input_Ajax extends Html_Input {
 	public $id;
