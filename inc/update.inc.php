@@ -15,6 +15,12 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_22() {
+		$this->param->add("locale_timezone", "Europe/Paris");
+		$this->param->add("email_from", "lozeil@noparking.net");
+		$this->param->add("email_wrap", "50");
+	}
+	
 	function to_21() {
 		$this->db->query("ALTER TABLE `categories` ADD `vat_category` TINYINT(1)  NOT NULL  DEFAULT 0  AFTER `vat`;");
 	}

@@ -425,3 +425,11 @@ function determine_vat_date($timestamp = 0) {
 	$month = date('n', $timestamp);
 	return mktime(0, 0, 0, $month + 4 - $month % 3, 15, date('Y', $timestamp));
 }
+
+function renew_session() {
+	if (isset($GLOBALS['_SESSION'])) {
+		unset($GLOBALS['_SESSION']);
+	}
+	session_destroy();
+	session_regenerate_id();
+}

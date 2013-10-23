@@ -23,9 +23,13 @@ require $current_directory."/banks.inc.php";
 require $current_directory."/bayesian_element.inc.php";
 require $current_directory."/bayesian_elements.inc.php";
 require $current_directory."/bot.inc.php";
+require $current_directory."/bot_abstract.inc.php";
 require $current_directory."/categories.inc.php";
 require $current_directory."/category.inc.php";
+require $current_directory."/collector_timed.inc.php";
 require $current_directory."/config_file.inc.php";
+require $current_directory."/database_tables.inc.php";
+require $current_directory."/database_tables_source.inc.php";
 require $current_directory."/debug.inc.php";
 require $current_directory."/excel.inc.php";
 require $current_directory."/export_excel.inc.php";
@@ -66,4 +70,9 @@ require $current_directory."/writings_simulations.inc.php";
 
 if (function_exists("date_default_timezone_set")) {
 	date_default_timezone_set("Europe/Paris");
+}
+
+if (strpos($_SERVER['SCRIPT_FILENAME'], "setup.php") === false) {
+	$db = new db($dbconfig);
+	$db->query("SET NAMES 'utf8'");
 }

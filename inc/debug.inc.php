@@ -1,12 +1,5 @@
 <?php
-/*
-	opentime
-	$Author: perrick $
-	$URL: svn://svn.noparking.net/var/repos/opentime/inc/debug.inc.php $
-	$Revision: 5271 $
-
-	Copyright (C) No Parking 2008 - 2012
-*/
+/* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class debug {
 	public static function dump_as_string($var) {

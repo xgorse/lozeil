@@ -94,6 +94,16 @@ class Collector implements iterator, countable, arrayAccess {
 
 		return $this;
 	}
+	
+	function set_order($col_name, $direction = null) {
+		$this->order_col_name = $col_name;
+
+		if ($direction !== null) {
+			$this->order_direction = $direction;
+		}
+
+		return $this;
+	}
 
 	function add_order($clause) {
 		$this->order[] = $clause;
@@ -104,7 +114,7 @@ class Collector implements iterator, countable, arrayAccess {
 		$this->reset();
 		list($records) = $this->db->query($this->get_query());
 		if ($this->limit_row_count or $this->calc_found_rows) {
-			$this->found_rows = !$this->calc_found_rows ? count($this) : $this->db->getValue("SELECT FOUND_ROWS()");
+			$this->found_rows = !$this->calc_found_rows ? count($this) : $this->db->value("SELECT FOUND_ROWS()");
 		}
 
 		while ($record = $this->db->fetchArray($records)) {
