@@ -7,7 +7,8 @@ class tests_Bank extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"banks"
+			"banks",
+			"writings"
 		);
 	}
 	

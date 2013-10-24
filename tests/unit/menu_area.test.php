@@ -7,7 +7,9 @@ class tests_Menu_area extends TableTestCase {
 	function __construct() {
 		parent::__construct();
 		$this->initializeTables(
-			"writings"
+			"writings",
+			"sources",
+			"banks"
 		);
 	}
 	
