@@ -58,7 +58,7 @@ abstract class Record {
 				}
 			}
 
-			$this->id = $db->value("
+			$this->id = $db->getValue("
 				SELECT id
 				FROM ".$db->config['table_'.$table]."
 				WHERE " . join(" AND ", $where)."

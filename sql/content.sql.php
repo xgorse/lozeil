@@ -51,10 +51,8 @@ $queries = array(
 	
 	'users' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_users']." (
 		  id INT(11) NOT NULL AUTO_INCREMENT,
-		  name VARCHAR(250),
 		  username VARCHAR(80) NOT NULL DEFAULT '',
 		  password VARCHAR(50) NOT NULL DEFAULT '',
-		  email VARCHAR(250),
 		  PRIMARY KEY (`id`),
 		  UNIQUE KEY username (username)
 		 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",

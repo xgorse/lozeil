@@ -9,16 +9,6 @@ if (file_exists($current_directory."/../cfg/config.inc.php")) {
 if (file_exists($current_directory."/../cfg/param.inc.php")) {
 	require $current_directory."/../cfg/param.inc.php";
 }
-
-if (isset($GLOBALS['pathconfig']['cfg']) and !empty($GLOBALS['pathconfig']['cfg'])) {
-	if (file_exists($GLOBALS['pathconfig']['cfg']."config.inc.php")) {
-		require($GLOBALS['pathconfig']['cfg']."config.inc.php");
-	}
-	if (file_exists($GLOBALS['pathconfig']['cfg']."param.inc.php")) {
-		require($GLOBALS['pathconfig']['cfg']."param.inc.php");
-	}
-}
-
 require $current_directory."/../lang/fr_FR.lang.php";
 
 require $current_directory."/collector.inc.php";
