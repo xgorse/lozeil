@@ -88,7 +88,7 @@ class Bot {
 			 $username = $this->input(__('username'));
 		};
 		$password = $this->input_hidden(__('password'));
-		$this->db->query("INSERT INTO ".$GLOBALS['dbconfig']['table_users']." (id, username, password) VALUES (1, '".$username."', password('".$password."'));");
+		$this->db->query("INSERT INTO ".$GLOBALS['dbconfig']['table_users']." (id, username, password) VALUES (1, '".$username."', password(".$this->db->quote($password)."));");
 		$this->import_accounting_plan();
 	}
 	
