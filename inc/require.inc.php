@@ -82,7 +82,7 @@ if (function_exists("date_default_timezone_set")) {
 	date_default_timezone_set("Europe/Paris");
 }
 
-if (strpos($_SERVER['SCRIPT_FILENAME'], "setup.php") === false) {
+if (strpos($_SERVER['SCRIPT_FILENAME'], "setup.php") === false  and strpos($_SERVER['SCRIPT_FILENAME'], "bot.php") === false) {
 	$db = new db($dbconfig);
 	$db->query("SET NAMES 'utf8'");
 }

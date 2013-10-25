@@ -37,9 +37,7 @@ class Database_Tables_Source {
 					name VARCHAR(100) NOT NULL DEFAULT '',
 					selected TINYINT(1) NOT NULL DEFAULT 0,
 					PRIMARY KEY (`id`)
-				   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
-				  "INSERT INTO ".$GLOBALS['dbconfig']['table_banks']." VALUES (1, 'cic', 1);",
-				  "INSERT INTO ".$GLOBALS['dbconfig']['table_banks']." VALUES (2, 'coop', 1);",
+				   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 				  ),
 
 			  'writings' => array(
