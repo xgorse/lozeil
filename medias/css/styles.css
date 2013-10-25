@@ -347,6 +347,19 @@ input[type="submit"]:hover {
 	cursor: pointer;
 }
 
+.modify a {
+	display: inline-block;
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 18px;
+	height: 18px;
+	background-image :  url(../images/bullet-wrench.png);
+	background-repeat: no-repeat;
+	background-size: 18px;
+	cursor: pointer;
+}
+
 .delete input[type='submit'] {
 	margin-left: 5px;
 	border: 0;
