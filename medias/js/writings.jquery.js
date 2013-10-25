@@ -225,21 +225,23 @@ $(document).ready(function() {
 			$("input#amount_excl_vat").val(amount_excl_vat);
 		})
 
-		.on("keyup change", "form[name=\"extra_filter_writings_form\"]", function() {
+		.on("keyup change", "form[name=\"extra_filter_writings_form\"]", function(event) {
 			var input = $(this);
 			clearTimeout(timer);
-			timer = setTimeout(function() {
-				$.post(
-					"index.php?content=writings.ajax.php",
-					input.serialize(),
-					function(data){
-						var result = jQuery.parseJSON(data);
-						$('#table_writings table').html(result.table);
-						make_drag_and_drop();
-						show_status(result.status);
-					}
-				);
-			}, 200);
+			if (event.type != "change" || event.target.type != "text") {
+				timer = setTimeout(function() {
+					$.post(
+						"index.php?content=writings.ajax.php",
+						input.serialize(),
+						function(data){
+							var result = jQuery.parseJSON(data);
+							$('#table_writings table').html(result.table);
+							make_drag_and_drop();
+							show_status(result.status);
+						}
+					);
+				}, 200);
+			}
 		})
 		
 		.on("change", "#filter_accountingcodes_none", function () {
