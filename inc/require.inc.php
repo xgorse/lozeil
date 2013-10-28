@@ -34,6 +34,7 @@ require $current_directory."/bayesian_element.inc.php";
 require $current_directory."/bayesian_elements.inc.php";
 require $current_directory."/bot.inc.php";
 require $current_directory."/bot_abstract.inc.php";
+require $current_directory."/cache.inc.php";
 require $current_directory."/categories.inc.php";
 require $current_directory."/category.inc.php";
 require $current_directory."/collector_timed.inc.php";
