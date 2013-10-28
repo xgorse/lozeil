@@ -151,6 +151,7 @@ $__['update OK'] = "mise à jour OK";
 $__['updates OK'] = "mises à jour OK";
 $__['upload'] = "upload";
 $__['use'] = "utiliser";
+$__['user'] = "utilisateur";
 $__['username'] = "nom d'utilisateur";
 $__['validate'] = "validation";
 $__['VAT'] = "TVA";

@@ -67,6 +67,8 @@ require $current_directory."/source.inc.php";
 require $current_directory."/sources.inc.php";
 require $current_directory."/theme_default.inc.php";
 require $current_directory."/update.inc.php";
+require $current_directory."/user.inc.php";
+require $current_directory."/users.inc.php";
 require $current_directory."/user_authentication.inc.php";
 require $current_directory."/writing.inc.php";
 require $current_directory."/writing_imported.inc.php";
