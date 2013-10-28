@@ -64,4 +64,46 @@ class User_Authentication {
 
 		return $is_authorized;
 	}
+	
+	function bypass($username, $dbconfig) {
+		$db = new db($dbconfig);
+		$is_authorized = false;
+		$this->user_id = 0;
+		
+		$query = "SELECT id, username".
+				" FROM ".$db->config['table_users'].
+				" WHERE username = ".$db->quote($username);
+		$result = $db->query($query);
+		$row = $db->fetchArray($result[0]);
+		
+		if ($row['username'] == $username) {
+			$this->user_id = (int)$row['id'];
+			$is_authorized = true;
+		}
+		
+		return $is_authorized;
+	}
+	
+	function session_headers($dbparams = "") {
+		$session = false;
+		if ($this->user_id > 0) {
+			$db = new db($dbparams);
+
+			$query = "SELECT ".$db->config['table_users'].".id as userid, ".
+			$db->config['table_users'].".name as name, ".
+			$db->config['table_users'].".username as username ".
+			" FROM ".$db->config['table_users'].
+			" WHERE ".$db->config['table_users'].".id = ".$this->user_id.
+			" LIMIT 0, 1";
+			$result = $db->query($query);
+
+			if ($result[1] == 1) {
+				$session = $db->fetchArray($result[0]);
+				$session['user_id'] = $session['userid'];
+				$session['userdatabase'] = $GLOBALS['dbconfig']['name'];
+			}
+		}
+
+		return $session;
+	}
 }
