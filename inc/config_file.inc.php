@@ -197,7 +197,6 @@ class Config_File {
 				$default_value = $file_fallback->find_default_value($value);
 			}
 		}
-		$bot = new Lozeil_Bot();
 		if (!isset($default_value) or !$default_value) {
 			echo $value." : ".__('No default value').$default_value."\n";
 			$final_value = $this->input('');

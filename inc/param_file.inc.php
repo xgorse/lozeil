@@ -38,7 +38,6 @@ class Param_File extends Config_File {
 				$default_value = $file_fallback->find_default_value($value);
 			}
 		}
-		$bot = new Lozeil_Bot();
 		if (!isset($default_value) or !$default_value) {
 			echo $value." : ".__('No default value').$default_value."\n";
 			$final_value = $this->input('');
@@ -61,7 +60,7 @@ class Param_File extends Config_File {
 	
 	function overwrite(Param_file $dist_config_file = null) {
 		if ($this->exists()) {
-			echo utf8_ucfirst(__('config file already exists, do you want to overwrite? (y/n)'))."\n";
+			echo utf8_ucfirst(__('param file already exists, do you want to overwrite? (y/n)'))."\n";
 			while(empty($config_answer)) {
 				$config_answer = $this->input('');
 			};

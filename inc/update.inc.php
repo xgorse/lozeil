@@ -15,6 +15,10 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_24() {
+		$this->param->add("locale_lang", "fr_FR");
+	}
+	
 	function to_23() {
 		$this->db->query("ALTER TABLE `users` ADD `name` varchar(250) AFTER `id`;");
 		$this->db->query("ALTER TABLE `users` ADD `email` varchar(250) AFTER `password`;");

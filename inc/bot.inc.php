@@ -12,69 +12,29 @@ class Bot {
 	
 	function setup() {
 		echo utf8_ucfirst(__('database configuration'))."\n";
-		while(empty($dbname)) {
-			 $dbname = $this->input(__('name'));
-		};
-		while(empty($dbuser)) {
-			 $dbuser = $this->input(__('username'));
-		};
+		
+		$config_file = new Config_File($this->directory_cfg."/config.inc.php", "dbconfig");
+		$dist_config_file = new Config_File($this->directory_cfg."/config.inc.php.dist", "dbconfig");
+		
+		$dbname = $config_file->change_config_value("name", $dist_config_file);
+		$dbuser = $config_file->change_config_value("user", $dist_config_file);
 		$dbpass = $this->input_hidden(__('password'));
 		
-		$config_file = new Config_File($this->directory_cfg."/config.inc.php");
-		if ($config_file->exists()) {
-			echo utf8_ucfirst(__('config file already exists, do you want to overwrite? (y/n)'))."\n";
-			while(empty($config_answer)) {
-				$config_answer = $this->input('');
-			};
-		} else {
-			$config_answer = "y";
-		}
-		
-		if ($config_answer == "y") {
-			$dist_config_file = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php.dist");
-			if (!$dist_config_file->exists()) {
-				die("Configuration file '".$dist_config_file."' does not exist");
-			} else {
-				try {
-					$config_file->copy($dist_config_file);
-				} catch (exception $exception) {
-					die($exception->getMessage());
-				}
-			}
-		}
-		
-		$this->dbconfig->update(array(
-			'dbconfig' => array(
+		$need_overwrite = $config_file->overwrite(new Config_File($this->directory_cfg."/config.inc.php.dist"));
+		if ($need_overwrite) {
+			$this->dbconfig->update(array(
 				'dbconfig' => array(
-					"name" => $dbname,
-					"user" => $dbuser,
-					"pass" => $dbpass
+					'dbconfig' => array(
+						"name" => $dbname,
+						"user" => $dbuser,
+						"pass" => $dbpass
+					)
 				)
-			)
-		));
+			));
+		}
 		
 		$param_file = new Param_File($this->directory_cfg."/param.inc.php");
-		if ($config_file->exists()) {
-			echo utf8_ucfirst(__('param file already exists, do you want to overwrite? (y/n)'))."\n";
-			while(empty($param_answer)) {
-				$param_answer = $this->input('');
-			};
-		} else {
-			$param_answer = "y";
-		}
-		
-		if ($param_answer == "y") {
-			$dist_param_file = new Param_File(dirname(__FILE__)."/../cfg/param.inc.php.dist");
-			if (!$dist_param_file->exists()) {
-				die("Parameters file '".$dist_param_file."' does not exist");
-			} else {
-				try {
-					$param_file->copy($dist_param_file);
-				} catch (exception $exception) {
-					die($exception->getMessage());
-				}
-			}
-		}
+		$param_file->overwrite(new Param_File($this->directory_cfg."/param.inc.php.dist"));
 		
 		$load_config = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 		$load_config->load_at_global_level();
