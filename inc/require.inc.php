@@ -40,6 +40,7 @@ require $current_directory."/collector_timed.inc.php";
 require $current_directory."/config_file.inc.php";
 require $current_directory."/database_tables.inc.php";
 require $current_directory."/database_tables_source.inc.php";
+require $current_directory."/database_tables_fr_fr.inc.php";
 require $current_directory."/debug.inc.php";
 require $current_directory."/excel.inc.php";
 require $current_directory."/export_excel.inc.php";

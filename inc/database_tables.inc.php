@@ -18,7 +18,7 @@ class Database_Tables {
 
 	function sources() {
 		$sources = array(
-			new Database_Tables_Source($this->db),
+			new Database_Tables_Source($this->db)
 		);
 
 		switch ($this->hl) {

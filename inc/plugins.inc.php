@@ -4,10 +4,10 @@
 class Plugins {
 	static function factory() {
 		$args = func_get_args();
-		$class = $args[0]; 
-		foreach (directories_for_plugins() as $name => $path) {
+		$class = $args[0];
+		$external_directories = array_merge(directories_for_plugins(), directories_for_applications());
+		foreach ($external_directories as $name => $path) {
 			$hooks_file = $path."/inc/hooks.inc.php";
-
 			if (file_exists($hooks_file)) {
 				require_once($hooks_file);
 

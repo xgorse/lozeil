@@ -14,3 +14,4 @@ $param['email_from'] = "lozeil@noparking.net";		// adresse de l'envoi des messag
 $param['email_wrap'] = "50";		// nombre de caractères avant le retour à la ligne automatique (50 - 50 caractères, par défaut)
 
 $param['locale_timezone'] = "Europe/Paris";
+$param['locale_lang'] = "fr_FR";
