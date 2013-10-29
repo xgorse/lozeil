@@ -10,6 +10,13 @@ if (!isset($_SESSION['order']['name']) or !isset($_SESSION['order']['direction']
 if (isset($_POST)) {
 	if (isset($_POST['vat_date']) and is_datepicker_valid($_POST['vat_date'])) {
 		$writings->calculate_quarterly_vat(timestamp_from_datepicker($_POST['vat_date']));
+		list($_SESSION['filter']['start'], $_SESSION['filter']['stop']) = determine_month(timestamp_from_datepicker($_POST['vat_date']));
+		$vat_category = new Categories();
+		$vat_category->filter_with(array("vat_category" => 1));
+		$vat_category->select();
+		if (isset($vat_category[0])) {
+			$_SESSION['filter']['categories_id'] = $vat_category[0]->id;
+		}
 	}
 }
 
