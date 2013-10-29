@@ -349,6 +349,13 @@ function determine_first_day_of_next_month($timestamp) {
 	return $starttime;
 }
 
+function determine_week($timestamp) {
+	$starttime = determine_monday($timestamp);
+	$stoptime = mktime(23, 59, 59, date("m", $starttime), date("d", $starttime) + 6, date("Y", $starttime));
+
+	return array($starttime, $stoptime);
+}
+
 function get_time($format,$act_time="") {
 	if (!$act_time or $act_time == "") {
 		$act_time = time();
@@ -432,4 +439,36 @@ function renew_session() {
 	}
 	session_destroy();
 	session_regenerate_id();
+}
+
+function is_dir_empty($dir){
+	return (($files = @scandir($dir)) and count($files) <= 2);
+}
+
+
+function input_list_2_array($string, $key="value") {
+	$output = array();
+
+	$reste = $string;
+	while (strlen($reste) > 0) {
+		$delimiter = " ";
+		if (substr($reste, 0, 1) == "'") {
+			$delimiter = "'";
+			$reste = substr($reste, 1);
+		}
+		if (strpos($reste, $delimiter)) {
+			$word = substr($reste, 0, strpos($reste, $delimiter));
+			$reste = ltrim(substr($reste, strpos($reste, $delimiter)+1));
+		} else {
+			$word = substr($reste, 0);
+			$reste = "";
+		}
+		if ($key == "num") {
+			$output[]= $word;
+		} else {
+			$output[$word]= $word;
+		}
+	}
+
+	return $output;
 }
