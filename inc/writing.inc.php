@@ -229,78 +229,47 @@ class Writing extends Record {
 		$paid = new Html_Radio("paid", array(__("no"),__("yes")));
 		$submit = new Html_Input("submit", __('save'), "submit");
 		
-		if ($GLOBALS['param']['accountant_view']) {
-			$grid = array(
-				'class' => "itemsform",
-				'leaves' => array(
-					'date' => array(
-						'value' => $datepicker->item(__('date')),
-					),
-					'category' => array(
-						'value' => $category->item(__('category')),
-					),
-					'source' => array(
-						'value' => $source->item(__('source')),
-					),
-					'accountingcode' => array(
-						'value' => $accountingcode->item(__('accounting code')),
-					),
-					'number' => array(
-						'value' => $number->item(__('piece nb')),
-					),
-					'amount_excl_vat' => array(
-						'value' => $amount_excl_vat->item(__('amount excluding vat')),
-					),
-					'vat' => array(
-						'value' => $vat->item(__('VAT')),
-					),
-					'amount_inc_vat' => array(
-						'value' => $amount_inc_vat->item(__('amount including vat')),
-					),
-					'comment' => array(
-						'value' => $comment->item(__('comment')),
-					),
-					'paid' => array(
-						'value' => $paid->item(__('paid')),
-					),
-					'submit' => array(
-						'value' => $submit->item(""),
-					)
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'date' => array(
+					'value' => $datepicker->item(__('date')),
+				),
+				'category' => array(
+					'value' => $category->item(__('category')),
+				),
+				'source' => array(
+					'value' => $source->item(__('source')),
+				),
+				'accountingcode' => array(
+					'value' => $accountingcode->item(__('accounting code')),
+				),
+				'number' => array(
+					'value' => $number->item(__('piece nb')),
+				),
+				'amount_excl_vat' => array(
+					'value' => $amount_excl_vat->item(__('amount excluding vat')),
+				),
+				'vat' => array(
+					'value' => $vat->item(__('VAT')),
+				),
+				'amount_inc_vat' => array(
+					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'comment' => array(
+					'value' => $comment->item(__('comment')),
+				),
+				'paid' => array(
+					'value' => $paid->item(__('paid')),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
 				)
-			);
-		} else {
-			$grid = array(
-				'class' => "itemsform",
-				'leaves' => array(
-					'date' => array(
-						'value' => $datepicker->item(__('date')),
-					),
-					'category' => array(
-						'value' => $category->item(__('category')),
-					),
-					'source' => array(
-						'value' => $source->item(__('source')),
-					),
-					'number' => array(
-						'value' => $number->item(__('piece nb')),
-					),
-					'amount_excl_vat' => array(
-						'value' => $amount_excl_vat->item(__('amount excluding vat')),
-					),
-					'vat' => array(
-						'value' => $vat->item(__('VAT')),
-					),
-					'amount_inc_vat' => array(
-						'value' => $amount_inc_vat->item(__('amount including vat')),
-					),
-					'comment' => array(
-						'value' => $comment->item(__('comment')),
-					),
-					'submit' => array(
-						'value' => $submit->item(""),
-					)
-				)
-			);
+			)
+		);
+
+		if (!$GLOBALS['param']['accountant_view']) {
+			unset($grid['leaves']['accountingcode']);
 		}
 		$list = new Html_List($grid);
 		$form .= $list->show();
@@ -311,6 +280,14 @@ class Writing extends Record {
 	}
 	
 	function form_in_table() {
+		if ($GLOBALS['param']['accountant_view']) {
+			return $this->form_in_table_accountant();
+		} else {
+			return $this->form_in_table_normal();
+		}
+	}
+	
+	function form_in_table_accountant() {
 		$categories = new Categories();
 		$categories->select();
 		$sources = new Sources();
@@ -318,7 +295,7 @@ class Writing extends Record {
 		
 		$accountingcode = new Accounting_Code();
 		$currentcode = array();
-		if($accountingcode->load($this->accountingcodes_id)) {
+		if ($accountingcode->load($this->accountingcodes_id)) {
 			$currentcode[] = $accountingcode->fullname();
 		}
 		
@@ -338,7 +315,111 @@ class Writing extends Record {
 		
 		$link = $this->attachment ? $this->link_to_file_attached() : "";
 		
-		if ($GLOBALS['param']['accountant_view']) {
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'date' => array(
+					'value' => $datepicker->item(__('date')),
+				),
+				'category' => array(
+					'value' => $category->item(__('category')),
+				),
+				'source' => array(
+					'value' => $source->item(__('source')),
+				),
+				'accountingcode' => array(
+					'value' => $accountingcode_input->item(__('accounting code')),
+				),
+				'number' => array(
+					'value' => $number->item(__('piece nb')),
+				),
+				'amount_excl_vat' => array(
+					'value' => $amount_excl_vat->item(__('amount excluding vat')),
+				),
+				'vat' => array(
+					'value' => $vat->item(__('VAT')),
+				),
+				'amount_inc_vat' => array(
+					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'comment' => array(
+					'value' => $comment->item(__('comment')),
+				),
+				'paid' => array(
+					'value' => $paid->item(__('paid')),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				)
+			)
+		);
+		$list = new Html_List($grid);
+		
+		$form = "<tr class=\"table_writings_form_modify\">
+					<td colspan=\"9\" >
+						<div id=\"table_edit_writings\">
+						<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
+							<div class=\"table_edit_writings_form\">
+								<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
+								$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
+								"</form>
+							</div>
+						</div>
+					</td>
+					<td colspan=\"2\" >".
+					$link."
+					</td>
+				</tr>";
+
+		return $form;
+	}
+	
+	function form_in_table_normal() {
+		$categories = new Categories();
+		$categories->select();
+		$sources = new Sources();
+		$sources->select();
+				
+		$input_hidden = new Html_Input("action", "edit", "submit");
+		$input_hidden_id = new Html_Input("writings_id", $this->id);
+		$datepicker = new Html_Input_Date("datepicker", $this->day);
+		$category = new Html_Select("categories_id", $categories->names(), $this->categories_id);
+		$source = new Html_Select("sources_id", $sources->names(), $this->sources_id);
+		$number = new Html_Input("number", $this->number);
+		$amount_excl_vat = new Html_Input("amount_excl_vat", $this->amount_excl_vat);
+		$vat = new Html_Input("vat", $this->vat);
+		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
+		$comment = new Html_Textarea("comment", $this->comment);
+		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
+		$submit = new Html_Input("submit", __('save'), "submit");
+		
+		$link = $this->attachment ? $this->link_to_file_attached() : "";
+		
+		if ($this->banks_id > 0) {
+			$grid = array(
+				'class' => "itemsform",
+				'leaves' => array(
+					'category' => array(
+						'value' => $category->item(__('category')),
+					),
+					'source' => array(
+						'value' => $source->item(__('source')),
+					),
+					'number' => array(
+						'value' => $number->item(__('piece nb')),
+					),
+					'vat' => array(
+						'value' => $vat->item(__('VAT')),
+					),
+					'comment' => array(
+						'value' => $comment->item(__('comment')),
+					),
+					'submit' => array(
+						'value' => $submit->item(""),
+					)
+				)
+			);
+		} else {
 			$grid = array(
 				'class' => "itemsform",
 				'leaves' => array(
@@ -350,9 +431,6 @@ class Writing extends Record {
 					),
 					'source' => array(
 						'value' => $source->item(__('source')),
-					),
-					'accountingcode' => array(
-						'value' => $accountingcode_input->item(__('accounting code')),
 					),
 					'number' => array(
 						'value' => $number->item(__('piece nb')),
@@ -370,72 +448,13 @@ class Writing extends Record {
 						'value' => $comment->item(__('comment')),
 					),
 					'paid' => array(
-						'value' => $paid->item(__('paid')),
+						'value' => $paid->item(""),
 					),
 					'submit' => array(
 						'value' => $submit->item(""),
-					)
+					),
 				)
 			);
-		} else {
-			if ($this->banks_id > 0) {
-				$grid = array(
-					'class' => "itemsform",
-					'leaves' => array(
-						'category' => array(
-							'value' => $category->item(__('category')),
-						),
-						'source' => array(
-							'value' => $source->item(__('source')),
-						),
-						'number' => array(
-							'value' => $number->item(__('piece nb')),
-						),
-						'vat' => array(
-							'value' => $vat->item(__('VAT')),
-						),
-						'comment' => array(
-							'value' => $comment->item(__('comment')),
-						),
-						'submit' => array(
-							'value' => $submit->item(""),
-						)
-					)
-				);
-			} else {
-				$grid = array(
-					'class' => "itemsform",
-					'leaves' => array(
-						'date' => array(
-							'value' => $datepicker->item(__('date')),
-						),
-						'category' => array(
-							'value' => $category->item(__('category')),
-						),
-						'source' => array(
-							'value' => $source->item(__('source')),
-						),
-						'number' => array(
-							'value' => $number->item(__('piece nb')),
-						),
-						'amount_excl_vat' => array(
-							'value' => $amount_excl_vat->item(__('amount excluding vat')),
-						),
-						'vat' => array(
-							'value' => $vat->item(__('VAT')),
-						),
-						'amount_inc_vat' => array(
-							'value' => $amount_inc_vat->item(__('amount including vat')),
-						),
-						'comment' => array(
-							'value' => $comment->item(__('comment')),
-						),
-						'submit' => array(
-							'value' => $submit->item(""),
-						)
-					)
-				);
-			}
 		}
 		$list = new Html_List($grid);
 		

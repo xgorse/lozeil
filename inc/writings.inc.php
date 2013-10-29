@@ -132,6 +132,25 @@ class Writings extends Collector {
 	
 	
 	function grid_header() {
+		if ($GLOBALS['param']['accountant_view']) {
+			return $this->grid_header_accountant();
+		} else {
+			return $this->grid_header_normal();
+		}
+	}
+	
+	function grid_header_accountant() {
+		$grid = $this->grid_header_normal();
+		$grid['header']['cells'][3] = array(
+						'type' => "th",
+						'class' => $this->determine_table_header_class("accountingcodes_id"),
+						'id' => "accountingcodes_id",
+						'value' => utf8_ucfirst(__('accounting code')),
+					);
+		return $grid;
+	}
+	
+	function grid_header_normal() {
 		$checkbox = new Html_Checkbox("checkbox_all_up", "check");
 		$grid = array(
 			'header' => array(
@@ -220,6 +239,106 @@ class Writings extends Collector {
 	}
 	
 	function grid_body() {
+		if ($GLOBALS['param']['accountant_view']) {
+			return $this->grid_body_accountant();
+		} else {
+			return $this->grid_body_normal();
+		}
+	}
+	
+	function grid_body_accountant() {
+		$sources = new Sources();
+		$sources->select();
+		$sources_name = $sources->names();
+		$banks = new Banks();
+		$banks->select();
+		$banks_name = $banks->names();
+		
+		$accounting_codes = new Accounting_Codes();
+		$accounting_codes->select();
+		$accounting_codes_number = $accounting_codes->numbers();
+		
+		$grid = array();
+		
+		if (isset($this->filters['duplicate']) and $_SESSION['order']['name'] == 'day') {
+			$duplicate = $this->get_duplicate_color_classes();
+		}
+		
+		foreach ($this as $writing) {
+			$class = "draggable droppable";
+			if ($writing->is_recently_modified()) {
+				$class .= " modified";
+			}
+			if ($writing->attachment) {
+				$class .= " file_attached";
+			}
+			
+			if (isset($this->filters['duplicate']) and $_SESSION['order']['name'] == 'day') {
+				if (isset($duplicate[$writing->day][$writing->amount_inc_vat]) and $duplicate[$writing->day][$writing->amount_inc_vat]) {
+					$class .= $duplicate[$writing->day][$writing->amount_inc_vat];
+				}
+			}
+			$informations = $writing->show_further_information();
+			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
+			$checkbox->properties = array("class" => "table_checkbox");
+			$grid[] = array(
+				'class' => $class,
+				'id' => "table_".$writing->id,
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => $checkbox->input(),
+					),
+					array(
+						'type' => "td",
+						'value' => date("d/m/Y", $writing->day),
+					),
+					array(
+						'type' => "td",
+						'value' => $writing->number,
+					),
+					array(
+						'type' => "td",
+						'value' => isset($accounting_codes_number[$writing->accountingcodes_id]) ? $accounting_codes_number[$writing->accountingcodes_id] : "",
+					),
+					array(
+						'type' => "td",
+						'value' => isset($sources_name[$writing->sources_id]) ? $sources_name[$writing->sources_id] : "",
+					),
+					array(
+						'type' => "td",
+						'value' => isset($banks_name[$writing->banks_id]) ? $banks_name[$writing->banks_id] : "",
+					),
+					array(
+						'type' => "td",
+						'class' => empty($informations) ? "" : "table_writings_comment",
+						'value' => $writing->comment.$informations,
+					),
+					array(
+						'type' => "td",
+						'value' => ($writing->vat != 0) ? $writing->vat : "",
+					),
+					array(
+						'type' => "td",
+						'value' => $writing->amount_inc_vat < 0 ? round($writing->amount_inc_vat, 2) : "",
+					),
+					array(
+						'type' => "td",
+						'value' => $writing->amount_inc_vat >= 0 ? round($writing->amount_inc_vat, 2) : "",
+					),
+					array(
+						'type' => "td",
+						'class' => "operations",
+						'value' => $writing->show_operations(),
+					),
+				),
+			);
+		}
+		
+		return $grid;
+	}
+	
+	function grid_body_normal() {
 		$categories = new Categories();
 		$categories->select();
 		$categories_names = $categories->names();
@@ -253,7 +372,7 @@ class Writings extends Collector {
 			$informations = $writing->show_further_information();
 			$checkbox = new Html_Checkbox("checkbox_".$writing->id, $writing->id);
 			$checkbox->properties = array("class" => "table_checkbox");
-			$grid[] =  array(
+			$grid[] = array(
 				'class' => $class,
 				'id' => "table_".$writing->id,
 				'cells' => array(
@@ -476,92 +595,52 @@ class Writings extends Collector {
 		
 		$submit = new Html_Input("submit_hidden", "", "submit");
 		
-		if ($GLOBALS['param']['accountant_view']) {
-			$grid = array(
-				'class' => 'itemsform',
-				'leaves' => array(
-					'*' => array(
-						'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
-					),
-					'date' => array(
-						'class' => "extra_filter_item ".$date_class,
-						'value' => $date_start->item(__('date')).$date_stop->input()
-					),
-					'category' => array(
-						'class' => "extra_filter_item ".$category_class,
-						'value' => $category->item(__('category'))
-					),
-					'source' => array(
-						'class' => "extra_filter_item ".$source_class,
-						'value' => $source->item(__('source')),
-					),
-					'bank' => array(
-						'class' => "extra_filter_item ".$bank_class,
-						'value' => $bank->item(__('bank')),
-					),
-					'accountingcode' => array(
-						'class' => "extra_filter_item ".$accountingcode_input_class,
-						'value' => $accountingcode_input->item(__('accounting code'), "", "<span class=\"".$accountingcode_checkbox_class."\">".$accountingcode_checkbox->item(__('not any'))."</span>"),
-					),
-					'number' => array(
-						'class' => "extra_filter_item ".$number_class,
-						'value' => $number->item(__('piece nb'), "", "<span class=\"".$number_checkbox_class."\">".$number_checkbox->item(__('duplicates'))."</span>"),
-					),
-					'amount_inc_vat' => array(
-						'class' => "extra_filter_item ".$amount_inc_vat_class,
-						'value' => $amount_inc_vat->item(__('amount including vat')),
-					),
-					'comment' => array(
-						'class' => "extra_filter_item ".$comment_class,
-						'value' => $comment->item(__('comment')),
-					),
-					'checkbox' => array(
-						'class' => "extra_filter_item ".$checkbox_class,
-						'value' => $checkbox->item(__('duplicates')),
-					),
-				)
-			);
-		} else {
-			$grid = array(
-				'class' => 'itemsform',
-				'leaves' => array(
-					'*' => array(
-						'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
-					),
-					'date' => array(
-						'class' => "extra_filter_item ".$date_class,
-						'value' => $date_start->item(__('date')).$date_stop->input()
-					),
-					'category' => array(
-						'class' => "extra_filter_item ".$category_class,
-						'value' => $category->item(__('category'))
-					),
-					'source' => array(
-						'class' => "extra_filter_item ".$source_class,
-						'value' => $source->item(__('source')),
-					),
-					'bank' => array(
-						'class' => "extra_filter_item ".$bank_class,
-						'value' => $bank->item(__('bank')),
-					),
-					'number' => array(
-						'class' => "extra_filter_item ".$number_class,
-						'value' => $number->item(__('piece nb'), "", "<span class=\"".$number_checkbox_class."\">".$number_checkbox->item(__('duplicates'))."</span>"),
-					),
-					'amount_inc_vat' => array(
-						'class' => "extra_filter_item ".$amount_inc_vat_class,
-						'value' => $amount_inc_vat->item(__('amount including vat')),
-					),
-					'comment' => array(
-						'class' => "extra_filter_item ".$comment_class,
-						'value' => $comment->item(__('comment')),
-					),
-					'checkbox' => array(
-						'class' => "extra_filter_item ".$checkbox_class,
-						'value' => $checkbox->item(__('duplicates')),
-					),
-				)
-			);
+		$grid = array(
+			'class' => 'itemsform',
+			'leaves' => array(
+				'*' => array(
+					'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
+				),
+				'date' => array(
+					'class' => "extra_filter_item ".$date_class,
+					'value' => $date_start->item(__('date')).$date_stop->input()
+				),
+				'category' => array(
+					'class' => "extra_filter_item ".$category_class,
+					'value' => $category->item(__('category'))
+				),
+				'source' => array(
+					'class' => "extra_filter_item ".$source_class,
+					'value' => $source->item(__('source')),
+				),
+				'bank' => array(
+					'class' => "extra_filter_item ".$bank_class,
+					'value' => $bank->item(__('bank')),
+				),
+				'accountingcode' => array(
+					'class' => "extra_filter_item ".$accountingcode_input_class,
+					'value' => $accountingcode_input->item(__('accounting code'), "", "<span class=\"".$accountingcode_checkbox_class."\">".$accountingcode_checkbox->item(__('not any'))."</span>"),
+				),
+				'number' => array(
+					'class' => "extra_filter_item ".$number_class,
+					'value' => $number->item(__('piece nb'), "", "<span class=\"".$number_checkbox_class."\">".$number_checkbox->item(__('duplicates'))."</span>"),
+				),
+				'amount_inc_vat' => array(
+					'class' => "extra_filter_item ".$amount_inc_vat_class,
+					'value' => $amount_inc_vat->item(__('amount including vat')),
+				),
+				'comment' => array(
+					'class' => "extra_filter_item ".$comment_class,
+					'value' => $comment->item(__('comment')),
+				),
+				'checkbox' => array(
+					'class' => "extra_filter_item ".$checkbox_class,
+					'value' => $checkbox->item(__('duplicates')),
+				),
+			)
+		);
+		if (!$GLOBALS['param']['accountant_view']) {
+			unset($grid['leaves']['accountingcode']);
 		}
 		$list = new Html_List($grid);
 		$form = "<div class=\"extra_filter_writings\">
@@ -585,32 +664,22 @@ class Writings extends Collector {
 	}
 	
 	function modify_options() {
-		if ($GLOBALS['param']['accountant_view']) {
-			$options = array(
-				"null" => "--",
-				"change_category" => __('change category to')." ...",
-				"change_source" => __('change source to')." ...",
-				"change_accounting_code" => __('change accounting code to')." ...",
-				"change_amount_inc_vat" => __('change amount including vat to')." ...",
-				"change_vat" => __('change vat to')." ...",
-				"change_day" => __('change date to')." ...",
-				"duplicate" => __('duplicate over')." ...",
-				"estimate_accounting_code" => __('estimate accounting code'),
-				"estimate_category" => __('estimate category'),
-				"delete" => __('delete')
-			);
-		} else {
-			$options = array(
+		$options = array(
 			"null" => "--",
 			"change_category" => __('change category to')." ...",
 			"change_source" => __('change source to')." ...",
+			"change_accounting_code" => __('change accounting code to')." ...",
 			"change_amount_inc_vat" => __('change amount including vat to')." ...",
 			"change_vat" => __('change vat to')." ...",
 			"change_day" => __('change date to')." ...",
 			"duplicate" => __('duplicate over')." ...",
+			"estimate_accounting_code" => __('estimate accounting code'),
 			"estimate_category" => __('estimate category'),
 			"delete" => __('delete')
 		);
+		if (!$GLOBALS['param']['accountant_view']) {
+			unset($options['change_accounting_code']);
+			unset($options['estimate_accounting_code']);
 		}
 		$select = new Html_Select("options_modify_writings", $options);
 		$select->properties = array(
