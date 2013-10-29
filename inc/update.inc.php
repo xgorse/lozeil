@@ -16,7 +16,9 @@ class Update {
 	}
 	
 	function to_24() {
+		$this->param->add("accountant_view", "0");
 		$this->param->add("locale_lang", "fr_FR");
+		$this->param->add("currency", "&euro;");
 	}
 	
 	function to_23() {

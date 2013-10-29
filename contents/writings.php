@@ -18,6 +18,20 @@ if (isset($_POST)) {
 			$_SESSION['filter']['categories_id'] = $vat_category[0]->id;
 		}
 	}
+	if (isset($_POST['submit_change_view'])) {
+		$accountant_view = !$GLOBALS['param']['accountant_view'] ? "1" : "0";
+		$path = (isset($GLOBALS['pathconfig']['cfg']) ? $GLOBALS['pathconfig']['cfg'] : dirname(__FILE__)."/../cfg")."/param.inc.php";
+		$param_file = new Param_File($path, "param");
+		$param_file->update(array(
+				'param' => array(
+					'param' => array(
+						"accountant_view" => $accountant_view
+						)
+					)
+				)
+		);
+		$param_file->load_at_global_level();
+	}
 }
 
 if (isset($_REQUEST['action'])) {

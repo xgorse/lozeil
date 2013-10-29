@@ -1058,3 +1058,17 @@ canvas {
 .filter_hide {
 	display: none;
 }
+
+input[name='submit_change_view'] {
+	border: 0;
+	background-color: transparent;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	color: white;
+}
+
+input[name='submit_change_view']:hover {
+	background-color: transparent;
+	text-decoration: underline;
+}

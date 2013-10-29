@@ -476,50 +476,93 @@ class Writings extends Collector {
 		
 		$submit = new Html_Input("submit_hidden", "", "submit");
 		
-		$grid = array(
-			'class' => 'itemsform',
-			'leaves' => array(
-				'*' => array(
-					'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
-				),
-				'date' => array(
-					'class' => "extra_filter_item ".$date_class,
-					'value' => $date_start->item(__('date')).$date_stop->input()
-				),
-				'category' => array(
-					'class' => "extra_filter_item ".$category_class,
-					'value' => $category->item(__('category'))
-				),
-				'source' => array(
-					'class' => "extra_filter_item ".$source_class,
-					'value' => $source->item(__('source')),
-				),
-				'bank' => array(
-					'class' => "extra_filter_item ".$bank_class,
-					'value' => $bank->item(__('bank')),
-				),
-				'accountingcode' => array(
-					'class' => "extra_filter_item ".$accountingcode_input_class,
-					'value' => $accountingcode_input->item(__('accounting code'), "", "<span class=\"".$accountingcode_checkbox_class."\">".$accountingcode_checkbox->item(__('not any'))."</span>"),
-				),
-				'number' => array(
-					'class' => "extra_filter_item ".$number_class,
-					'value' => $number->item(__('piece nb'), "", "<span class=\"".$number_checkbox_class."\">".$number_checkbox->item(__('duplicates'))."</span>"),
-				),
-				'amount_inc_vat' => array(
-					'class' => "extra_filter_item ".$amount_inc_vat_class,
-					'value' => $amount_inc_vat->item(__('amount including vat')),
-				),
-				'comment' => array(
-					'class' => "extra_filter_item ".$comment_class,
-					'value' => $comment->item(__('comment')),
-				),
-				'checkbox' => array(
-					'class' => "extra_filter_item ".$checkbox_class,
-					'value' => $checkbox->item(__('duplicates')),
-				),
-			)
-		);				
+		if ($GLOBALS['param']['accountant_view']) {
+			$grid = array(
+				'class' => 'itemsform',
+				'leaves' => array(
+					'*' => array(
+						'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
+					),
+					'date' => array(
+						'class' => "extra_filter_item ".$date_class,
+						'value' => $date_start->item(__('date')).$date_stop->input()
+					),
+					'category' => array(
+						'class' => "extra_filter_item ".$category_class,
+						'value' => $category->item(__('category'))
+					),
+					'source' => array(
+						'class' => "extra_filter_item ".$source_class,
+						'value' => $source->item(__('source')),
+					),
+					'bank' => array(
+						'class' => "extra_filter_item ".$bank_class,
+						'value' => $bank->item(__('bank')),
+					),
+					'accountingcode' => array(
+						'class' => "extra_filter_item ".$accountingcode_input_class,
+						'value' => $accountingcode_input->item(__('accounting code'), "", "<span class=\"".$accountingcode_checkbox_class."\">".$accountingcode_checkbox->item(__('not any'))."</span>"),
+					),
+					'number' => array(
+						'class' => "extra_filter_item ".$number_class,
+						'value' => $number->item(__('piece nb'), "", "<span class=\"".$number_checkbox_class."\">".$number_checkbox->item(__('duplicates'))."</span>"),
+					),
+					'amount_inc_vat' => array(
+						'class' => "extra_filter_item ".$amount_inc_vat_class,
+						'value' => $amount_inc_vat->item(__('amount including vat')),
+					),
+					'comment' => array(
+						'class' => "extra_filter_item ".$comment_class,
+						'value' => $comment->item(__('comment')),
+					),
+					'checkbox' => array(
+						'class' => "extra_filter_item ".$checkbox_class,
+						'value' => $checkbox->item(__('duplicates')),
+					),
+				)
+			);
+		} else {
+			$grid = array(
+				'class' => 'itemsform',
+				'leaves' => array(
+					'*' => array(
+						'value' => $input_hidden_action->input_hidden().$input->item(utf8_ucfirst(__('filter')." : "))."<span id =\"extra_filter_writings_toggle\"> + </span>"
+					),
+					'date' => array(
+						'class' => "extra_filter_item ".$date_class,
+						'value' => $date_start->item(__('date')).$date_stop->input()
+					),
+					'category' => array(
+						'class' => "extra_filter_item ".$category_class,
+						'value' => $category->item(__('category'))
+					),
+					'source' => array(
+						'class' => "extra_filter_item ".$source_class,
+						'value' => $source->item(__('source')),
+					),
+					'bank' => array(
+						'class' => "extra_filter_item ".$bank_class,
+						'value' => $bank->item(__('bank')),
+					),
+					'number' => array(
+						'class' => "extra_filter_item ".$number_class,
+						'value' => $number->item(__('piece nb'), "", "<span class=\"".$number_checkbox_class."\">".$number_checkbox->item(__('duplicates'))."</span>"),
+					),
+					'amount_inc_vat' => array(
+						'class' => "extra_filter_item ".$amount_inc_vat_class,
+						'value' => $amount_inc_vat->item(__('amount including vat')),
+					),
+					'comment' => array(
+						'class' => "extra_filter_item ".$comment_class,
+						'value' => $comment->item(__('comment')),
+					),
+					'checkbox' => array(
+						'class' => "extra_filter_item ".$checkbox_class,
+						'value' => $checkbox->item(__('duplicates')),
+					),
+				)
+			);
+		}
 		$list = new Html_List($grid);
 		$form = "<div class=\"extra_filter_writings\">
 					<form method=\"post\" name=\"extra_filter_writings_form\" action=\"\" enctype=\"multipart/form-data\">
@@ -542,19 +585,33 @@ class Writings extends Collector {
 	}
 	
 	function modify_options() {
-		$options = array(
+		if ($GLOBALS['param']['accountant_view']) {
+			$options = array(
+				"null" => "--",
+				"change_category" => __('change category to')." ...",
+				"change_source" => __('change source to')." ...",
+				"change_accounting_code" => __('change accounting code to')." ...",
+				"change_amount_inc_vat" => __('change amount including vat to')." ...",
+				"change_vat" => __('change vat to')." ...",
+				"change_day" => __('change date to')." ...",
+				"duplicate" => __('duplicate over')." ...",
+				"estimate_accounting_code" => __('estimate accounting code'),
+				"estimate_category" => __('estimate category'),
+				"delete" => __('delete')
+			);
+		} else {
+			$options = array(
 			"null" => "--",
 			"change_category" => __('change category to')." ...",
 			"change_source" => __('change source to')." ...",
-			"change_accounting_code" => __('change accounting code to')." ...",
 			"change_amount_inc_vat" => __('change amount including vat to')." ...",
 			"change_vat" => __('change vat to')." ...",
 			"change_day" => __('change date to')." ...",
 			"duplicate" => __('duplicate over')." ...",
-			"estimate_accounting_code" => __('estimate accounting code'),
 			"estimate_category" => __('estimate category'),
 			"delete" => __('delete')
 		);
+		}
 		$select = new Html_Select("options_modify_writings", $options);
 		$select->properties = array(
 				'onchange' => "confirm_option('".utf8_ucfirst(__('are you sure?'))."')"
@@ -1013,16 +1070,33 @@ class Writings extends Collector {
 	
 	function form_other_actions() {
 		$date = new Html_Input_Date("vat_date", determine_vat_date());
+		$date = new Html_Input_Date("vat_date", determine_vat_date());
 		$date->img_src = "medias/images/link_calendar_white.png";
 		$submit = new Html_Input("submit_calculate_vat", __('ok'), "submit");
-		$form = "<form method=\"post\" name=\"menu_actions_other\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">".
+		
+		if (!$GLOBALS['param']['accountant_view']) {
+			$label = utf8_ucfirst(__("change to accountant's view"));
+		} else {
+			$label = utf8_ucfirst(__("change to normal view"));
+		}
+		$submit_view = new Html_Input("submit_change_view", $label, "submit");
+		$submit_view->properties = array('class' => 'submit_as_link');
+		
+		$form_vat = "<form method=\"post\" name=\"menu_actions_other\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">".
 					$date->item("")." ".$submit->input()
+				."</form>";
+		
+		$form_view = "<form method=\"post\" name=\"menu_actions_other_change_view\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">".
+					$submit_view->input()
 				."</form>";
 		
 		$grid = array(
 			'leaves' => array(
 				'calculate_vat' => array(
-					'value' => utf8_ucfirst(__("automatically calculate vat to"))." ".$form
+					'value' => utf8_ucfirst(__("automatically calculate vat to"))." ".$form_vat
+				),
+				'change_view' => array(
+					'value' => $form_view
 				),
 			)
 		);				

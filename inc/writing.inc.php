@@ -229,44 +229,79 @@ class Writing extends Record {
 		$paid = new Html_Radio("paid", array(__("no"),__("yes")));
 		$submit = new Html_Input("submit", __('save'), "submit");
 		
-		$grid = array(
-			'class' => "itemsform",
-			'leaves' => array(
-				'date' => array(
-					'value' => $datepicker->item(__('date')),
-				),
-				'category' => array(
-					'value' => $category->item(__('category')),
-				),
-				'source' => array(
-					'value' => $source->item(__('source')),
-				),
-				'accountingcode' => array(
-					'value' => $accountingcode->item(__('accounting code')),
-				),
-				'number' => array(
-					'value' => $number->item(__('piece nb')),
-				),
-				'amount_excl_vat' => array(
-					'value' => $amount_excl_vat->item(__('amount excluding vat')),
-				),
-				'vat' => array(
-					'value' => $vat->item(__('VAT')),
-				),
-				'amount_inc_vat' => array(
-					'value' => $amount_inc_vat->item(__('amount including vat')),
-				),
-				'comment' => array(
-					'value' => $comment->item(__('comment')),
-				),
-				'paid' => array(
-					'value' => $paid->item(__('paid')),
-				),
-				'submit' => array(
-					'value' => $submit->item(""),
+		if ($GLOBALS['param']['accountant_view']) {
+			$grid = array(
+				'class' => "itemsform",
+				'leaves' => array(
+					'date' => array(
+						'value' => $datepicker->item(__('date')),
+					),
+					'category' => array(
+						'value' => $category->item(__('category')),
+					),
+					'source' => array(
+						'value' => $source->item(__('source')),
+					),
+					'accountingcode' => array(
+						'value' => $accountingcode->item(__('accounting code')),
+					),
+					'number' => array(
+						'value' => $number->item(__('piece nb')),
+					),
+					'amount_excl_vat' => array(
+						'value' => $amount_excl_vat->item(__('amount excluding vat')),
+					),
+					'vat' => array(
+						'value' => $vat->item(__('VAT')),
+					),
+					'amount_inc_vat' => array(
+						'value' => $amount_inc_vat->item(__('amount including vat')),
+					),
+					'comment' => array(
+						'value' => $comment->item(__('comment')),
+					),
+					'paid' => array(
+						'value' => $paid->item(__('paid')),
+					),
+					'submit' => array(
+						'value' => $submit->item(""),
+					)
 				)
-			)
-		);				
+			);
+		} else {
+			$grid = array(
+				'class' => "itemsform",
+				'leaves' => array(
+					'date' => array(
+						'value' => $datepicker->item(__('date')),
+					),
+					'category' => array(
+						'value' => $category->item(__('category')),
+					),
+					'source' => array(
+						'value' => $source->item(__('source')),
+					),
+					'number' => array(
+						'value' => $number->item(__('piece nb')),
+					),
+					'amount_excl_vat' => array(
+						'value' => $amount_excl_vat->item(__('amount excluding vat')),
+					),
+					'vat' => array(
+						'value' => $vat->item(__('VAT')),
+					),
+					'amount_inc_vat' => array(
+						'value' => $amount_inc_vat->item(__('amount including vat')),
+					),
+					'comment' => array(
+						'value' => $comment->item(__('comment')),
+					),
+					'submit' => array(
+						'value' => $submit->item(""),
+					)
+				)
+			);
+		}
 		$list = new Html_List($grid);
 		$form .= $list->show();
 		
@@ -303,51 +338,105 @@ class Writing extends Record {
 		
 		$link = $this->attachment ? $this->link_to_file_attached() : "";
 		
-		if ($this->banks_id > 0) {
-			$disabled = array('disabled' => 'disabled');
-			$amount_inc_vat->properties = $disabled;
-			$datepicker->properties = $disabled;
-			$paid->properties = $disabled;
-		}
-				
-		$grid = array(
-			'class' => "itemsform",
-			'leaves' => array(
-				'date' => array(
-					'value' => $datepicker->item(__('date')),
-				),
-				'category' => array(
-					'value' => $category->item(__('category')),
-				),
-				'source' => array(
-					'value' => $source->item(__('source')),
-				),
-				'accountingcode' => array(
-					'value' => $accountingcode_input->item(__('accounting code')),
-				),
-				'number' => array(
-					'value' => $number->item(__('piece nb')),
-				),
-				'amount_excl_vat' => array(
-					'value' => $amount_excl_vat->item(__('amount excluding vat')),
-				),
-				'vat' => array(
-					'value' => $vat->item(__('VAT')),
-				),
-				'amount_inc_vat' => array(
-					'value' => $amount_inc_vat->item(__('amount including vat')),
-				),
-				'comment' => array(
-					'value' => $comment->item(__('comment')),
-				),
-				'paid' => array(
-					'value' => $paid->item(__('paid')),
-				),
-				'submit' => array(
-					'value' => $submit->item(""),
+		if ($GLOBALS['param']['accountant_view']) {
+			$grid = array(
+				'class' => "itemsform",
+				'leaves' => array(
+					'date' => array(
+						'value' => $datepicker->item(__('date')),
+					),
+					'category' => array(
+						'value' => $category->item(__('category')),
+					),
+					'source' => array(
+						'value' => $source->item(__('source')),
+					),
+					'accountingcode' => array(
+						'value' => $accountingcode_input->item(__('accounting code')),
+					),
+					'number' => array(
+						'value' => $number->item(__('piece nb')),
+					),
+					'amount_excl_vat' => array(
+						'value' => $amount_excl_vat->item(__('amount excluding vat')),
+					),
+					'vat' => array(
+						'value' => $vat->item(__('VAT')),
+					),
+					'amount_inc_vat' => array(
+						'value' => $amount_inc_vat->item(__('amount including vat')),
+					),
+					'comment' => array(
+						'value' => $comment->item(__('comment')),
+					),
+					'paid' => array(
+						'value' => $paid->item(__('paid')),
+					),
+					'submit' => array(
+						'value' => $submit->item(""),
+					)
 				)
-			)
-		);				
+			);
+		} else {
+			if ($this->banks_id > 0) {
+				$grid = array(
+					'class' => "itemsform",
+					'leaves' => array(
+						'category' => array(
+							'value' => $category->item(__('category')),
+						),
+						'source' => array(
+							'value' => $source->item(__('source')),
+						),
+						'number' => array(
+							'value' => $number->item(__('piece nb')),
+						),
+						'vat' => array(
+							'value' => $vat->item(__('VAT')),
+						),
+						'comment' => array(
+							'value' => $comment->item(__('comment')),
+						),
+						'submit' => array(
+							'value' => $submit->item(""),
+						)
+					)
+				);
+			} else {
+				$grid = array(
+					'class' => "itemsform",
+					'leaves' => array(
+						'date' => array(
+							'value' => $datepicker->item(__('date')),
+						),
+						'category' => array(
+							'value' => $category->item(__('category')),
+						),
+						'source' => array(
+							'value' => $source->item(__('source')),
+						),
+						'number' => array(
+							'value' => $number->item(__('piece nb')),
+						),
+						'amount_excl_vat' => array(
+							'value' => $amount_excl_vat->item(__('amount excluding vat')),
+						),
+						'vat' => array(
+							'value' => $vat->item(__('VAT')),
+						),
+						'amount_inc_vat' => array(
+							'value' => $amount_inc_vat->item(__('amount including vat')),
+						),
+						'comment' => array(
+							'value' => $comment->item(__('comment')),
+						),
+						'submit' => array(
+							'value' => $submit->item(""),
+						)
+					)
+				);
+			}
+		}
 		$list = new Html_List($grid);
 		
 		$form = "<tr class=\"table_writings_form_modify\">
