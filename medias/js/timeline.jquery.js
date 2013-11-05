@@ -25,7 +25,6 @@ function make_timeline() {
 		.stop();
 
 	var data = get_data("");
-	var scale = d3.scale.linear();
 	
 	d3.select("#cubismtimeline").call(function(div) {
 		$(".axis").remove();

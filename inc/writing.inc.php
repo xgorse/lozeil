@@ -138,7 +138,9 @@ class Writing extends Record {
 		$cleaned['categories_id'] = (int)$post['categories_id'];
 		$cleaned['sources_id'] = (int)$post['sources_id'];
 		$cleaned['comment'] = $post['comment'];
-		$cleaned['amount_excl_vat'] = str_replace(",", ".", $post['amount_excl_vat']);
+		if (isset($post['amount_inc_vat'])) {
+			$cleaned['amount_excl_vat'] = str_replace(",", ".", $post['amount_excl_vat']);
+		}
 		$cleaned['vat'] = str_replace(",", ".", $post['vat']);
 		$cleaned['number'] = $post['number'];
 		
@@ -197,13 +199,11 @@ class Writing extends Record {
 	}
 	
 	function form() {
-		return "<div id=\"insert_writings\">".$this->display()."</div>";
+		return "<div id=\"insert_writings\"><span class=\"button\" id=\"insert_writings_show\">".utf8_ucfirst(__('show form'))."</span></div>";
 	}
 	
 	function display() {
-		$form = "<span class=\"button\" id=\"insert_writings_show\">".utf8_ucfirst(__('show form'))."</span>
-			<span class=\"button\" id=\"insert_writings_hide\">".utf8_ucfirst(__('hide form'))."</span>
-			<span class=\"button\" id=\"insert_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&timestamp=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
+		$form = "
 			<div class=\"insert_writings_form\">
 			<form method=\"post\" name=\"insert_writings_form\" action=\"\" enctype=\"multipart/form-data\">";
 		
@@ -355,21 +355,14 @@ class Writing extends Record {
 		);
 		$list = new Html_List($grid);
 		
-		$form = "<tr class=\"table_writings_form_modify\">
-					<td colspan=\"9\" >
-						<div id=\"table_edit_writings\">
-						<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
-							<div class=\"table_edit_writings_form\">
-								<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
-								$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
-								"</form>
-							</div>
-						</div>
-					</td>
-					<td colspan=\"2\" >".
+		$form = "<div id=\"table_edit_writings\">
+				<div class=\"table_edit_writings_form\">
+					<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
+					$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
+					"</form>".
 					$link."
-					</td>
-				</tr>";
+				</div>
+			</div>";
 
 		return $form;
 	}
@@ -458,38 +451,57 @@ class Writing extends Record {
 		}
 		$list = new Html_List($grid);
 		
-		$form = "<tr class=\"table_writings_form_modify\">
-					<td colspan=\"9\" >
-						<div id=\"table_edit_writings\">
-						<span class=\"button\" id=\"table_edit_writings_cancel\">".Html_Tag::a(link_content("content=writings.php&start=".$_SESSION['filter']['start']),utf8_ucfirst(__('cancel record')))."</span>
-							<div class=\"table_edit_writings_form\">
-								<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
-								$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
-								"</form>
-							</div>
-						</div>
-					</td>
-					<td colspan=\"2\" >".
+		$form = "<div id=\"table_edit_writings\">
+				<div class=\"table_edit_writings_form\">
+					<form method=\"post\" name=\"table_edit_writings_form\" action=\"\" enctype=\"multipart/form-data\">".
+					$input_hidden->input_hidden().$input_hidden_id->input_hidden().$list->show().
+					"</form>".
 					$link."
-					</td>
-				</tr>";
+				</div>
+			</div>";
 
 		return $form;
 	}
 	
-	function form_duplicate() {
-		$input_hidden_id = new Html_Input("table_writings_duplicate_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "duplicate");
+	function show_form_duplicate() {
+		$input_hidden_id = new Html_Input("table_writings_form_duplicate_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "form_duplicate");
 		$submit = new Html_Input("table_writings_duplicate_submit", "", "submit");
-		$input_hidden_value = new Html_Input("table_writings_duplicate_amount", "");
 		
 		$form = "<div class=\"duplicate\">
-					<form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden()."
+					<form method=\"post\" name=\"table_writings_form_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
 					</form>
 				</div>";
 		
 		return $form;
+	}
+	
+	function form_duplicate() {
+		$input_hidden_id = new Html_Input("writing_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "duplicate");
+		$submit = new Html_Input("table_writings_duplicate_submit", utf8_ucfirst(__('save')), "submit");
+		$input_value = new Html_Input("table_writings_duplicate_amount", "");
+		
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'duplicate' => array(
+					'value' => $input_value->item(utf8_ucfirst(__('duplicate over'))),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				),
+			)
+		);
+		$list = new Html_List($grid);
+		$form = "<div class=\"form_duplicate\">
+					<form method=\"post\" name=\"table_writings_duplicate\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
+					</form>
+				</div>";
+		
+		return $form."<div class=\"preview_changes\">".$this->preview_duplicate()."</div>";
 	}
 	
 	function form_delete() {
@@ -511,31 +523,58 @@ class Writing extends Record {
 		}
 	}
 	
-	function form_split() {
-		$input_hidden_id = new Html_Input("table_writings_split_id", $this->id);
-		$input_hidden_action = new Html_Input("action", "split");
-		$submit = new Html_Input("table_writings_split_submit", "", "submit");
-		$input_hidden_value = new Html_Input("table_writings_split_amount", "");
+	function show_form_split() {
+		$input_hidden_id = new Html_Input("table_writings_form_split_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "form_split");
+		$submit = new Html_Input("table_writings_form_split_submit", "", "submit");
 
 		$form = "<div class=\"split\">
-					<form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">".
-						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden()."
+					<form method=\"post\" name=\"table_writings_form_split\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
 					</form>
 				</div>";
 		
 		return $form;
 	}
 	
-	function form_forward() {
+	function form_split() {
+		$input_hidden_id = new Html_Input("writing_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "split");
+		$submit = new Html_Input("table_writings_split_submit", utf8_ucfirst(__('save')), "submit");
+		$input_value = new Html_Input("table_writings_split_amount", "");
+		
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'duplicate' => array(
+					'value' => $input_value->item(utf8_ucfirst(__('split'))),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				),
+			)
+		);
+
+		$list = new Html_List($grid);
+		
+		$form = "<div class=\"form_split\">
+					<form method=\"post\" name=\"table_writings_split\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
+					</form>
+				</div>";
+		
+		return $form."<div class=\"preview_changes\">".$this->preview_split()."</div>";
+	}
+	
+	function show_form_forward() {
 		if ($this->banks_id == 0) {
-			$input_hidden_id = new Html_Input("table_writings_forward_id", $this->id);
-			$input_hidden_action = new Html_Input("action", "forward");
-			$submit = new Html_Input("table_writings_forward_submit", "", "submit");
-			$input_hidden_value = new Html_Input("table_writings_forward_amount", "");
+			$input_hidden_id = new Html_Input("table_writings_form_forward_id", $this->id);
+			$input_hidden_action = new Html_Input("action", "form_forward");
+			$submit = new Html_Input("table_writings_form_forward_submit", "", "submit");
 			
 			$form = "<div class=\"forward\">
-						<form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">".
-							$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input().$input_hidden_value->input_hidden()."
+						<form method=\"post\" name=\"table_writings_form_forward\" action=\"\" enctype=\"multipart/form-data\">".
+							$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$submit->input()."
 						</form>
 					</div>";
 		
@@ -543,7 +582,37 @@ class Writing extends Record {
 		}
 	}
 	
-	function form_modify() {
+	
+	function form_forward() {
+		$input_hidden_id = new Html_Input("writing_id", $this->id);
+		$input_hidden_action = new Html_Input("action", "forward");
+		$submit = new Html_Input("table_writings_forward_submit", utf8_ucfirst(__('save')), "submit");
+		$input_value = new Html_Input("table_writings_forward_amount", "");
+		
+		$grid = array(
+			'class' => "itemsform",
+			'leaves' => array(
+				'duplicate' => array(
+					'value' => $input_value->item(utf8_ucfirst(__('forward'))),
+				),
+				'submit' => array(
+					'value' => $submit->item(""),
+				),
+			)
+		);
+
+		$list = new Html_List($grid);
+		
+		$form = "<div class=\"form_forward\">
+					<form method=\"post\" name=\"table_writings_forward\" action=\"\" enctype=\"multipart/form-data\">".
+						$input_hidden_action->input_hidden().$input_hidden_id->input_hidden().$list->show()."
+					</form>
+				</div>";
+
+		return $form."<div class=\"preview_changes\">".$this->preview_forward()."</div>";
+	}
+	
+	function show_form_modify() {
 		$input_hidden_id = new Html_Input("table_writings_modify_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "form_edit");
 		$submit = new Html_Input("table_writings_modify_submit", "", "submit");
@@ -643,7 +712,7 @@ class Writing extends Record {
 	}
 	
 	function show_operations() {
-		return $this->form_split().$this->form_modify().$this->form_duplicate().$this->form_forward().$this->form_delete();
+		return $this->show_form_modify().$this->show_form_split().$this->show_form_duplicate().$this->show_form_forward().$this->form_delete();
 	}
 	
 	function is_recently_modified(){
@@ -707,5 +776,171 @@ class Writing extends Record {
 			$link .= "</form><br />";
 		}
 		return $link."</div>";
+	}
+	
+	function preview_split($amount = "") {
+		$amount = (float)str_replace(",", ".", $amount);
+		
+		$grid = array(
+			'header' => array(
+				'cells' => array(
+					array(
+						'type' => "th",
+						'value' => __('Current amount')
+					),
+					array(
+						'type' => "th",
+						'value' => __('New amounts')
+					)
+				)
+			),
+			'lines' => array(
+				'cells' => array(
+					array(
+						'type' => "td",
+						'rowspan' => 2,
+						'value' => round($this->amount_inc_vat, 2)." ".$GLOBALS['param']['currency']
+					),
+					array(
+						'type' => "td",
+						'value' => ($this->amount_inc_vat - $amount)." ".$GLOBALS['param']['currency']
+					)
+				)
+			),
+			'lines_' => array(
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => $amount." ".$GLOBALS['param']['currency']
+					)
+				)
+			),	
+		);
+		$html_table = new Html_table(array('lines' => $grid));
+		
+		return $html_table->show();
+	}
+	
+	function preview_forward($value = "") {
+		$day = "";
+		if (is_numeric($value)) {
+			$day = date("d/m/Y", strtotime('+'.$value.' months', $this->day));
+		} else {
+			$split = preg_split("/(q)|(y)|(a)|(t)|(m)|(d)|(j)/i", $value, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+			if (count($split) == 2 and is_numeric($split[0])) {
+				if (preg_match("/(m)/i", $split[1])) {
+					$day = strtotime('+'.$split[0].' months', $this->day);
+				} elseif(preg_match("/(d)|(j)/i", $split[1])) {
+					$day = strtotime('+'.($split[0]).' days', $this->day);
+				} elseif(preg_match("/(q)|(t)/i", $split[1])) {
+					$day = strtotime('+'.($split[0] * 3).' months', $this->day);
+				} elseif(preg_match("/(a)|(y)/i", $split[1])) {
+					$day = strtotime('+'.$split[0].' year', $this->day);
+				}
+				$day = date("d/m/Y", $day);
+			}
+		}
+		
+		$grid = array(
+			'header' => array(
+				'cells' => array(
+					array(
+						'type' => "th",
+						'value' => __('Current date')
+					),
+					array(
+						'type' => "th",
+						'value' => __('New date')
+					)
+				)
+			),
+			'lines' => array(
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => date("d/m/Y", $this->day)
+					),
+					array(
+						'type' => "td",
+						'value' => $day
+					)
+				)
+			),
+		);
+		$html_table = new Html_table(array('lines' => $grid));
+		
+		return $html_table->show();
+	}
+	
+	function preview_duplicate($value = "") {
+		$days = array();
+		if (is_numeric($value) and $value > 0) {
+			for ($i=1; $i<=$value; $i++) {
+				$days[] = date("d/m/Y", strtotime('+'.$i.' months', $this->day));
+			}
+		} else {
+			$split = preg_split("/(q)|(y)|(a)|(t)|(m)/i", $value, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+			if (count($split) == 2 and is_numeric($split[0])) {
+				if(preg_match("/(m)/i", $split[1])) {
+					for ($i=1; $i<=$split[0]; $i++) {
+						$days[] = date("d/m/Y", strtotime('+'.$i.' months', $this->day));
+					}
+				} elseif(preg_match("/(q)|(t)/i", $split[1])) {
+					for ($i=1; $i<=$split[0]; $i++) {
+						$days[] = date("d/m/Y", strtotime('+'.($i * 3).' months', $this->day));
+					}
+				} elseif(preg_match("/(a)|(y)/i", $split[1])) {
+					for ($i=1; $i<=$split[0]; $i++) {
+						$days[] = date("d/m/Y", strtotime('+'.$i.' year', $this->day));
+					}
+				}
+			}
+		}
+		
+		$grid = array(
+			'header' => array(
+				'cells' => array(
+					array(
+						'type' => "th",
+						'value' => __('Current date')
+					),
+					array(
+						'type' => "th",
+						'value' => __('New date(s)')
+					)
+				)
+			),
+			'lines' => array(
+				'cells' => array(
+					array(
+						'type' => "td",
+						'rowspan' => count($days) + 1,
+						'value' => date("d/m/Y", $this->day)
+					)
+				)
+			),
+		);
+		
+		foreach ($days as $day) {
+			$grid[] = array(
+				'cells' => array(
+					array(
+						'type' => "td",
+						'value' => $day
+					)
+				)
+			);
+		}
+		
+		if (empty($days)) {
+			$grid['lines']['cells'][] = array(
+				'type' => "td",
+				'value' => ""
+			);
+		}
+		
+		$html_table = new Html_table(array('lines' => $grid));
+		
+		return $html_table->show();
 	}
 }

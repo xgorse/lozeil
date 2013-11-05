@@ -1,55 +1,30 @@
-$(document).ready(function() {	
+$(document).ready(function() {
 	var timer;
 	make_drag_and_drop();
-	$('.layout_status').slideDown(400);
-	timerstatus = setTimeout(function(){
-		$('.layout_status').slideUp(200);
-	},3000);
 	
 	$("body")
 		.on("click", "#insert_writings_show", function() {
-			$(".insert_writings_form").slideDown(1, function() {
-				$("html, body").animate({ scrollTop: $(document).height() }, "slow");
-			});
-			$(this).hide();
-			$("#insert_writings_hide, #insert_writings_cancel").show();
-		})
-		
-		.on("click", "#insert_writings_hide", function() {
-			$(".insert_writings_form").slideUp();
-			$(this).hide();
-			$("#insert_writings_show").show();
-		})
-		
-		.on("submit", "form[name=\"table_writings_modify\"]", function() {
-			var row = $(this).closest(".draggable");
-			var id = row.attr('id').substr(6);
-			if (row.next().hasClass("table_writings_form_modify")) {
-				$("#table_edit_writings").slideUp(400, function() {
-					$(".table_writings_form_modify").remove();
-				})
-			} else {
-				$.post(
-					"index.php?content=writings.ajax.php",
-					$(this).serialize(),
-					function(data) {
-						$(".table_writings_form_modify").remove();
-						$(data).insertAfter(row);
-						$("#table_edit_writings").slideDown();
-						$("html, body").animate({ scrollTop: $("#table_"+id).offset().top - 18 }, "slow");
-					}
-				);
-			}
+			$.post(
+				"index.php?content=writings.ajax.php",
+				({action:"reload_insert_form"}),
+				function(data) {
+					$.colorbox({html:data});
+				}
+			);
 			return false;
 		})
 		
-		.on("click", "#table_edit_writings_cancel", function() {
-			$("#table_edit_writings").slideUp(400, function() {
-				$(".table_writings_form_modify").remove();
-			})
+		.on("submit", "form[name=\"table_writings_modify\"], form[name=\"table_writings_form_split\"], form[name=\"table_writings_form_forward\"], form[name=\"table_writings_form_duplicate\"]", function() {
+			$.post(
+				"index.php?content=writings.ajax.php",
+				$(this).serialize(),
+				function(data) {
+					$.colorbox({html:data});
+				}
+			);
 			return false;
 		})
-		
+
 		.on("submit", "form[name=\"delete_writing_attachment\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
@@ -63,76 +38,15 @@ $(document).ready(function() {
 			return false;
 		})
 		
-		.on("submit", "form[name=\"table_edit_writings_form\"]", function() {
-			$.post(
-				"index.php?content=writings.ajax.php",
-				$(this).serialize(),
-				function(data) {
-					var result = jQuery.parseJSON(data);
-					$('#table_writings table').html(result.table);
-					refresh_balance();
-					make_drag_and_drop();
-					show_status(result.status);
-				}
-			);
-			return false;
-		})
-		
-		.on("submit", "form[name=\"table_writings_duplicate\"]", function() {
-			$.post(
-				"index.php?content=writings.ajax.php",
-				$(this).serialize(),
-				function(data) {
-					refresh_balance();
-					var result = jQuery.parseJSON(data);
-					$('#table_writings table').html(result.table);
-					make_drag_and_drop();
-					show_status(result.status);
-				}
-			);
-			return false;
-		})
-		
-		.on("submit", "form[name=\"table_writings_forward\"]", function() {
-			$.post(
-				"index.php?content=writings.ajax.php",
-				$(this).serialize(),
-				function(data) {
-					refresh_balance();
-					var result = jQuery.parseJSON(data);
-					$('#table_writings table').html(result.table);
-					make_drag_and_drop();
-					show_status(result.status);
-				}
-			);
-			return false;
-		})
-		
 		.on("submit", "form[name=\"table_writings_delete\"]", function() {
 			$.post(
 				"index.php?content=writings.ajax.php",
 				$(this).serialize(),
 				function(data) {
-					refresh_balance();
 					var result = jQuery.parseJSON(data);
 					$('#table_writings table').html(result.table);
 					make_drag_and_drop();
-					show_status(result.status);
-				}
-			);
-			return false;
-		})
-		
-		.on("submit", "form[name=\"insert_writings_form\"]", function() {
-			$.post(
-				"index.php?content=writings.ajax.php",
-				$(this).serialize(),
-				function(data) {
 					refresh_balance();
-					reload_insert_form();
-					var result = jQuery.parseJSON(data);
-					$('#table_writings table').html(result.table);
-					make_drag_and_drop();
 					show_status(result.status);
 				}
 			);
@@ -146,19 +60,6 @@ $(document).ready(function() {
 				cell.slideDown();
 			}
 			return false;
-		})
-		
-		.on("click", "input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit", function(event) {
-			if ($(this).next().val() == "") {
-				event.preventDefault();
-				if ($(this).next().attr("type") == "hidden") {
-					var next = "text";
-				} else {
-					var next = "hidden";
-				}
-			$("input#table_writings_split_submit, input#table_writings_duplicate_submit, input#table_writings_forward_submit").next().attr("type", "hidden");
-					$(this).next().attr("type", next);
-			}
 		})
 		
 		.on("click", "#table_writings .sort", function() {
@@ -175,31 +76,15 @@ $(document).ready(function() {
 			)
 		})
 		
-		.on("submit", "form[name=\"table_writings_split\"]", function() {
-			var row = $(this).parent().parent().parent();
-			var id = row.attr("id").substr(6);
-			var amount = $(this).find("#table_writings_split_amount").val();
-			$.post(
-				"index.php?content=writings.ajax.php",
-				{action: "split", table_writings_split_id: id, table_writings_split_amount: amount},
-				function(data) {
-					var result = jQuery.parseJSON(data);
-					$('#table_writings table').html(result.table);
-					make_drag_and_drop();
-					show_status(result.status);
-				}
-			)
-		return false;
-		})
-		
-		.on("submit", "form[name=\"extra_cancel_writings_form\"]", function() {
+		.on("submit", "form[name=\"table_writings_split\"], form[name=\"table_writings_forward\"], form[name=\"table_writings_duplicate\"], form[name=\"table_edit_writings_form\"], form[name=\"insert_writings_form\"]", function() {
+			$.colorbox.close();
 			$.post(
 				"index.php?content=writings.ajax.php",
 				$(this).serialize(),
 				function(data) {
-					refresh_balance();
 					var result = jQuery.parseJSON(data);
 					$('#table_writings table').html(result.table);
+					refresh_balance();
 					make_drag_and_drop();
 					show_status(result.status);
 				}
@@ -207,6 +92,23 @@ $(document).ready(function() {
 		return false;
 		})
 		
+		.on("keyup", "form[name=\"table_writings_split\"] input[name=\"table_writings_split_amount\"], form[name=\"table_writings_forward\"] input[name=\"table_writings_forward_amount\"], form[name=\"table_writings_duplicate\"] input[name=\"table_writings_duplicate_amount\"]", function() {
+			clearTimeout(timer);
+			var value = $(this).val();
+			var id = $(this).closest("form").find("#writing_id").val();
+			var type = $(this).attr('id');
+			timer = setTimeout(function() {
+				$.post(
+					"index.php?content=writings.ajax.php",
+					{action: "preview_changes", value: value, type: type, id: id},
+					function(data) {
+						$(".preview_changes").html(data);
+					}
+				)
+			}, 200);
+		return false;
+		})
+
 		.on("change", "input#amount_excl_vat", function() {
 			$(this).val($(this).val().replace(",", "."));
 			var amount_inc_vat = Math.round($(this).val() * (($("input#vat").val()/100 +1))*1000000)/1000000;
@@ -270,20 +172,20 @@ $(document).ready(function() {
 		})
 		
 		.on("mouseenter", "#table_writings tr", function() {
-			$(this).find(".operations > div").css("display", "inline-block");
+			$(this).find(".operations > div:not(.modify)").css("display", "inline-block");
 		})
 		
 		.on("mouseleave", "#table_writings tr", function() {
-			$(this).find(".operations > div").hide();
+			$(this).find(".operations > div:not(.modify)").hide();
 		})
 		
 		.on("change", "select[name='categories_id']", function() {
-			var form = $(this);
+			var select = $(this);
 			$.post(
 				"index.php?content=categories.ajax.php",
 				{ method: "json", action: "fill_vat", value: $(this).val() },
 				function(data){
-					form.parent().parent().parent().find("#vat").val(data).change();
+					select.parent().parent().parent().find("#vat").val(data).change();
 				}
 			);
 		})
@@ -312,7 +214,7 @@ $(document).ready(function() {
 		})
 		
 		.on("click", "#checkbox_all_up, #checkbox_all_down", function() {
-			var $checkboxes = $("#table_writings, #select_modify_writings").find(':checkbox');
+			var $checkboxes = $("#table_writings, #select_writings").find(':checkbox');
 			if (this.checked) {
 				$checkboxes.each(function() {
 					$(this)[0].checked = true
@@ -357,9 +259,8 @@ function make_drag_and_drop() {
 				"index.php?content=writings.ajax.php",
 				{action: "merge", writing_from: writing_from, writing_into: writing_into},
 				function(data) {
-					$('#table_writings table tbody').remove();
 					var result = jQuery.parseJSON(data);
-					$('#table_writings table').html(result.table);
+					$('#table_writings table').replaceWith(result.table);
 					make_drag_and_drop();
 					show_status(result.status);
 				}
@@ -379,25 +280,13 @@ function make_drag_and_drop() {
 	});
 }
 
-function reload_insert_form() {
+function reload_select_writings() {
 	$.ajax({
 		type: "POST",
 		url : "index.php?content=writings.ajax.php",
-		data : {action: "reload_insert_form"}
-	}).done(function (data) {
-		$(".insert_writings_form").slideUp(400, function() {
-			$("#insert_writings").html(data);
-		})
-	});
-}
-
-function reload_select_modify_writings() {
-	$.ajax({
-		type: "POST",
-		url : "index.php?content=writings.ajax.php",
-		data : {action: "reload_select_modify_writings"}
+		data : {action: "reload_select_writings"}
 	}).done(function (data2) {
-		$("#select_modify_writings").replaceWith(data2);
+		$("#select_writings").replaceWith(data2);
 	});
 }
 
@@ -413,7 +302,7 @@ function confirm_option(text) {
 				function(data) {
 					refresh_balance();
 					var result = jQuery.parseJSON(data);
-					reload_select_modify_writings();
+					reload_select_writings();
 					$('#table_writings table').html(result.table);
 					show_status(result.status);
 				}
@@ -455,7 +344,7 @@ function confirm_modify(text) {
 			"index.php?content=writings.ajax.php",
 			serialized,
 			function(data) {
-				reload_select_modify_writings();
+				reload_select_writings();
 				refresh_balance();
 				var result = jQuery.parseJSON(data);
 				$('#table_writings table').html(result.table);
@@ -478,16 +367,3 @@ function changeColorLine(){
 		$('#table_writings tr.modified').removeClass('modified');
 	},6000);
 };
-
-
-var timerstatus;
-function show_status(status) {
-	$('.layout_status').slideUp(200, function() {
-		$(this).empty().html(status);
-	})
-	clearTimeout(timerstatus);
-	$('.layout_status').slideDown(400);
-	timerstatus = setTimeout(function(){
-		$('.layout_status').slideUp(200);
-	},3000);
-}

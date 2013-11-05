@@ -61,6 +61,8 @@ img { border: none; }
 }
 
 .content_copyright {
+	width: 1195px;
+	text-align: left;
 	margin: 8px auto 5px auto;
 	text-align: left;
 	color: #999;
@@ -109,6 +111,10 @@ table {
 
 .dragged tr:first-child {
 	background: rgba(175, 175, 175, 0.15);
+}
+
+.dragged .operations {
+	display: none;
 }
 
 .over {
@@ -200,11 +206,13 @@ input[type="submit"]:hover {
 }
 
 #table_writings {
-	margin: 0 50px;
+	margin: 0 70px 0 30px;
+	width: 1095px;
 }
 
-#table_writings th:last-of-type {
-	min-width: 120px;
+#table_writings td:last-of-type {
+	position: absolute;
+	border-bottom: none;
 }
 
 #table_header_dragged {
@@ -250,7 +258,7 @@ input[type="submit"]:hover {
 
 /* --- form modify writings --- */
 
-#select_modify_writings {
+#select_writings {
 	margin: 10px 50px 0 60px;
 	width: 70%;
 	display: inline-block;
@@ -287,11 +295,12 @@ input[type="submit"]:hover {
 	display: inline-block;
 }
 
-/* --- Tables writings & writingssimulations --- */
-#table_writings_split_amount {
-	display: inline-block;
-	margin-left: 9px;
+textarea#comment {
+	width: 250px;
+	height: 30px;
 }
+
+/* --- Tables writings & writingssimulations --- */
 
 .split input[type="submit"], .split input[type="submit"]:hover {
 	border: 0;
@@ -385,6 +394,19 @@ input[type="submit"]:hover {
 	cursor: pointer;
 }
 
+.show_operations input[type='submit'] {
+	margin-left: 5px;
+	border: 0;
+	background: transparent;
+	width: 18px;
+	height: 18px;
+	background-image :  url(../images/more.png);
+	background-repeat: no-repeat;
+	background-position-y: center;
+	background-size: 14px;
+	cursor: pointer;
+}
+
 #insert_writings_cancel,
 #edit_writingssimulation_cancel {
 	margin-left: 20px;
@@ -403,7 +425,6 @@ input[type="submit"]:hover {
 	display: none;
 }
 
-.insert_writings_form,
 .edit_writingssimulation_form{
 	margin-top: 20px;
 	display: none;
@@ -414,6 +435,9 @@ input[type="submit"]:hover {
 	padding: 15px;
 	margin: 0 50px;
 }
+#table_edit_writings {
+	min-width: 500px;
+}
 
 .table_edit_writings_form {
 	margin-top: 15px;
@@ -423,13 +447,22 @@ tr.modified {
 	background-color: #FFFF78;
 }
 
-#table_edit_writings,
 #table_edit_writingssimulation{
 	display: none;
 }
 
+.operations {
+	padding: 10px 10px 10px 2px;
+	background-color: white;
+	border-radius: 50px;
+}
+
 .operations > div {
 	display: none;
+}
+
+.operations > div.modify {
+	display: inline-block;
 }
 
 #evolution_periodical {
@@ -442,12 +475,14 @@ tr.modified {
 
 .heading {
 	padding-top: 15px;
+	margin: 0 70px 0 30px;
+	width: 1095px;
 }
 
 .heading h2 {
 	font-size: 1.2em;
 	padding: 5px 0;
-	margin: 5px 50px;
+	margin: 5px 0;
 }
 
 /*Timeline*/
@@ -466,7 +501,6 @@ tr.modified {
 #heading_timeline {
 	display: block;
     width: 1095px;
-    margin: 0 50px 0 50px;
 	height: 90px;
 }
 
@@ -546,7 +580,8 @@ label[for="filter_number_duplicate"] {
 /*Extra*/
 
 .extra {
-	margin: 20px 50px 10px 50px;
+	margin: 25px 0 10px 0;
+	padding-top: 5px;
 	border: 1px #EDEDED solid;
 }
 
@@ -568,14 +603,14 @@ label[for="filter_number_duplicate"] {
 }
 
 #menu_header_balance {
-	margin-left: 50px;
+	margin-left: 30px;
 	margin-top: 3px;
 	position: relative;
 	display: inline-block;
 }
 
 #menu_header_logo {
-	margin-right: 50px;
+	margin-right: 30px;
 	position: relative;
 	display: inline-block;
 	float: right;
@@ -624,6 +659,7 @@ label[for="filter_number_duplicate"] {
 }
 
 #menu_actions_export {
+	display: none;
 	margin-left: 20px;
 }
 
@@ -764,7 +800,7 @@ label[for="filter_number_duplicate"] {
 
 .input-ajax-dynamic,
 .select-ajax-dynamic {
-	width: 500px;
+	width: 300px;
 	margin-top: 4px;
 	font-size: 0.9em;
 	display: none;
@@ -1071,4 +1107,70 @@ input[name='submit_change_view'] {
 input[name='submit_change_view']:hover {
 	background-color: transparent;
 	text-decoration: underline;
+}
+
+
+/*
+    Colorbox Core Style:
+    The following CSS is consistent between example themes and should not be altered.
+*/
+#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
+#cboxOverlay{position:fixed; width:100%; height:100%;}
+#cboxMiddleLeft, #cboxBottomLeft{clear:left;}
+#cboxContent{position:relative;}
+#cboxLoadedContent{overflow:auto; -webkit-overflow-scrolling: touch;}
+#cboxTitle{margin:0;}
+#cboxLoadingOverlay, #cboxLoadingGraphic{position:absolute; top:0; left:0; width:100%; height:100%;}
+#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{cursor:pointer;}
+.cboxPhoto{float:left; margin:auto; border:0; display:block; max-width:none; -ms-interpolation-mode:bicubic;}
+.cboxIframe{width:100%; height:100%; display:block; border:0;}
+#colorbox, #cboxContent, #cboxLoadedContent{box-sizing:content-box; -moz-box-sizing:content-box; -webkit-box-sizing:content-box;}
+
+/* 
+    User Style:
+    Change the following styles to modify the appearance of Colorbox.  They are
+    ordered & tabbed in a way that represents the nesting of the generated HTML.
+*/
+#cboxOverlay{background:#000;}
+#colorbox{outline:0;}
+    #cboxContent{margin-top:20px;background:#000;}
+        .cboxIframe{background:#fff;}
+        #cboxError{padding:50px; border:1px solid #ccc;}
+        #cboxLoadedContent{border:5px solid #000; background:#fff;}
+        #cboxTitle{position:absolute; top:-20px; left:0; color:#ccc;}
+        #cboxCurrent{position:absolute; top:-20px; right:0px; color:#ccc;}
+
+        /* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
+        #cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {border:0; padding:0; margin:0; overflow:visible; width:auto; background:none; }
+        
+        /* avoid outlines on :active (mouseclick), but preserve outlines on :focus (tabbed navigating) */
+        #cboxPrevious:active, #cboxNext:active, #cboxSlideshow:active, #cboxClose:active {outline:0;}
+        
+        #cboxSlideshow{position:absolute; top:-20px; right:90px; color:#fff;}
+        #cboxPrevious{position:absolute; top:50%; left:5px; margin-top:-32px; background:url(../images/controls.png) no-repeat top left; width:28px; height:65px; text-indent:-9999px;}
+        #cboxPrevious:hover{background-position:bottom left;}
+        #cboxNext{position:absolute; top:50%; right:5px; margin-top:-32px; background:url(../images/controls.png) no-repeat top right; width:28px; height:65px; text-indent:-9999px;}
+        #cboxNext:hover{background-position:bottom right;}
+        #cboxClose{position:absolute; top:5px; right:5px; display:block; background:url(../images/controls.png) no-repeat top center; width:38px; height:19px; text-indent:-9999px;}
+        #cboxClose:hover{background-position:bottom center;}
+
+		
+/* --- Colorbox --- */
+
+#cboxLoadedContent {
+	padding: 18px;
+}
+
+#cboxLoadedContent .preview_changes {
+	margin-top: 20px;
+	display: block;
+}
+
+.loading {
+	position: fixed;
+	bottom: 8px;
+	width: 1195px;
+	height: 30px;
+	left: 50%;
+	margin-left: -584px;
 }

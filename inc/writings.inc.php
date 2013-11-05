@@ -199,8 +199,8 @@ class Writings extends Collector {
 					),
 					array(
 						'type' => "th",
-						'class' => $this->determine_table_header_class("amount_excl_vat"),
-						'id' => "amount_excl_vat",
+						'class' => $this->determine_table_header_class("vat"),
+						'id' => "vat",
 						'value' => __("VAT"),
 					),
 					array(
@@ -218,7 +218,7 @@ class Writings extends Collector {
 					array(
 						'type' => "th",
 						'id' => "operations",
-						'value' => utf8_ucfirst(__("operations")),
+						'value' => "",
 					),
 				),
 			),
@@ -687,7 +687,7 @@ class Writings extends Collector {
 			);
 		$checkbox = new Html_Checkbox("checkbox_all_down", "check");
 		
-		$form = "<div id=\"select_modify_writings\">".
+		$form = "<div id=\"select_writings\">".
 					$checkbox->input().$select->item("")."
 					<div id=\"form_modify_writings\">
 					</div>

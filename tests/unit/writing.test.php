@@ -465,15 +465,15 @@ Autre complément d'infos");
 		$this->truncateTable("writings");
 	}
 	
-	function test_form() {
+	function test_display() {
 		$_SESSION['filter']['start'] = time();
 		$writing = new Writing();
-		$form = $writing->form();
-		$this->assertPattern("/".date('m')."/", $form);
-		$this->assertPattern("/".date('Y')."/", $form);
-		$this->assertPattern("/<option value=\"0\" selected=\"selected\">--<\/option>/", $form);
-		$this->assertPattern("/value=\"insert\"/", $form);
-		$this->assertNoPattern("/value=\"edit\"/", $form);
+		$display = $writing->display();
+		$this->assertPattern("/".date('m')."/", $display);
+		$this->assertPattern("/".date('Y')."/", $display);
+		$this->assertPattern("/<option value=\"0\" selected=\"selected\">--<\/option>/", $display);
+		$this->assertPattern("/value=\"insert\"/", $display);
+		$this->assertNoPattern("/value=\"edit\"/", $display);
 		$category = new Category();
 		$category->name = "Category 1";
 		$category->save();
@@ -483,15 +483,15 @@ Autre complément d'infos");
 		$source = new Source();
 		$source->name = "Source 1";
 		$source->save();
-		$form = $writing->form();
-		$this->assertPattern("/".date('d', time())."/", $form);
-		$this->assertPattern("/".date('m', time())."/", $form);
-		$this->assertPattern("/".date('Y', time())."/", $form);
-		$this->assertPattern("/<option value=\"1\">Source 1<\/option>/", $form);
-		$this->assertNoPattern("/<option value=\"1\">Bank 1<\/option>/", $form);
-		$this->assertPattern("/<option value=\"1\">Category 1<\/option>/", $form);
-		$this->assertPattern("/value=\"insert\"/", $form);
-		$this->assertNoPattern("/value=\"edit\"/", $form);
+		$display = $writing->display();
+		$this->assertPattern("/".date('d', time())."/", $display);
+		$this->assertPattern("/".date('m', time())."/", $display);
+		$this->assertPattern("/".date('Y', time())."/", $display);
+		$this->assertPattern("/<option value=\"1\">Source 1<\/option>/", $display);
+		$this->assertNoPattern("/<option value=\"1\">Bank 1<\/option>/", $display);
+		$this->assertPattern("/<option value=\"1\">Category 1<\/option>/", $display);
+		$this->assertPattern("/value=\"insert\"/", $display);
+		$this->assertNoPattern("/value=\"edit\"/", $display);
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("sources");
@@ -503,7 +503,7 @@ Autre complément d'infos");
 		$writing = new Writing();
 		$writing->id = 40;
 		$form_duplicate = $writing->form_duplicate();
-		$this->assertPattern("/class=\"duplicate\"/", $form_duplicate);
+		$this->assertPattern("/class=\"form_duplicate\"/", $form_duplicate);
 		$this->assertPattern("/value=\"40\"/", $form_duplicate);
 		$this->assertPattern("/table_writings_duplicate_submit/", $form_duplicate);
 		$this->assertPattern("/table_writings_duplicate_amount/", $form_duplicate);
@@ -523,10 +523,20 @@ Autre complément d'infos");
 		$writing = new Writing();
 		$writing->id = 40;
 		$form_split = $writing->form_split();
-		$this->assertPattern("/class=\"split\"/", $form_split);
+		$this->assertPattern("/class=\"form_split\"/", $form_split);
 		$this->assertPattern("/value=\"40\"/", $form_split);
 		$this->assertPattern("/table_writings_split_submit/", $form_split);
 		$this->assertPattern("/table_writings_split_amount/", $form_split);
+	}
+	
+	function test_form_forward() {
+		$writing = new Writing();
+		$writing->id = 40;
+		$form_forward = $writing->form_forward();
+		$this->assertPattern("/class=\"form_forward\"/", $form_forward);
+		$this->assertPattern("/value=\"40\"/", $form_forward);
+		$this->assertPattern("/table_writings_forward_submit/", $form_forward);
+		$this->assertPattern("/table_writings_forward_amount/", $form_forward);
 	}
 		
 	function test_duplicate() {

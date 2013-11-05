@@ -49,8 +49,10 @@ class Theme_Default {
 	
 	function js_files() {
 		$js_files[] = "medias/js/jquery.js";
+		$js_files[] = "medias/js/spin.js";
 		$js_files[] = "medias/js/draganddrop.jquery.js";
 		$js_files[] = "medias/js/calendar.js";
+		$js_files[] = "medias/js/colorbox.jquery.js";
 		$js_files[] = "medias/js/common.js";
 		$js_files[] = "medias/js/common.jquery.js";
 		$js_files[] = "medias/js/d3.js";
@@ -115,10 +117,10 @@ class Theme_Default {
 		return "</div>
 		<div class=\"content_copyright\">
 		<div>
-		<ul>
-		<li class=\"\">&copy; No Parking 2013 - 2013 v.".$GLOBALS['config']['version']."</li>
-		</ul>
+		&copy; No Parking 2013 - 2013 v.".$GLOBALS['config']['version']."
 		</div>
+		</div>
+		<div class=\"loading\">
 		</div>";
 	}
 	

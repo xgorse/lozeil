@@ -1,6 +1,18 @@
+var spinner;
 $(document)
 	.ready(function() {
+		
+		$('.layout_status').slideDown(400);
+		timerstatus = setTimeout(function(){
+			$('.layout_status').slideUp(200);
+		},3000);
+		
 		$("body")
+			.on("submit", "form[name=\"menu_actions_import_bank_form\"], form[name=\"menu_actions_import_source_form\"]", function() {
+				spinner = new Spinner(opts).spin();
+				$(".loading").append(spinner.el);
+			})
+		
 			.on("click", "input.input-ajax-checkbox", function() {
 				if ($(this).is(':checked') == false) {
 					$(this).parent().hide();
@@ -100,12 +112,6 @@ $(document)
 		$(".insert_writings_form, .table_writings_comment_further_information").slideUp();
 		$("#insert_writings_hide, #insert_writings_cancel").hide();
 		$("#insert_writings_show").show();
-		$(".extra_filter_writings_days").hide();
-		$(".extra_filter_writings_days input").val('');
-		$("#extra_filter_writings_value").val('').trigger("keyup");
-		$("#table_edit_writings").slideUp(400, function() {
-			$(".table_writings_form_modify").remove();
-		})
 	  }   
 	});
 
@@ -124,4 +130,46 @@ function refresh_balance() {
 			$('#menu_header_balance').html(data);
 		}
 	);
+}
+
+
+var opts = {
+  lines: 12, // The number of lines to draw
+  length: 5, // The length of each line
+  width: 2, // The line thickness
+  radius: 6, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 0, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb or array of colors
+  speed: 2, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: "-15", // Top position relative to parent in px
+  left: "-15" // Left position relative to parent in px
+};
+
+$(document)
+	.ajaxStart(function() {
+		spinner = new Spinner(opts).spin();
+		$(".loading").append(spinner.el);
+	})
+	.ajaxStop(function() {
+		spinner.stop();
+	})
+
+
+var timerstatus;
+function show_status(status) {
+	$('.layout_status').slideUp(200, function() {
+		$(this).empty().html(status);
+	})
+	clearTimeout(timerstatus);
+	$('.layout_status').slideDown(400);
+	timerstatus = setTimeout(function(){
+		$('.layout_status').slideUp(200);
+	},3000);
 }
