@@ -914,6 +914,7 @@ class Writing extends Record {
 				'cells' => array(
 					array(
 						'type' => "td",
+						'id' => "preview_changes_align_top",
 						'rowspan' => count($days) + 1,
 						'value' => date("d/m/Y", $this->day)
 					)

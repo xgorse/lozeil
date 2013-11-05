@@ -215,6 +215,10 @@ input[type="submit"]:hover {
 	border-bottom: none;
 }
 
+#table_writings #amount_inc_vat {
+	min-width: 75px;
+}
+
 #table_header_dragged {
 	visibility: collapse;
 }
@@ -1168,6 +1172,10 @@ input[name='submit_change_view']:hover {
 #cboxLoadedContent .preview_changes {
 	margin-top: 20px;
 	display: block;
+}
+
+#cboxLoadedContent .preview_changes #preview_changes_align_top {
+	vertical-align: top;
 }
 
 .loading {

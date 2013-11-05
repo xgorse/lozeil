@@ -4,7 +4,6 @@
 class Html_Cubismchart {
 	public $name = "";
 	public $data = array();
-	public $data_per_category = array();
 	public $width = 1095;
 	public $height = 55;
 	public $start = 0;
@@ -40,11 +39,11 @@ class Html_Cubismchart {
 		return $data;
 	}
 	
-	function prepare_navigation() {
+	function prepare_navigation($filter = "", $scale = "") {
 		list($previous_year_start, $previous_year_stop) = determine_month(mktime(0, 0, 0, 1, 1, date ('Y',$this->start) - 1));
 		list($next_year_start, $next_year_stop) = determine_month(mktime(0, 0, 0, 1, 1, date ('Y',$this->start) + 1));
-		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$previous_year_start."&amp;stop=".$previous_year_stop),"<<")."</span>
-			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$next_year_start."&amp;stop=".$next_year_stop),">>")."</span>";
+		return "<span id=\"cubismtimeline_back\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$previous_year_start."&amp;stop=".$previous_year_stop."&amp;filter=".$filter."&amp;scale=".$scale),"<<")."</span>
+			<span id=\"cubismtimeline_next\">".Html_Tag::a(link_content("content=".$this->name.".php&amp;start=".$next_year_start."&amp;stop=".$next_year_stop."&amp;filter=".$filter."&amp;scale=".$scale),">>")."</span>";
 	}
 	
 	function show() {

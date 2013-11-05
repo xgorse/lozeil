@@ -12,7 +12,7 @@ class tests_Writings_Followup extends TableTestCase {
 		);
 	}
 	
-	function test_show_timeseries_at() {
+	function test_show_timeseries_per_category_at() {
 		$category = new Category();
 		$category->name = "category 1";
 		$category->save();
@@ -37,13 +37,52 @@ class tests_Writings_Followup extends TableTestCase {
 		$writing->categories_id = 0;
 		$writing->save();
 		$writingfollowup = new Writings_Followup();
-		$timeseries = $writingfollowup->show_timeseries_at(mktime(0, 0, 0, 11, 15, 2013));
+		$timeseries = $writingfollowup->show_timeseries_per_category_at(mktime(0, 0, 0, 11, 15, 2013));
 		$this->assertPattern("/category 1/", $timeseries);
 		$this->assertPattern("/200/", $timeseries);
 		$this->assertPattern("/aucune/", $timeseries);
 		$this->assertPattern("/90/", $timeseries);
-		$timeseries = $writingfollowup->show_timeseries_at(mktime(0, 0, 0, 11, 15, 2014));
+		$timeseries = $writingfollowup->show_timeseries_per_category_at(mktime(0, 0, 0, 11, 15, 2014));
 		$this->assertPattern("/aucune/", $timeseries);
 		$this->assertPattern("/-50/", $timeseries);
+		$this->truncateTable("writings");
+		$this->truncateTable("categories");
+	}
+	
+	function test_show_timeseries_per_bank_at() {
+		$bank = new Bank();
+		$bank->name = "bank 1";
+		$bank->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 100;
+		$writing->day = mktime(0, 0, 0, 10, 14, 2013);
+		$writing->banks_id = 0;
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -10;
+		$writing->day = mktime(0, 0, 0, 10, 14, 2013);
+		$writing->banks_id = 0;
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = 200;
+		$writing->day = mktime(0, 0, 0, 10, 14, 2013);
+		$writing->banks_id = 1;
+		$writing->save();
+		$writing = new Writing();
+		$writing->amount_inc_vat = -50;
+		$writing->day = mktime(0, 0, 0, 10, 14, 2014);
+		$writing->banks_id = 0;
+		$writing->save();
+		$writingfollowup = new Writings_Followup();
+		$timeseries = $writingfollowup->show_timeseries_per_bank_at(mktime(0, 0, 0, 11, 15, 2013));
+		$this->assertPattern("/bank 1/", $timeseries);
+		$this->assertPattern("/200/", $timeseries);
+		$this->assertPattern("/aucune/", $timeseries);
+		$this->assertPattern("/90/", $timeseries);
+		$timeseries = $writingfollowup->show_timeseries_per_bank_at(mktime(0, 0, 0, 11, 15, 2014));
+		$this->assertPattern("/aucune/", $timeseries);
+		$this->assertPattern("/-50/", $timeseries);
+		$this->truncateTable("writings");
+		$this->truncateTable("banks");
 	}
 }
