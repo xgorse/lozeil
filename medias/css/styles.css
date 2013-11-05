@@ -219,6 +219,10 @@ input[type="submit"]:hover {
 	visibility: collapse;
 }
 
+.table_total {
+	background: #F6F6F6;
+}
+
 .sortedup, .sortedup:hover {
 	background-image :  url(../images/up.png)!important;
 	background-position: right center;

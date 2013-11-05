@@ -114,8 +114,8 @@ class tests_Writings extends TableTestCase {
 		
 		$writing2 = new Writing();
 		$writing2->categories_id = 2;
-		$writing2->amount_excl_vat = 90.50;
-		$writing2->amount_inc_vat = 100;
+		$writing2->amount_excl_vat = -90.50;
+		$writing2->amount_inc_vat = -100;
 		$writing2->banks_id = 2;
 		$writing2->comment = "Ceci est un autre élément du test";
 		$writing2->day = mktime(10, 0, 0, 7, 10, 2013);
@@ -154,6 +154,8 @@ class tests_Writings extends TableTestCase {
 		$writings->select();
 		
 		$table = $writings->show();
+		$this->assertPattern("/-100 ".$GLOBALS['param']['currency']."/", $table);
+		$this->assertPattern("/250 ".$GLOBALS['param']['currency']."/", $table);
 		$this->assertPattern("/5.5/", $table);
 		$this->assertPattern("/Bank 1/", $table);
 		$this->assertPattern("/Source 1/", $table);

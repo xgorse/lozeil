@@ -264,7 +264,14 @@ class Writings extends Collector {
 			$duplicate = $this->get_duplicate_color_classes();
 		}
 		
+		$debit = 0;
+		$credit = 0;
 		foreach ($this as $writing) {
+			if ($writing->amount_inc_vat < 0) {
+				$debit += $writing->amount_inc_vat;
+			} else {
+				$credit += $writing->amount_inc_vat;
+			}
 			$class = "draggable droppable";
 			if ($writing->is_recently_modified()) {
 				$class .= " modified";
@@ -334,6 +341,28 @@ class Writings extends Collector {
 				),
 			);
 		}
+		$grid[] = array(
+			'class' => "table_total",
+			'cells' => array(
+					array(
+						'colspan' => "8",
+						'type' => "td",
+						'value' => "",
+					),
+				array(
+						'type' => "td",
+						'value' => $debit." ".$GLOBALS['param']['currency'],
+					),
+				array(
+						'type' => "td",
+						'value' => $credit." ".$GLOBALS['param']['currency'],
+					),
+				array(
+						'type' => "td",
+						'value' => "",
+					),
+				)
+			);
 		
 		return $grid;
 	}
@@ -355,7 +384,15 @@ class Writings extends Collector {
 			$duplicate = $this->get_duplicate_color_classes();
 		}
 		
+		
+		$debit = 0;
+		$credit = 0;
 		foreach ($this as $writing) {
+			if ($writing->amount_inc_vat < 0) {
+				$debit += $writing->amount_inc_vat;
+			} else {
+				$credit += $writing->amount_inc_vat;
+			}
 			$class = "draggable droppable";
 			if ($writing->is_recently_modified()) {
 				$class .= " modified";
@@ -425,6 +462,29 @@ class Writings extends Collector {
 				),
 			);
 		}
+		
+		$grid[] = array(
+			'class' => "table_total",
+			'cells' => array(
+					array(
+						'colspan' => "8",
+						'type' => "td",
+						'value' => "",
+					),
+				array(
+						'type' => "td",
+						'value' => round($debit, 2)." ".$GLOBALS['param']['currency'],
+					),
+				array(
+						'type' => "td",
+						'value' => round($credit, 2)." ".$GLOBALS['param']['currency'],
+					),
+				array(
+						'type' => "td",
+						'value' => "",
+					),
+				)
+			);
 		
 		return $grid;
 	}
