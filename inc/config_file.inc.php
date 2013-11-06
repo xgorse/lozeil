@@ -62,6 +62,7 @@ class Config_File {
 			trigger_error("Content of file ".$this->path." must not be null", E_USER_ERROR);
 		} else {
 			$size = @file_put_contents($this->path, $this->content);
+			chmod($this->path, 0775);
 
 			if ($size === false || $size < strlen($this->content)) {
 				 throw new Exception("Unable to write in ".$this->path);

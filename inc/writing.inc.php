@@ -481,13 +481,14 @@ class Writing extends Record {
 		$input_hidden_id = new Html_Input("writing_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "duplicate");
 		$submit = new Html_Input("table_writings_duplicate_submit", utf8_ucfirst(__('save')), "submit");
+		$select = new Html_Select("table_writings_duplicate_amount_select", $this->periods());
 		$input_value = new Html_Input("table_writings_duplicate_amount", "");
 		
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
 				'duplicate' => array(
-					'value' => $input_value->item(utf8_ucfirst(__('duplicate over'))),
+					'value' => $select->item(utf8_ucfirst(__('duplicate over')), "", $input_value->input()),
 				),
 				'submit' => array(
 					'value' => $submit->item(""),
@@ -587,13 +588,14 @@ class Writing extends Record {
 		$input_hidden_id = new Html_Input("writing_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "forward");
 		$submit = new Html_Input("table_writings_forward_submit", utf8_ucfirst(__('save')), "submit");
+		$select = new Html_Select("table_writings_forward_amount_select", $this->periods());
 		$input_value = new Html_Input("table_writings_forward_amount", "");
 		
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
-				'duplicate' => array(
-					'value' => $input_value->item(utf8_ucfirst(__('forward'))),
+				'forward' => array(
+					'value' => $select->item(utf8_ucfirst(__('forward')), "", $input_value->input()),
 				),
 				'submit' => array(
 					'value' => $submit->item(""),
@@ -943,5 +945,29 @@ class Writing extends Record {
 		$html_table = new Html_table(array('lines' => $grid));
 		
 		return $html_table->show();
+	}
+	
+	function periods() {
+		return array(
+			"0" => "--",
+			"1" => "1 ".__("month"),
+			"2" => "2 ".__("months"),
+			"3" => "3 ".__("months"),
+			"4" => "4 ".__("months"),
+			"5" => "5 ".__("months"),
+			"6" => "6 ".__("months"),
+			"7" => "7 ".__("months"),
+			"8" => "8 ".__("months"),
+			"9" => "9 ".__("months"),
+			"10" => "10 ".__("months"),
+			"11" => "11 ".__("months"),
+			"12" => "12 ".__("months"),
+			"1t" => "1 ".__("quarter"),
+			"2t" => "2 ".__("quarters"),
+			"3t" => "3 ".__("quarters"),
+			"4t" => "4 ".__("quarters"),
+			"1a" => "1 ".__("year"),
+			"2a" => "2 ".__("years"),
+		);
 	}
 }

@@ -19,10 +19,10 @@ if (isset($_REQUEST['action'])) {
 			if ($_REQUEST['type'] == "table_writings_split_amount") {
 				echo $writing->preview_split($_REQUEST['value']);
 			}
-			if ($_REQUEST['type'] == "table_writings_forward_amount") {
+			if ($_REQUEST['type'] == "table_writings_forward_amount" or $_REQUEST['type'] == "table_writings_forward_amount_select") {
 				echo $writing->preview_forward($_REQUEST['value']);
 			}
-			if ($_REQUEST['type'] == "table_writings_duplicate_amount") {
+			if ($_REQUEST['type'] == "table_writings_duplicate_amount" or $_REQUEST['type'] == "table_writings_duplicate_amount_select") {
 				echo $writing->preview_duplicate($_REQUEST['value']);
 			}
 			exit(0);
@@ -134,7 +134,11 @@ if (isset($_REQUEST['action'])) {
 			if (isset($_POST['writing_id']) and isset($_POST['table_writings_duplicate_amount'])) {
 				$writing = new Writing();
 				$writing->load((int)$_POST['writing_id']);
-				$writing->duplicate($_POST['table_writings_duplicate_amount']);
+				if (!empty($_POST['table_writings_duplicate_amount'])) {
+					$writing->duplicate($_POST['table_writings_duplicate_amount']);
+				} else {
+					$writing->duplicate($_POST['table_writings_duplicate_amount_select']);
+				}
 			}
 			break;
 
@@ -142,7 +146,11 @@ if (isset($_REQUEST['action'])) {
 			if (isset($_POST['writing_id']) and isset($_POST['table_writings_forward_amount'])) {
 				$writing = new Writing();
 				$writing->load((int)$_POST['writing_id']);
-				$writing->forward($_POST['table_writings_forward_amount']);
+				if (!empty($_POST['table_writings_forward_amount'])) {
+					$writing->forward($_POST['table_writings_forward_amount']);
+				} else {
+					$writing->forward($_POST['table_writings_forward_amount_select']);
+				}
 			}
 			break;
 
