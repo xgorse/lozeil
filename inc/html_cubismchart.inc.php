@@ -30,7 +30,7 @@ class Html_Cubismchart {
 			<li id=\"cubism_start_year\">".date('Y', $this->start)."</li>
 			<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>";
 		
-		for ($i = 0; $i <12; $i++) {
+		for ($i = 0; $i < 12; $i++) {
 			list($start, $stop) = determine_month(mktime(0, 0, 0, $i + 1, 1, date ('Y',$this->start)));
 			$data .= "<li class=\"cubism_link\">".link_content("content=writings.php&amp;start=".$start."&amp;stop=".$stop)."</li>";
 		}

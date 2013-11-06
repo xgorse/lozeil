@@ -22,7 +22,7 @@ class Writings_Simulations extends Collector  {
 		$this->month = determine_first_day_of_month($timestamp);
 		
 		$cubismchart = new Html_Cubismchart("writingssimulations");
-		$cubismchart->data = $this->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 0, date('Y',$this->month)));
+		$cubismchart->data = $this->balance_per_day_in_a_year_in_array(mktime(0, 0, 0, 1, 1, date('Y',$this->month)));
 		$cubismchart->start = $this->month;
 		return $cubismchart->show();
 	}
@@ -65,7 +65,8 @@ class Writings_Simulations extends Collector  {
 					),
 					array(
 						'type' => "th",
-						'value' => utf8_ucfirst(__("operations")),
+						'id' => "operations",
+						'value' => "",
 					)
 				)
 			)
@@ -142,7 +143,7 @@ class Writings_Simulations extends Collector  {
 	}
 	
 	function display() {
-		return "<div id=\"simulation\">".$this->show()."</div>";
+		return "<div id=\"table_simulations\">".$this->show()."</div>";
 	}
 	
 	function get_amounts_in_array() {

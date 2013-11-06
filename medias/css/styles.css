@@ -210,7 +210,8 @@ input[type="submit"]:hover {
 	width: 1095px;
 }
 
-#table_writings td:last-of-type {
+#table_writings td:last-of-type,
+#table_simulations td:last-of-type {
 	position: absolute;
 	border-bottom: none;
 }
@@ -332,12 +333,12 @@ textarea#comment {
 	width: 40px;
 }
 
-#simulation {
+#table_simulations {
 	margin: 25px 70px 0 30px;
 }
 
 #table_writings td,
-#simulation td{
+#table_simulations td{
 	height: 40px;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -439,7 +440,7 @@ textarea#comment {
 }
 
 #insert_writings,
-#edit_writingssimulation{
+#insert_simulations{
 	padding: 15px;
 	margin: 0 50px;
 }
@@ -453,10 +454,6 @@ textarea#comment {
 
 tr.modified {
 	background-color: #FFFF78;
-}
-
-#table_edit_writingssimulation{
-	display: none;
 }
 
 .operations {
@@ -1185,4 +1182,13 @@ input[name='submit_change_view']:hover {
 	height: 30px;
 	left: 50%;
 	margin-left: -584px;
+}
+
+th#operations {
+	width: 0px;
+	padding: 10px;
+}
+
+td.operations {
+	padding-right: 0;
 }
