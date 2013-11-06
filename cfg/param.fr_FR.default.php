@@ -15,3 +15,6 @@ $param['email_wrap'] = "50";		// nombre de caractères avant le retour à la lig
 
 $param['locale_timezone'] = "Europe/Paris";
 $param['locale_lang'] = "fr_FR";
+$param['currency'] = "&euro;";
+
+$param['accountant_view'] = "0";
