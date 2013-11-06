@@ -92,7 +92,7 @@ $(document).ready(function() {
 		return false;
 		})
 		
-		.on("keyup", "form[name=\"table_writings_split\"] input[name=\"table_writings_split_amount\"], form[name=\"table_writings_forward\"] input[name=\"table_writings_forward_amount\"], form[name=\"table_writings_duplicate\"] input[name=\"table_writings_duplicate_amount\"]", function() {
+		.on("keyup change", "form[name=\"table_writings_split\"] input[name=\"table_writings_split_amount\"], form[name=\"table_writings_forward\"] input[name=\"table_writings_forward_amount\"], form[name=\"table_writings_duplicate\"] input[name=\"table_writings_duplicate_amount\"], form[name=\"table_writings_duplicate\"] select[name=\"table_writings_duplicate_amount_select\"], form[name=\"table_writings_forward\"] select[name=\"table_writings_forward_amount_select\"]", function() {
 			clearTimeout(timer);
 			var value = $(this).val();
 			var id = $(this).closest("form").find("#writing_id").val();
