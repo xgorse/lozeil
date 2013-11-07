@@ -6,7 +6,7 @@ function is_directory_for_plugins_external() {
 		return false;
 	} else {
 		$directory = dirname(__FILE__)."/../..";
-		return is_dir($directory."/lozeil") && is_dir($directory."/../plugins");
+		return is_dir($directory."/lozeil") && is_dir($directory."/plugins");
 	}
 }
 
