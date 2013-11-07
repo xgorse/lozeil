@@ -1,15 +1,15 @@
 Lozeil
 ======
 
-Lozeil is PHP-based cashflow management web application. Its goal is to improve and simplify the way that companies manage their cash.
+Lozeil is a PHP-based cashflow management web application. Its goal is to improve and simplify the way that companies manage their cash.
 This involves bank's statement importation from standard format, real-time monitoring, statistics, simulations...
 
 
 ## Installation
 
 ### Requirement
-* server supporting PHP
-* mysql database
+* Server supporting PHP
+* Mysql database
 
 ### Build your own Lozeil
 
@@ -44,7 +44,7 @@ Your done! Try running index.php to test your installation.
 
 ## Running the unit tests
 
-First to run the unit tests, you need to update the submodule simpletest:
+To run the unit tests you need to update the submodule simpletest:
 ```bash
 git submodule init
 ```
