@@ -28,6 +28,10 @@ class User_Authentication {
 				'class' => "itemsform-submit",
 				'value' => $login->input(),
 			),
+			'password-request' => array(
+				'class' => "itemsform-link",
+				'value' => Html_Tag::a(link_content("content=passwordrequest.php"), __('request a new password')),
+			),
 		);
 		
 		$items = new Html_List(array('leaves' => $list, 'class' => "itemsform itemsform-login"));

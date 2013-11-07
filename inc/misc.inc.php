@@ -472,3 +472,7 @@ function input_list_2_array($string, $key="value") {
 
 	return $output;
 }
+
+function is_email($e) {
+	return (preg_match('/[_a-z0-9-]+([\._a-z0-9-]+)*@[\._a-z0-9-]+(\.[a-z0-9-]{2,5})+/', $e));
+}

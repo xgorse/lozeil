@@ -851,6 +851,22 @@ label[for="filter_number_duplicate"] {
 
 /* --- login --- */
 
+#password_request, #password_sent {
+	width: 600px;
+	margin-top: 50px;
+	margin-left: auto;
+	margin-right: auto;
+	border: solid black thin;
+}
+
+#password_sent {
+	text-align: center;
+}
+
+.body-passwordrequest .heading {
+	text-align: center;
+}
+
 .body-login #form_login {
 	width: 400px;
 	padding-top: 200px;
@@ -1191,4 +1207,9 @@ th#operations {
 
 td.operations {
 	padding-right: 0;
+}
+
+.itemsform-link {
+	text-align: center;
+	font-size: 0.8em;
 }

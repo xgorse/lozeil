@@ -23,7 +23,7 @@ class tests_User extends TableTestCase {
 		$user_loaded->load();
 		$this->assertEqual($user_loaded->name, $user->name);
 		$this->assertEqual($user_loaded->username, $user->username);
-		$this->assertEqual($user_loaded->password, $user->password);
+		$this->assertEqual($user_loaded->password, "*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7");
 		$this->assertEqual($user_loaded->email, $user->email);
 		$this->truncateTable("users");
 	}

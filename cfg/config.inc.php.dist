@@ -3,10 +3,11 @@
 
 $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
-$config['version'] = "24";
+$config['version'] = "25";
 
 $config['layout_mediaserver'] = "http://localhost/~adrien/lozeil.com/lozeil/";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;
+$config['mysql_password'] = "password";
 
 ## database config
 $dbconfig['type'] = "mysql";		// type de serveur de la base de données (mysql, par défaut)
@@ -28,7 +29,9 @@ $dbconfig['table_users'] = "users";
 $dbconfig['table_accountingcodes'] = "accountingcodes";
 $dbconfig['table_bayesianelements'] = "bayesianelements";
 $dbconfig['table_files'] = "files";
+$dbconfig['table_passwordrequests'] = "passwordrequests";
 
 $config['error_handling'] = "0";		// utilisation d'un systÃ¨me de gestion des erreurs avec PHP (1 - oui, par dÃ©faut)
 $config['db_profiler'] = "0";		// utilisation d'un profiler pour les requÃªtes Ã  la base de donnÃ©es (0 - non, par dÃ©faut)
 $config['external_plugins'] = "1";
+$config['email_smtp'] = "";		// adresse du serveur SMTP responsable de l'envoi des courriels ("", par défaut)

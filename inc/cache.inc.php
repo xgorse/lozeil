@@ -52,7 +52,7 @@ function directory_for_plugins() {
 	}
 }
 
-function directory_for_opentime() {
+function directory_for_lozeil() {
 	return realpath(dirname(__FILE__).'/../');
 }
 

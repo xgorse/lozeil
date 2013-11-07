@@ -101,5 +101,14 @@ $queries = array(
 		`hash` VARCHAR(100),
 		`value` VARCHAR(255),
 		PRIMARY KEY (`id`)
-	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
+	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+	
+	'passwordrequests' => "CREATE TABLE ".$GLOBALS['dbconfig']['table_passwordrequests']." (
+		id INT(11) NOT NULL AUTO_INCREMENT,
+		timestamp INT(10) NOT NULL DEFAULT '0',
+		token VARCHAR(32) NOT NULL DEFAULT '',
+		completed INT(1) NOT NULL DEFAULT '0',
+		user_id INT(11) NOT NULL DEFAULT '0',
+		PRIMARY KEY (`id`)
+	  ) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=MyISAM;",
 );

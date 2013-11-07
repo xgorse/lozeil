@@ -50,13 +50,15 @@ class User extends Record  {
 	}
 	
 	function insert() {
-		$result = $this->db->id("
-			INSERT INTO ".$this->db->config['table_users']."
-			SET name = ".$this->db->quote($this->name).", 
-			username = ".$this->db->quote($this->username).",
-			password = ".$this->db->quote($this->password).",
-			email = ".$this->db->quote($this->email)
-		);
+		$query = "INSERT INTO ".$this->db->config['table_users']."
+			SET name = ".$this->db->quote($this->name).",
+			username = ".$this->db->quote($this->username).", ";
+			if (isset($this->password) and !empty($this->password)) {
+				$query .= " password = ".$GLOBALS['config']['mysql_password']."(".$this->db->quote($this->password)."), ";
+			}
+			$query .=" email = ".$this->db->quote($this->email);
+				
+		$result = $this->db->id($query);
 		$this->id = $result[2];
 		$this->db->status($result[1], "i", __('user'));
 
@@ -64,13 +66,17 @@ class User extends Record  {
 	}
 	
 	function update() {
-		$result = $this->db->query("UPDATE ".$this->db->config['table_users'].
-			" SET name = ".$this->db->quote($this->name).",
-			username = ".$this->db->quote($this->username).",
-			password = ".$this->db->quote($this->password).",
-			email = ".$this->db->quote($this->email)."
-			WHERE id = ".(int)$this->id
-		);
+		$query = "UPDATE ".$this->db->config['table_users'].
+		" SET name = ".$this->db->quote($this->name).",
+		username = ".$this->db->quote($this->username).", ";
+		if (isset($this->password) and !empty($this->password)) {
+			$query .= " password = ".$GLOBALS['config']['mysql_password']."(".$this->db->quote($this->password)."), ";
+		}
+		$query .=" email = ".$this->db->quote($this->email)."
+		WHERE id = ".(int)$this->id;
+		
+		$result = $this->db->query($query);
+		
 		$this->db->status($result[1], "u", __('user'));
 
 		return $this->id;
@@ -83,5 +89,81 @@ class User extends Record  {
 		$this->db->status($result[1], "d", __('user'));
 
 		return $this->id;
+	}
+	
+	function password_request() {
+		if ($this->email) {
+			$db = new db();
+
+			$time = time();
+			$token = md5($time.$this->username.$this->password);
+			$id = $db->id("
+				INSERT INTO ".$db->config['table_passwordrequests']."
+				(user_id, timestamp, token, completed)
+				VALUES (".(int)$this->id.", ".(int)$time.", ".$db->quote($token).", 0)"
+			);
+
+			$url = $GLOBALS['config']['root_url']."/index.php?content=passwordrequest.php&token=".$token;
+
+			$emails = array(
+				array(
+					'To' => $this->email,
+					'ToName' => $this->name,
+					'From' => $GLOBALS['param']['email_from'],
+					'FromName' => $GLOBALS['config']['name'],
+					'Subject' => sprintf($GLOBALS['array_email']['password_request'][0], $this->username),
+					'Body' => sprintf($GLOBALS['array_email']['password_request'][1], $this->username, $url),
+				),
+			);
+
+			email_send($emails);
+
+			return true;
+		}
+
+		return false;
+	}
+	
+	function password_reset($token) {
+		$db = new db();
+		$result = $db->query("
+			SELECT id, user_id, timestamp
+			FROM ".$db->config['table_passwordrequests']."
+			WHERE token = ".$db->quote($token)."
+			AND completed = 0
+			LIMIT 0, 1"
+		);
+
+		if ($result[1]) {
+			$row = $db->fetchArray($result[0]);
+
+			if ($row['timestamp'] > strtotime("-1 hour")) {
+				$this->load($row['user_id']);
+				$this->password = substr(md5(time().$token), 0, 8);
+				$this->save();
+				$db->query("
+					UPDATE ".$db->config['table_passwordrequests']."
+					SET completed = 1
+					WHERE id = ".(int)$row['id']
+				);
+
+				$emails = array(
+					array(
+						'To' => $this->email,
+						'ToName' => $this->name,
+						'From' => $GLOBALS['param']['email_from'],
+						'FromName' => $GLOBALS['config']['name'],
+						'Subject' => sprintf($GLOBALS['array_email']['new_password'][0], $this->username),
+						'Body' => sprintf($GLOBALS['array_email']['new_password'][1], $this->username, $this->password),
+					),
+				);
+
+				email_send($emails);
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

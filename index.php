@@ -57,15 +57,21 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 	}
 } else {
 	$location = clean_location($_SERVER['PHP_SELF']);
-	$GLOBALS['content'] = "login.php";
+	if (isset($_GET['content']) and $_GET['content'] == "passwordrequest.php") {
+		$GLOBALS['content'] = "passwordrequest.php";
+	} else {
+		$GLOBALS['content'] = "login.php";
+	}
+	
 	$theme = new Theme_Default();
 	echo $theme->html_top();
 	echo $theme->head();
 	echo $theme->body_top($location, $GLOBALS['content']);
 
 	echo $theme->content_top();
-	include("contents/login.php");
+	include("contents/".$GLOBALS['content']);
 	echo $theme->content_bottom();
+	echo $theme->show_status();
 	echo $theme->body_bottom();
 	echo $theme->html_bottom();
 }

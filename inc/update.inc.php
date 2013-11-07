@@ -14,6 +14,19 @@ class Update {
 		$this->param = new Param_File(dirname(__FILE__)."/../cfg/param.inc.php", "param");
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
+	function to_25() {
+		$this->config->add("mysql_password", "password");
+		$this->config->add("email_smtp", "");
+		$this->dbconfig->add("table_passwordrequests", "passwordrequests");
+		$this->db->query("CREATE TABLE `passwordrequests` (
+			id INT(11) NOT NULL AUTO_INCREMENT,
+			timestamp INT(10) NOT NULL DEFAULT '0',
+			token VARCHAR(32) NOT NULL DEFAULT '',
+			completed INT(1) NOT NULL DEFAULT '0',
+			user_id INT(11) NOT NULL DEFAULT '0',
+			PRIMARY KEY (`id`)
+		  ) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=MyISAM;");
+	}
 	
 	function to_24() {
 		$this->config->add("error_handling", "0");
