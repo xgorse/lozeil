@@ -16,6 +16,9 @@ class Update {
 	}
 	
 	function to_24() {
+		$this->config->add("error_handling", "0");
+		$this->config->add("db_profiler", "0");
+		$this->config->add("external_plugins", "1");
 		$this->param->add("accountant_view", "0");
 		$this->param->add("locale_lang", "fr_FR");
 		$this->param->add("currency", "&euro;");

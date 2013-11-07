@@ -28,3 +28,7 @@ $dbconfig['table_users'] = "users";
 $dbconfig['table_accountingcodes'] = "accountingcodes";
 $dbconfig['table_bayesianelements'] = "bayesianelements";
 $dbconfig['table_files'] = "files";
+
+$config['error_handling'] = "0";		// utilisation d'un systÃ¨me de gestion des erreurs avec PHP (1 - oui, par dÃ©faut)
+$config['db_profiler'] = "0";		// utilisation d'un profiler pour les requÃªtes Ã  la base de donnÃ©es (0 - non, par dÃ©faut)
+$config['external_plugins'] = "1";

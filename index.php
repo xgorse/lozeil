@@ -1,8 +1,21 @@
 <?php
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
-ob_start();
 require dirname(__FILE__)."/inc/require.inc.php";
+
+$application = new Application();
+$application->boot();
+
+$global_status = false;
+
+if ($GLOBALS['config']['db_profiler']) {
+	$dbInst = new db_perf();
+} else {
+	$dbInst = new db();
+}
+
+$timer = new Benchmark_Timer;
+$timer->start();
 
 if(!isset($_SESSION)) {
 	session_start();
@@ -56,3 +69,7 @@ if (isset($_SESSION['username']) and $_SESSION['username']) {
 	echo $theme->body_bottom();
 	echo $theme->html_bottom();
 }
+
+$timer->stop();
+
+register_shutdown_function(array($application, "shutdown"));
