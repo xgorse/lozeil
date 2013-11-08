@@ -24,6 +24,8 @@ require $current_directory."/../lang/fr_FR.lang.php";
 require $current_directory."/adodb-time.inc.php";
 require $current_directory."/misc.inc.php";
 require $current_directory."/email.inc.php";
+require $current_directory."/excel.inc.php";
+require $current_directory."/export_excel.inc.php";
 
 require ($current_directory."/../inc/autoload.inc.php");
 Lozeil_Autoload::register($current_directory, $current_directory."/../var/tmp/autoload.index");
