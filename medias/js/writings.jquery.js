@@ -128,9 +128,13 @@ $(document).ready(function() {
 		})
 
 		.on("keyup change", "form[name=\"extra_filter_writings_form\"]", function(event) {
+			var text = false;
+			if (event.target.type.match(/text/)) {
+				text = true;
+			}
 			var input = $(this);
 			clearTimeout(timer);
-			if (event.type != "change" || event.target.type != "text") {
+			if (event.type != "change" || !text) {
 				timer = setTimeout(function() {
 					$.post(
 						"index.php?content=writings.ajax.php",
