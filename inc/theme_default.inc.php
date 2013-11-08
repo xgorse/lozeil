@@ -72,9 +72,6 @@ class Theme_Default {
 		if ($GLOBALS['content'] == "accountingplan.php") {
 			$js_files[] = "medias/js/accountingplan.jquery.js";
 		}
-		if ($GLOBALS['content'] == "login.php") {
-			$js_files[] = "medias/js/login.jquery.js";
-		}
 		if ($GLOBALS['content'] == "categories.php") {
 			$js_files[] = "medias/js/categories.jquery.js";
 		}
