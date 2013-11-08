@@ -15,6 +15,13 @@ class tests_Writings_Data_File extends TableTestCase {
 		);
 	}
 	
+	function test_is_qif() {
+		$import = new Writings_Data_File("temp.123", "temp.QIF", "");
+		$this->assertTrue($import->is_qif());
+		$import = new Writings_Data_File("temp.123", "temp.csv", "");
+		$this->assertFalse($import->is_qif());
+	}
+	
 	function test_is_ofx() {
 		$import = new Writings_Data_File("temp.123", "temp.OFX", "");
 		$this->assertTrue($import->is_ofx());
@@ -748,6 +755,96 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		$data = new Writings_Data_File($name);
 		$data->banks_id = 1;
 		$data->import_as_ofx();
+		
+		$this->assertTrue($writing->load(4));
+		$this->assertFalse($writing->load(5));
+		
+		$this->truncateTable("writings");
+		$this->truncateTable("writingsimported");
+	}
+	
+	function test_import_as_qif() {
+		$name = tempnam('/tmp', 'qif');
+		
+		$content = "!Type:Bank
+D29/10/13
+T500.00
+PVIR NO PARKING REFERENCE NON TRANSMISE
+^
+D05/11/13
+T-10.60
+PSNCF CARTE 21542154 PAIEMENT CB 0411 AMIENS
+^
+D06/11/13
+T-24.00
+PFLIB TRAVEL INTE CARTE 21542154 PAIEMENT CB 0511 LU BASCHARAGE
+^
+D06/11/13
+T-20.00
+PRETRAIT DAB 0411 BEAUVAIS AERO CRCA BRIE PICARD CARTE 21542154
+MAUTRE CHAMPS INCONNU
+LENCORE UN CHAMP INCONNU
+^
+";
+		$handle = fopen($name, 'w+');
+		fwrite($handle, $content);
+		fclose($handle);
+		
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 1;
+		$data->import_as_qif();
+		
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 1,
+				'amount_inc_vat' => "500.000000",
+				'amount_excl_vat' => "500.000000",
+				'vat' => "0",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 10, 29, 2013),
+				'comment' => "VIR NO PARKING REFERENCE NON TRANSMISE",
+				)
+		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 2,
+				'amount_inc_vat' => "-10.600000",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 11, 5, 2013),
+				'comment' => "SNCF CARTE 21542154 PAIEMENT CB 0411 AMIENS",
+				)
+		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 3,
+				'amount_inc_vat' => "-24.00000",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 11, 6, 2013),
+				'comment' => "FLIB TRAVEL INTE CARTE 21542154 PAIEMENT CB 0511 LU BASCHARAGE",
+				)
+		);
+		$this->assertRecordExists(
+			"writings",
+			array(
+				'id' => 4,
+				'amount_inc_vat' => "-20.00000",
+				'banks_id' => 1,
+				'day' => mktime(0, 0, 0, 11, 6, 2013),
+				'comment' => "RETRAIT DAB 0411 BEAUVAIS AERO CRCA BRIE PICARD CARTE 21542154",
+				'information' => "AUTRE CHAMPS INCONNU
+ENCORE UN CHAMP INCONNU
+"
+				)
+		);
+		$writing = new Writing();
+		$this->assertFalse($writing->load(5));
+		
+		$data = new Writings_Data_File($name);
+		$data->banks_id = 1;
+		$data->import_as_qif();
 		
 		$this->assertTrue($writing->load(4));
 		$this->assertFalse($writing->load(5));

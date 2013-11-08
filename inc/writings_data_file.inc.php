@@ -48,6 +48,8 @@ class Writings_Data_File {
 			
 		} elseif ($this->is_ofx()) {
 			$this->import_as_ofx();
+		} elseif ($this->is_qif()) {
+			$this->import_as_qif();
 		}
 	}
 	
@@ -359,6 +361,88 @@ class Writings_Data_File {
 		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
 	}
 	
+	function import_as_qif() {
+		$bayesianelements_categories_id = new Bayesian_Elements();
+		$bayesianelements_categories_id->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
+		
+		$bayesianelements_accounting_codes_id = new Bayesian_Elements();
+		$bayesianelements_accounting_codes_id->prepare_id_estimation($GLOBALS['dbconfig']['table_accountingcodes']);
+		
+		$writings_imported = new Writings_Imported();
+		$writings_imported->filter_with(array("banks_id" => $this->banks_id));
+		$writings_imported->select();
+		foreach ($writings_imported as $writing_imported) {
+			$this->unique_keys[] = $writing_imported->hash;
+		}
+		
+		$blocks = explode("^", file_get_contents($this->tmp_name));
+		
+		foreach($blocks as $block) {
+			$block = rtrim($block);
+			if (!empty($block)) {
+				$lines = explode("\n", $block);
+
+				$amount_inc_vat = 0;
+				$day = 0;
+				$comment = "";
+				$information = "";
+
+				foreach ($lines as $line) {
+					if (!empty($line)) {
+						$date_supposed = preg_split("/^D/", $line);
+						$amount_supposed = preg_split("/^T/", $line);
+						$comment_supposed = preg_split("/^P/", $line);
+						if (isset($date_supposed[1])) {
+							$date = explode("/", $date_supposed[1]);
+							$date[2] = (strlen($date[2]) < 4) ? ($date[2] + 2000) : $date[2];
+							$day = mktime(0, 0, 0, $date[1], $date[0], $date[2]);
+							
+						} elseif (isset($amount_supposed[1])) {
+							$amount_inc_vat = (float)$amount_supposed[1];
+						} elseif (isset($comment_supposed[1])) {
+							$comment = $comment_supposed[1];
+						} else {
+							$header = preg_split("/^!/", $line);
+							if (!isset($header[1])) {
+								$information .= substr($line, 1)."\n";
+							}
+						}
+					}
+				}
+				$writing = new Writing();
+				$writing->amount_inc_vat = $amount_inc_vat;
+				$writing->day = $day;
+				$writing->comment = $comment;
+				$writing->information = $information;
+				$writing->banks_id = $this->banks_id;
+				$writing->paid = 1;
+				$hash = hash('md5', $writing->day.$writing->comment.$writing->banks_id.$writing->amount_inc_vat);
+
+				if (!in_array($hash, $this->unique_keys)) {
+					$this->determine_start_stop($writing->day);
+
+					$writing_imported = new Writing_Imported();
+					$writing_imported->hash = $hash;
+					$writing_imported->banks_id = $this->banks_id;
+					$writing_imported->save();
+					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
+					if ($writing->categories_id > 0) {
+						$category = new Category();
+						$category->load($writing->categories_id);
+						$writing->vat = $category->vat;
+					}
+					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
+					$writing->save();
+					$this->nb_new_records++;
+				} else {
+					$this->nb_ignored_records++;
+					log_status(__('line %s of file %s already exists', array(implode(' - ', $lines), $this->file_name)));
+				}
+			}
+		}
+		log_status(__(('%s record(s) inserted for %s'), array(strval($this->nb_new_records), $this->file_name)));
+	}
+	
 	function is_line_paybox($line) {
 		$time = explode("/", $line[6]);
 		
@@ -441,6 +525,14 @@ class Writings_Data_File {
 	
 	function is_ofx() {
 		if (strtolower(pathinfo($this->file_name, PATHINFO_EXTENSION)) == "ofx") {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	function is_qif() {
+		if (strtolower(pathinfo($this->file_name, PATHINFO_EXTENSION)) == "qif") {
 			return true;
 		} else {
 			return false;
