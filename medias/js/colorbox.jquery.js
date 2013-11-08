@@ -23,7 +23,7 @@
 		initialWidth: "300",
 		innerWidth: false,
 		maxWidth: false,
-		height: "500",
+		height: "550",
 		initialHeight: "250",
 		innerHeight: false,
 		maxHeight: false,

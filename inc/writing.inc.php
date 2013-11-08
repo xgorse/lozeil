@@ -310,6 +310,8 @@ class Writing extends Record {
 		$vat = new Html_Input("vat", $this->vat);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
 		$comment = new Html_Textarea("comment", $this->comment);
+		$information = new Html_Textarea("information", $this->information);
+		$information->properties['disabled'] = 'disabled';
 		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
 		$submit = new Html_Input("submit", __('save'), "submit");
 		
@@ -344,6 +346,9 @@ class Writing extends Record {
 				),
 				'comment' => array(
 					'value' => $comment->item(__('comment')),
+				),
+				'information' => array(
+					'value' => $information->item(__('information')),
 				),
 				'paid' => array(
 					'value' => $paid->item(__('paid')),
@@ -383,6 +388,8 @@ class Writing extends Record {
 		$vat = new Html_Input("vat", $this->vat);
 		$amount_inc_vat = new Html_Input("amount_inc_vat", $this->amount_inc_vat);
 		$comment = new Html_Textarea("comment", $this->comment);
+		$information = new Html_Textarea("information", $this->information);
+		$information->properties['disabled'] = 'disabled';
 		$paid = new Html_Radio("paid", array(__("no"),__("yes")), $this->paid);
 		$submit = new Html_Input("submit", __('save'), "submit");
 		
@@ -406,6 +413,9 @@ class Writing extends Record {
 					),
 					'comment' => array(
 						'value' => $comment->item(__('comment')),
+					),
+					'information' => array(
+						'value' => $information->item(__('information')),
 					),
 					'submit' => array(
 						'value' => $submit->item(""),
@@ -439,6 +449,9 @@ class Writing extends Record {
 					),
 					'comment' => array(
 						'value' => $comment->item(__('comment')),
+					),
+					'information' => array(
+						'value' => $information->item(__('information')),
 					),
 					'paid' => array(
 						'value' => $paid->item(""),
