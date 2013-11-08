@@ -17,9 +17,6 @@ if ($GLOBALS['config']['db_profiler']) {
 $timer = new Benchmark_Timer;
 $timer->start();
 
-if(!isset($_SESSION)) {
-	session_start();
-}
 if (isset($_POST['username']) and $_POST['username'] != '') {
 	$auth = new User_Authentication();
 	if ($auth->is_authorized($_POST['username'], $_POST['password'])) {

@@ -132,7 +132,7 @@ class Writings extends Collector {
 	
 	
 	function grid_header() {
-		if ($GLOBALS['param']['accountant_view']) {
+		if ($_SESSION['accountant_view']) {
 			return $this->grid_header_accountant();
 		} else {
 			return $this->grid_header_normal();
@@ -239,7 +239,7 @@ class Writings extends Collector {
 	}
 	
 	function grid_body() {
-		if ($GLOBALS['param']['accountant_view']) {
+		if ($_SESSION['accountant_view']) {
 			return $this->grid_body_accountant();
 		} else {
 			return $this->grid_body_normal();
@@ -699,7 +699,7 @@ class Writings extends Collector {
 				),
 			)
 		);
-		if (!$GLOBALS['param']['accountant_view']) {
+		if (!$_SESSION['accountant_view']) {
 			unset($grid['leaves']['accountingcode']);
 		}
 		$list = new Html_List($grid);
@@ -737,7 +737,7 @@ class Writings extends Collector {
 			"estimate_category" => __('estimate category'),
 			"delete" => __('delete')
 		);
-		if (!$GLOBALS['param']['accountant_view']) {
+		if (!$_SESSION['accountant_view']) {
 			unset($options['change_accounting_code']);
 			unset($options['estimate_accounting_code']);
 		}
@@ -1303,7 +1303,7 @@ class Writings extends Collector {
 		$date->img_src = "medias/images/link_calendar_white.png";
 		$submit = new Html_Input("submit_calculate_vat", __('ok'), "submit");
 		
-		if (!$GLOBALS['param']['accountant_view']) {
+		if (!$_SESSION['accountant_view']) {
 			$label = utf8_ucfirst(__("change to accountant's view"));
 		} else {
 			$label = utf8_ucfirst(__("change to normal view"));

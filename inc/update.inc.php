@@ -14,6 +14,7 @@ class Update {
 		$this->param = new Param_File(dirname(__FILE__)."/../cfg/param.inc.php", "param");
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
+	
 	function to_25() {
 		$this->config->add("mysql_password", "password");
 		$this->config->add("email_smtp", "");

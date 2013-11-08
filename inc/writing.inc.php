@@ -268,7 +268,7 @@ class Writing extends Record {
 			)
 		);
 
-		if (!$GLOBALS['param']['accountant_view']) {
+		if (!$_SESSION['accountant_view']) {
 			unset($grid['leaves']['accountingcode']);
 		}
 		$list = new Html_List($grid);
@@ -280,7 +280,7 @@ class Writing extends Record {
 	}
 	
 	function form_in_table() {
-		if ($GLOBALS['param']['accountant_view']) {
+		if ($_SESSION['accountant_view']) {
 			return $this->form_in_table_accountant();
 		} else {
 			return $this->form_in_table_normal();

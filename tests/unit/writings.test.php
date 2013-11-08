@@ -77,7 +77,7 @@ class tests_Writings extends TableTestCase {
 	
 	function test_show() {
 		$_SESSION['filter']['start'] = mktime(0, 0, 0, 7, 1, 2013);
-		$GLOBALS['param']['accountant_view'] = 0;
+		$_SESSION['accountant_view'] = 0;
 		list($start, $stop) = determine_month($_SESSION['filter']['start']);
 		$category = new Category();
 		$category->name = "Category 1";
@@ -198,7 +198,7 @@ class tests_Writings extends TableTestCase {
 		$this->truncateTable("sources");
 		$this->truncateTable("categories");
 		$this->truncateTable("banks");
-		$GLOBALS['param']['accountant_view'] = 1;
+		$_SESSION['accountant_view'] = 1;
 	}
 	
 	function test_get_where() {

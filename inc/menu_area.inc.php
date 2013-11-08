@@ -41,7 +41,7 @@ class Menu_Area {
 		$writings->select();
 		$this->header = $writings->display_balance_on_current_date();
 		
-		$accountingplan = $GLOBALS['param']['accountant_view'] ? ", ".Html_tag::a(link_content("content=accountingplan.php"), __("accounting plan")) : "";
+		$accountingplan = $_SESSION['accountant_view'] ? ", ".Html_tag::a(link_content("content=accountingplan.php"), __("accounting plan")) : "";
 
 		$data = new Writings_Data_File();
 		$grid = array(

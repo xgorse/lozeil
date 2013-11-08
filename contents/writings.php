@@ -2,10 +2,6 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 $writings = new Writings();
-if (!isset($_SESSION['order']['name']) or !isset($_SESSION['order']['direction'])) {
-	$_SESSION['order']['name'] = 'day';
-	$_SESSION['order']['direction'] = 'ASC';
-}
 
 if (isset($_POST)) {
 	if (isset($_POST['vat_date']) and is_datepicker_valid($_POST['vat_date'])) {
@@ -19,18 +15,7 @@ if (isset($_POST)) {
 		}
 	}
 	if (isset($_POST['submit_change_view'])) {
-		$accountant_view = !$GLOBALS['param']['accountant_view'] ? "1" : "0";
-		$path = (isset($GLOBALS['pathconfig']['cfg']) ? $GLOBALS['pathconfig']['cfg'] : dirname(__FILE__)."/../cfg")."/param.inc.php";
-		$param_file = new Param_File($path, "param");
-		$param_file->update(array(
-				'param' => array(
-					'param' => array(
-						"accountant_view" => $accountant_view
-						)
-					)
-				)
-		);
-		$param_file->load_at_global_level();
+		$_SESSION['accountant_view'] = !$_SESSION['accountant_view'] ? "1" : "0";
 	}
 }
 

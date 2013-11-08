@@ -4,6 +4,20 @@
 class Application {
 	function boot() {
 		ob_start();
+		
+		if(!isset($_SESSION)) {
+			session_start();
+		}
+		
+		if(!isset($_SESSION['accountant_view'])) {
+			$_SESSION['accountant_view'] = 0;
+		}
+		
+		if (!isset($_SESSION['order']['name']) or !isset($_SESSION['order']['direction'])) {
+			$_SESSION['order']['name'] = 'day';
+			$_SESSION['order']['direction'] = 'ASC';
+		}
+		
 		Plugins::call_hook("boot", array());
 	}
 	
