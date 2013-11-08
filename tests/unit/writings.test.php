@@ -744,7 +744,9 @@ class tests_Writings extends TableTestCase {
 			"filter_accountingcodes_id" => 546,
 			"filter_number" => 124,
 			"filter_amount_inc_vat" => 251,
-			"filter_comment" => "Test de commentaire"
+			"filter_comment" => "Test de commentaire",
+			"filter_duplicate" => 1,
+			"filter_last" => 1,
 			);
 		$expected = array(
 			"search_index" => "test",
@@ -756,7 +758,9 @@ class tests_Writings extends TableTestCase {
 			"accountingcodes_id" => 546,
 			"number" => 124,
 			"amount_inc_vat" => 251,
-			"comment" => "Test de commentaire"
+			"comment" => "Test de commentaire",
+			"duplicate" => 1,
+			"last" => 1,
 		);
 		$writings = new Writings();
 		$this->assertEqual($expected, $writings->clean_filter_from_ajax($post));

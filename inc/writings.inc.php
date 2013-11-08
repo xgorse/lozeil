@@ -114,6 +114,9 @@ class Writings extends Collector {
 				HAVING (COUNT(amount_inc_vat) > 1 AND MIN(banks_id) = 0)
 			)";
 		}
+		if (isset($this->filters['last'])) {
+			$query_where[] = $this->db->config['table_writings'].".timestamp >= (SELECT MAX(".$this->db->config['table_writings'].".timestamp) FROM ".$this->db->config['table_writings'].")";
+		}
 		
 		return $query_where;
 	}
@@ -645,6 +648,14 @@ class Writings extends Collector {
 			$checkbox_class = "filter_hide";
 		}
 		
+		$checkbox_last = new Html_Checkbox("filter_last", "last");
+		if (isset($_SESSION['filter']['last'])) {
+			$checkbox_last->selected = $_SESSION['filter']['last'];
+			$checkbox_last_class = "filter_show";
+		} else {
+			$checkbox_last_class = "filter_hide";
+		}
+		
 		$date_start = new Html_Input_Date("filter_day_start", $start);
 		$date_stop = new Html_Input_Date("filter_day_stop", $stop);
 		if (preg_match("/show/", $category_class.$source_class.$bank_class.$accountingcode_input_class.$number_class.$amount_inc_vat_class.$comment_class.$checkbox_class)) {
@@ -696,6 +707,10 @@ class Writings extends Collector {
 				'checkbox' => array(
 					'class' => "extra_filter_item ".$checkbox_class,
 					'value' => $checkbox->item(__('duplicates')),
+				),
+				'last' => array(
+					'class' => "extra_filter_item ".$checkbox_last_class,
+					'value' => $checkbox_last->item(__('last modified')),
 				),
 			)
 		);
@@ -1017,6 +1032,9 @@ class Writings extends Collector {
 		}
 		if (isset($post['filter_duplicate'])) {
 			$cleaned['duplicate'] = 1;
+		}
+		if (isset($post['filter_last'])) {
+			$cleaned['last'] = 1;
 		}
 		return $cleaned;
 	}
