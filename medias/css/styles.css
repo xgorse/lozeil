@@ -268,7 +268,7 @@ input[type="submit"]:hover {
 /* --- form modify writings --- */
 
 #select_writings {
-	margin: 10px 50px 0 60px;
+	margin: 10px 50px 0 30px;
 	width: 70%;
 	display: inline-block;
 }
@@ -348,6 +348,12 @@ textarea#information {
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;
+}
+
+
+#table_writings #checkbox,
+#table_writings tr td:first-child {
+	padding: 0;
 }
 
 .modify,
@@ -446,8 +452,8 @@ textarea#information {
 
 #insert_writings,
 #insert_simulations{
-	padding: 15px;
-	margin: 0 50px;
+	padding: 15px 0;
+	margin: 0 30px;
 }
 #table_edit_writings {
 	min-width: 500px;

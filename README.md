@@ -31,12 +31,15 @@ Those steps need to be done in order, as they aren't independent.<br />
 The navigation is done by using the top menu, accessible by clicking on 'More'.
 
 ### Import your bank statement
-* Supported format: OFX
+* Supported format: OFX, QIF
 
 The only step before using Lozeil is to export your bank statement in a supported format directly from your bank's website.<br />
 Tell Lozeil which bank you want to handle by using the top menu, manage the banks. Add it using the form and don't forget to tick the checkbox corresponding, otherwise it won't be took into consideration.<br />
 The next step is to import your statement into Lozeil. To do so, go to the top menu and choose your file by clicking on 'Import bank statement'. Select your bank and 'Ok'.<br />
 You are now redirected onto your records, called 'writings' in Lozeil's Language. You can appreciate the timeline that gives you a good overview of what's going on.
+
+If you are using other source of payment, you'll also be able to import it using 'import writings from source'.
+* Supported source: Paybox .csv
 
 ### Categorize & refine
 Go to 'manage the categories' through the top menu. In this section you can define as much categories as you need with a default vat rate (e.g., telecommunication - 19.6, bank charges - 0.0, wages - 0.0, activity A - 19.6, activity B - 5.5... aso)<br />
