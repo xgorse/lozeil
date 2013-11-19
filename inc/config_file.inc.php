@@ -234,11 +234,13 @@ class Config_File {
 			} else {
 				try {
 					$this->copy($dist_config_file);
+					return true;
 				} catch (exception $exception) {
 					die($exception->getMessage());
 				}
 			}
 		}
+		return false;
 	}
 	
 	private function input($message) {
