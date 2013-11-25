@@ -166,4 +166,12 @@ class User extends Record  {
 
 		return false;
 	}
+	
+	function defaultpage($context = "") {
+		if (empty($this->defaultpage)) {
+			$this->defaultpage = "writings.php";
+		}
+
+		return $this->defaultpage;
+	}
 }

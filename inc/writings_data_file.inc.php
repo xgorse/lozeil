@@ -479,42 +479,6 @@ class Writings_Data_File {
 		}
 	}
 	
-	function form_import_bank() {
-		$banks = new Banks();
-		$banks->select();
-		$form = "<div id=\"menu_actions_import_bank\"><form method=\"post\" name=\"menu_actions_import_bank_form\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
-		$import_file = new Html_Input("menu_actions_import_file", "", "file");
-		$bank_select = new Html_Select("menu_actions_import_bank", $banks->names_of_selected_banks());
-		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
-		$form .= "<a class=\"menu_actions_import_label\" href=\"\">".utf8_ucfirst(__("import bank statement"))."</a>".$import_file->item("").$bank_select->item("").$submit->input();
-		$form .= "</form></div>";
-		return $form;
-	}
-	
-	function form_import_source() {
-		$sources = new Sources();
-		$sources->select();
-		$form = "<div id=\"menu_actions_import_source\"><form method=\"post\" name=\"menu_actions_import_source_form\" action=\"".link_content("content=writingsimport.php")."\" enctype=\"multipart/form-data\">";
-		$import_file = new Html_Input("menu_actions_import_file", "", "file");
-		$bank_select = new Html_Select("menu_actions_import_source", $sources->names());
-		$submit = new Html_Input("menu_actions_import_submit", "Ok", "submit");
-		$form .= "<a class=\"menu_actions_import_label\" href=\"\">".utf8_ucfirst(__("import writings from source"))."</a>".$import_file->item("").$bank_select->item("").$submit->input();
-		$form .= "</form></div>";
-		return $form;
-	}
-	
-	function form_export() {
-		$date_picker_from = new Html_Input_Date('date_picker_from');
-		$date_picker_to = new Html_Input_Date('date_picker_to');
-		$date_picker_from->img_src = "medias/images/link_calendar_white.png";
-		$date_picker_to->img_src = "medias/images/link_calendar_white.png";
-		$form = "<div id=\"menu_actions_export\"><form method=\"post\" name=\"menu_actions_export_form\" action=\"".link_content("content=writingsexport.php")."\" enctype=\"multipart/form-data\">";
-		$submit = new Html_Input("menu_actions_export_submit", "Ok", "submit");
-		$form .= $date_picker_from->input().$date_picker_to->input().$submit->input();
-		$form .= "</form></div>";
-		return $form;
-	}
-	
 	function is_csv() {
 		if (strtolower(pathinfo($this->file_name, PATHINFO_EXTENSION)) == "csv") {
 			return true;

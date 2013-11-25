@@ -21,7 +21,7 @@ class Writings extends Collector {
 	
 	function get_join() {
 		$join = parent::get_join();
-		if(!empty($this->order)) {
+		if (!empty($this->order)) {
 			$join[] = "
 				LEFT JOIN ".$this->db->config['table_categories']."
 				ON ".$this->db->config['table_categories'].".id = ".$this->db->config['table_writings'].".categories_id
@@ -1313,42 +1313,6 @@ class Writings extends Collector {
 			}
 		}
 		return $duplicate;
-	}
-	
-	function form_other_actions() {
-		$date = new Html_Input_Date("vat_date", determine_vat_date());
-		$date = new Html_Input_Date("vat_date", determine_vat_date());
-		$date->img_src = "medias/images/link_calendar_white.png";
-		$submit = new Html_Input("submit_calculate_vat", __('ok'), "submit");
-		
-		if (!$_SESSION['accountant_view']) {
-			$label = utf8_ucfirst(__("change to accountant's view"));
-		} else {
-			$label = utf8_ucfirst(__("change to normal view"));
-		}
-		$submit_view = new Html_Input("submit_change_view", $label, "submit");
-		$submit_view->properties = array('class' => 'submit_as_link');
-		
-		$form_vat = "<form method=\"post\" name=\"menu_actions_other\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">".
-					$date->item("")." ".$submit->input()
-				."</form>";
-		
-		$form_view = "<form method=\"post\" name=\"menu_actions_other_change_view\" action=\"".link_content("content=writings.php")."\" enctype=\"multipart/form-data\">".
-					$submit_view->input()
-				."</form>";
-		
-		$grid = array(
-			'leaves' => array(
-				'calculate_vat' => array(
-					'value' => utf8_ucfirst(__("automatically calculate vat to"))." ".$form_vat
-				),
-				'change_view' => array(
-					'value' => $form_view
-				),
-			)
-		);				
-		$list = new Html_List($grid);
-		return $list->show();
 	}
 	
 	function calculate_quarterly_vat($timestamp) {

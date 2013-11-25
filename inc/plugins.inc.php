@@ -12,7 +12,6 @@ class Plugins {
 				require_once($hooks_file);
 
 				$class_hook = ucfirst($name)."_Hooks";
-
 				if (class_exists($class_hook) and method_exists($class_hook, "factory")) {
 					if ($class_from_plugin = call_user_func(array($class_hook, "factory"), $class)) {
 						return new $class_from_plugin(isset($args[1]) ? $args[1] : null, isset($args[2]) ? $args[2] : null, isset($args[3]) ? $args[3] : null);
@@ -25,7 +24,7 @@ class Plugins {
 
 	static function call_hook($method, $args) {
 		$hooks = array();
-
+		
 		foreach (directories_for_plugins() as $name => $path) {
 			$hooks_file = $path."/inc/hooks.inc.php";
 

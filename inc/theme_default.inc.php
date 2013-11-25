@@ -11,7 +11,7 @@ class Theme_Default {
 		return "<head>
 			<title>".($GLOBALS['config']['title'] == '' ? '' : $GLOBALS['config']['title']." : ").$GLOBALS['config']['name']."</title>
 			<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />".
-			$this->css_files().
+			$this->css().
 			$this->js_files()."
 		</head>";
 	}
@@ -23,12 +23,21 @@ class Theme_Default {
 	function css_files() {
 		$css_files[] = "medias/css/styles.css";
 		
-		if ($GLOBALS['content'] == "writings.php") {
+		if (isset($GLOBALS['content']) and $GLOBALS['content'] == "writings.php") {
 			$css_files[] = "medias/css/dropzone.css";
 		}
 		
-		$html = "";
+		return $css_files;
+	}
 
+	function css() {
+		$files = array_merge($this->css_files(), get_plugins_files("css"));
+		return $this->show_css_files($files);
+	}
+	
+	function show_css_files($css_files) {
+		
+		$html = "";
 		if (is_array($css_files)) {
 			$media_css_file = "";
 			foreach ($css_files as $css_file) {
@@ -57,29 +66,31 @@ class Theme_Default {
 		$js_files[] = "medias/js/common.jquery.js";
 		$js_files[] = "medias/js/d3.js";
 		$js_files[] = "medias/js/cubism.js";
-		if ($GLOBALS['content'] == "writings.php") {
-			$js_files[] = "medias/js/dropzone.js";
-			$js_files[] = "medias/js/writings.jquery.js";
-			$js_files[] = "medias/js/timeline.jquery.js";
-		}
-		if ($GLOBALS['content'] == "followupwritings.php") {
-			$js_files[] = "medias/js/followupwritings.jquery.js";
-		}
-		if ($GLOBALS['content'] == "writingssimulations.php") {
-			$js_files[] = "medias/js/writingssimulations.jquery.js";
-			$js_files[] = "medias/js/timeline.jquery.js";
-		}
-		if ($GLOBALS['content'] == "accountingplan.php") {
-			$js_files[] = "medias/js/accountingplan.jquery.js";
-		}
-		if ($GLOBALS['content'] == "categories.php") {
-			$js_files[] = "medias/js/categories.jquery.js";
-		}
-		if ($GLOBALS['content'] == "sources.php") {
-			$js_files[] = "medias/js/sources.jquery.js";
-		}
-		if ($GLOBALS['content'] == "banks.php") {
-			$js_files[] = "medias/js/banks.jquery.js";
+		if (isset($GLOBALS['content'])) {
+			if ($GLOBALS['content'] == "writings.php") {
+				$js_files[] = "medias/js/dropzone.js";
+				$js_files[] = "medias/js/writings.jquery.js";
+				$js_files[] = "medias/js/timeline.jquery.js";
+			}
+			if ($GLOBALS['content'] == "followupwritings.php") {
+				$js_files[] = "medias/js/followupwritings.jquery.js";
+			}
+			if ($GLOBALS['content'] == "writingssimulations.php") {
+				$js_files[] = "medias/js/writingssimulations.jquery.js";
+				$js_files[] = "medias/js/timeline.jquery.js";
+			}
+			if ($GLOBALS['content'] == "accountingplan.php") {
+				$js_files[] = "medias/js/accountingplan.jquery.js";
+			}
+			if ($GLOBALS['content'] == "categories.php") {
+				$js_files[] = "medias/js/categories.jquery.js";
+			}
+			if ($GLOBALS['content'] == "sources.php") {
+				$js_files[] = "medias/js/sources.jquery.js";
+			}
+			if ($GLOBALS['content'] == "banks.php") {
+				$js_files[] = "medias/js/banks.jquery.js";
+			}
 		}
 		
 		$html = "";

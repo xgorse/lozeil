@@ -32,7 +32,7 @@ if (isset($_REQUEST['action'])) {
 	}
 }
 
-$menu = new Menu_Area();
+$menu = Plugins::factory("Menu_Area");
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 
