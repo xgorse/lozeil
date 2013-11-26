@@ -133,6 +133,17 @@ class Database_Tables_Source {
 				  PRIMARY KEY (`id`)
 				 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;"
 				),
+			
+			  'useroptions' => array (
+				  "CREATE TABLE ".$GLOBALS['dbconfig']['table_useroptions']." (
+					`id` bigint(21) NOT NULL AUTO_INCREMENT,
+					`user_id` int(11) NOT NULL,
+					`name` mediumtext NOT NULL,
+					`value` mediumtext NOT NULL,
+					PRIMARY KEY (`id`),
+					KEY `user_id` (`user_id`)
+				  ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;"
+			  ),
 		);
 	}
 }

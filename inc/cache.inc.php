@@ -43,7 +43,7 @@ function directories_for_applications() {
 function directory_for_plugins() {
 	$back = "/..";
 	if (is_directory_for_plugins_external()) {
-		$back .= "/../..";
+		$back .= "/..";
 	}
 	if (file_exists(dirname(__FILE__).$back."/plugins/")) {
 		return realpath(dirname(__FILE__).$back."/plugins/") . "/";

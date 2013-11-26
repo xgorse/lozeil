@@ -15,6 +15,18 @@ class Update {
 		$this->dbconfig = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 	}
 	
+	function to_26() {
+		$this->dbconfig->add("table_useroptions", "useroptions");
+		$this->db->query("CREATE TABLE `useroptions` (
+			`id` bigint(21) NOT NULL AUTO_INCREMENT,
+			`user_id` int(11) NOT NULL,
+			`name` mediumtext NOT NULL,
+			`value` mediumtext NOT NULL,
+			PRIMARY KEY (`id`),
+			KEY `user_id` (`user_id`)
+		  ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;");
+	}
+	
 	function to_25() {
 		$this->config->add("mysql_password", "password");
 		$this->config->add("email_smtp", "");
