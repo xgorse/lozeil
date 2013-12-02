@@ -41,8 +41,7 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 	}
 }
 
-
-$menu = new Menu_Area();
+$menu = Plugins::factory("Menu_Area");
 $menu->prepare_navigation(__FILE__);
 echo $menu->show();
 

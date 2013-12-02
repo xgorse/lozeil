@@ -8,14 +8,12 @@ class User_Authentication {
 		$this->user_id = (int)$user_id;
 	}
 	
-	function form() {
+	function form_grid() {
 		$loginname = new Html_Input("username");
 		$password = new Html_Input("password", "", "password");
 		$login = new Html_Input("login", utf8_ucfirst(__('login')), "submit");
 		
-		$html = "<form method=\"post\" action=\"\" name=\"form_login\">";
-		
-		$list = array(
+		$grid = array(
 			'name' => array(
 				'value' => $loginname->item(utf8_ucfirst(__('username'))." :"),
 				'class' => "clearform",
@@ -34,12 +32,19 @@ class User_Authentication {
 			),
 		);
 		
-		$items = new Html_List(array('leaves' => $list, 'class' => "itemsform itemsform-login"));
-		$html .= $items->show();
-		
-		$html .= "</form>";
-		
-		return $html;
+		return $grid;
+	}
+	
+	function form() {
+		$items = new Html_List(array('leaves' => $this->form_grid(), 'class' => "itemsform itemsform-login"));
+		return "<form method=\"post\" action=\"\" name=\"form_login\">".$items->show()."</form>";
+	}
+	
+	function form_no_password_request() {
+		$grid = $this->form_grid();
+		unset($grid['password-request']);
+		$items = new Html_List(array('leaves' => $grid, 'class' => "itemsform itemsform-login"));
+		return "<form method=\"post\" action=\"\" name=\"form_login\">".$items->show()."</form>";
 	}
 
 	function is_authorized($username, $password) {

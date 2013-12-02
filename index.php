@@ -31,7 +31,6 @@ if (isset($_POST['username']) and $_POST['username'] != '') {
 }
 
 if (isset($_SESSION['username']) and $_SESSION['username']) {
-	
 	if (isset($_GET['content']) and !empty($_GET['content']) and $_GET['content'] != 'login.php') {
 		$content_object->filename($_GET['content']);
 	} else {
