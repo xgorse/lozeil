@@ -92,15 +92,16 @@ $(document).ready(function() {
 		return false;
 		})
 		
-		.on("keyup change", "form[name=\"table_writings_split\"] input[name=\"table_writings_split_amount\"], form[name=\"table_writings_forward\"] input[name=\"table_writings_forward_amount\"], form[name=\"table_writings_duplicate\"] input[name=\"table_writings_duplicate_amount\"], form[name=\"table_writings_duplicate\"] select[name=\"table_writings_duplicate_amount_select\"], form[name=\"table_writings_forward\"] select[name=\"table_writings_forward_amount_select\"]", function() {
+		.on("keyup change", "form[name=\"table_writings_split\"] li input, form[name=\"table_writings_forward\"] input[name=\"table_writings_forward_amount\"], form[name=\"table_writings_duplicate\"] input[name=\"table_writings_duplicate_amount\"], form[name=\"table_writings_duplicate\"] select[name=\"table_writings_duplicate_amount_select\"], form[name=\"table_writings_forward\"] select[name=\"table_writings_forward_amount_select\"]", function() {
 			clearTimeout(timer);
 			var value = $(this).val();
 			var id = $(this).closest("form").find("#writing_id").val();
 			var type = $(this).attr('id');
+			var form = $(this).closest("form").serialize();
 			timer = setTimeout(function() {
 				$.post(
 					"index.php?content=writings.ajax.php",
-					{action: "preview_changes", value: value, type: type, id: id},
+					{action: "preview_changes", value: value, type: type, id: id, form: form},
 					function(data) {
 						$(".preview_changes").html(data);
 					}

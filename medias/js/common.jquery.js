@@ -38,6 +38,8 @@ $(document)
 				$(this).find(".input-ajax-dynamic").hide();
 			})
 			
+			.on("change", ".li-clone", Li_clone)
+			
 			.find("tr.modified").delay('6000').queue(function(next){
 				$(this).removeClass('modified');
 			})
@@ -173,3 +175,20 @@ function show_status(status) {
 		$('.layout_status').slideUp(200);
 	},3000);
 }
+
+var li_clone_index = 1;
+
+function Li_clone() {
+	var hide_label = true;
+	
+	var parent_li = $(this).closest("li");
+	var cloned_li = parent_li.clone();
+	var html = cloned_li.html().replace(/new/g, "new" + li_clone_index);
+	cloned_li.html(html);
+	parent_li.after(cloned_li);
+	if (hide_label) {
+		cloned_li.find("label").css("visibility", "collapse");
+	}
+	$(this).removeClass("li-clone");
+	li_clone_index = (parseInt(li_clone_index) + 1);
+};

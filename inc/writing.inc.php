@@ -188,14 +188,27 @@ class Writing extends Record {
 		}
 	}
 	
-	function split($amount = 0) {
-		$this->amount_inc_vat = ($this->amount_inc_vat - $amount);
-		$this->save();
+	function split($amount) {
+		if (!is_array($amount)) {
+			$amounts[] = $amount;
+		} else {
+			$amounts = $amount;
+		}
 		
-		$writing = new Writing();
-		$writing->load($this->id);
-		$writing->amount_inc_vat = $amount;
-		$writing->insert();
+		foreach ($amounts as $split_amount) {
+			$split_amount = str_replace(",", ".", $split_amount);
+			if (is_numeric($split_amount)) {
+				$this->amount_inc_vat = ($this->amount_inc_vat - $split_amount);
+
+				$writing = new Writing();
+				$writing->load($this->id);
+				$writing->amount_inc_vat = $split_amount;
+				$writing->insert();
+			}
+		}
+		
+		$this->save();
+		return $this->id;
 	}
 	
 	function form() {
@@ -555,13 +568,18 @@ class Writing extends Record {
 		$input_hidden_id = new Html_Input("writing_id", $this->id);
 		$input_hidden_action = new Html_Input("action", "split");
 		$submit = new Html_Input("table_writings_split_submit", utf8_ucfirst(__('save')), "submit");
-		$input_value = new Html_Input("table_writings_split_amount", "");
+		$input_value = new Html_Input("table_writings_split_amount[new]", "");
+		$input_value_clone = new Html_Input("table_writings_split_amount[new0]", "");
+		$input_value_clone->properties = array('class' => 'li-clone');
 		
 		$grid = array(
 			'class' => "itemsform",
 			'leaves' => array(
 				'duplicate' => array(
 					'value' => $input_value->item(utf8_ucfirst(__('split'))),
+				),
+				'duplicate_clone' => array(
+					'value' => $input_value_clone->item(""),
 				),
 				'submit' => array(
 					'value' => $submit->item(""),
@@ -793,8 +811,14 @@ class Writing extends Record {
 		return $link."</div>";
 	}
 	
-	function preview_split($amount = "") {
-		$amount = (float)str_replace(",", ".", $amount);
+	function grid_preview_split($amounts) {
+		$line = 0;
+		$sum = 0;
+		$rowspan = count($amounts) + 1;
+		if ($rowspan <= 1) {
+			$rowspan = 2;
+			$amounts[0] = 0;
+		}
 		
 		$grid = array(
 			'header' => array(
@@ -813,25 +837,45 @@ class Writing extends Record {
 				'cells' => array(
 					array(
 						'type' => "td",
-						'rowspan' => 2,
+						'rowspan' => $rowspan,
 						'value' => round($this->amount_inc_vat, 2)." ".$GLOBALS['param']['currency']
 					),
 					array(
 						'type' => "td",
-						'value' => ($this->amount_inc_vat - $amount)." ".$GLOBALS['param']['currency']
+						'value' => $amounts[0]." ".$GLOBALS['param']['currency']
 					)
 				)
-			),
-			'lines_' => array(
-				'cells' => array(
-					array(
-						'type' => "td",
-						'value' => $amount." ".$GLOBALS['param']['currency']
-					)
-				)
-			),	
+			)
 		);
-		$html_table = new Html_table(array('lines' => $grid));
+		
+		foreach ($amounts as $key => $amount) {
+			if ($key != 0) {
+				$grid["lines_".$line]["cells"][] = array(
+					'type' => "td",
+					'value' => $amount." ".$GLOBALS['param']['currency']
+				);
+				$line++;
+			}
+			$sum = $sum + $amount;
+		}
+		
+		$grid["lines_last"]["cells"][] = array(
+			'type' => "td",
+			'value' => ($this->amount_inc_vat - $sum)." ".$GLOBALS['param']['currency']
+		);
+		
+		return $grid;
+	}
+	
+	function preview_split($request = "", $rowspan = 2) {
+		$amounts = array();
+		
+		parse_str(urldecode($request), $parsed);
+		if (!empty($parsed)) {
+			$amounts = $this->clean_amounts_from_ajax($parsed['table_writings_split_amount']);
+		}
+		
+		$html_table = new Html_table(array('lines' => $this->grid_preview_split($amounts)));
 		
 		return $html_table->show();
 	}
@@ -982,5 +1026,15 @@ class Writing extends Record {
 			"1a" => "1 ".__("year"),
 			"2a" => "2 ".__("years"),
 		);
+	}
+	
+	function clean_amounts_from_ajax(array $amounts) {
+		$cleaned = array();
+		foreach ($amounts as $amount) {
+			if (!empty($amount)) {
+				$cleaned[] = (float)str_replace(",", ".", $amount);
+			}
+		}
+		return $cleaned;
 	}
 }

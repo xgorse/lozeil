@@ -16,8 +16,8 @@ if (isset($_REQUEST['action'])) {
 		case "preview_changes" :
 			$writing = new Writing();
 			$writing->load((int)$_REQUEST['id']);
-			if ($_REQUEST['type'] == "table_writings_split_amount") {
-				echo $writing->preview_split($_REQUEST['value']);
+			if (preg_match("/table_writings_split_amount/", $_REQUEST['type']) or preg_match("/table_writings_split_submit/", $_REQUEST['type'])) {
+				echo $writing->preview_split($_REQUEST['form']);
 			}
 			if ($_REQUEST['type'] == "table_writings_forward_amount" or $_REQUEST['type'] == "table_writings_forward_amount_select") {
 				echo $writing->preview_forward($_REQUEST['value']);
@@ -121,12 +121,10 @@ if (isset($_REQUEST['action'])) {
 
 		case 'split':
 			if (isset($_REQUEST['table_writings_split_amount'])) {
-				$amount = str_replace(",", ".", $_REQUEST['table_writings_split_amount']);
-				if (is_numeric($amount)) {
-					$writing = new Writing();
-					$writing->load((int)$_REQUEST['writing_id']);
-					$writing->split($amount);
-				}
+				$writing = new Writing();
+				$amount = $writing->clean_amounts_from_ajax($_REQUEST['table_writings_split_amount']);
+				$writing->load((int)$_REQUEST['writing_id']);
+				$writing->split($amount);
 			}
 			break;
 

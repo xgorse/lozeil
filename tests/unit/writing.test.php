@@ -463,6 +463,23 @@ Autre complément d'infos");
 		$this->assertEqual($writing_splited->day, mktime(10, 0, 0, 7, 31, 2013));
 		
 		$this->truncateTable("writings");
+		
+		$writing = new Writing();
+		$writing->amount_inc_vat = 1000;
+		$writing->save();
+		
+		$amount_to_split = array(10, 50, -200, 50.65);
+		$writing->split($amount_to_split);
+		
+		$writings = new Writings();
+		$writings->select();
+		$this->assertTrue(count($writings) == 5);
+		$this->assertRecordExists("writings", array('amount_inc_vat' => (1000 - 10 - 50 - 50.65 + 200)));
+		$this->assertRecordExists("writings", array('amount_inc_vat' => (10)));
+		$this->assertRecordExists("writings", array('amount_inc_vat' => (50)));
+		$this->assertRecordExists("writings", array('amount_inc_vat' => (-200)));
+		$this->assertRecordExists("writings", array('amount_inc_vat' => (50.65)));
+		$this->truncateTable("writings");
 	}
 	
 	function test_display() {
