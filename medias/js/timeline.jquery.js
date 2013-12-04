@@ -5,6 +5,7 @@ function make_timeline() {
 		isleap_year = $("#cubism_isleap_year").text(),
 		positive_average = $(".cubism_data_positive_average").text(),
 		negative_average = $(".cubism_data_negative_average").text(),
+		current_month = $("#cubism_current_month").text(),
 		link = []
 		
 	if (isleap_year.length == 0) {
@@ -53,6 +54,8 @@ function make_timeline() {
 		);
 			
 	});
+	
+	$("#cubismtimeline g .tick").eq(current_month - 1).attr("font-weight", "bold").attr("font-size", "12");
 	
 	$("#cubismtimeline g .tick").on("click", function() {
 		window.location = link[$(this).index("#cubismtimeline g .tick")];

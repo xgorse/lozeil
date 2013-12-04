@@ -39,7 +39,7 @@ $(document)
 			})
 			
 			.on("change", ".li-clone", Li_clone)
-			
+	
 			.find("tr.modified").delay('6000').queue(function(next){
 				$(this).removeClass('modified');
 			})

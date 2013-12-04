@@ -28,7 +28,8 @@ class Html_Cubismchart {
 			<li id=\"cubism_width\">".$this->width."</li>
 			<li id=\"cubism_height\">".$this->height."</li>
 			<li id=\"cubism_start_year\">".date('Y', $this->start)."</li>
-			<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>";
+			<li id=\"cubism_isleap_year\">".is_leap(date('Y',$this->start))."</li>
+			<li id=\"cubism_current_month\">".date('n', $this->start)."</li>";
 		
 		for ($i = 0; $i < 12; $i++) {
 			list($start, $stop) = determine_month(mktime(0, 0, 0, $i + 1, 1, date ('Y',$this->start)));
