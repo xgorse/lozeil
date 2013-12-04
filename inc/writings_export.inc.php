@@ -30,40 +30,46 @@ class Writings_Export  {
 		if (isset($this->to)) {
 			$querywhere .= " AND ".$this->db->config['table_writings'].".day <= ".$this->to;
 		}
-
 		$result_export = $this->db->query("SELECT ".
-			$this->db->config['table_writings'].".day as ".__('date').", ".
-			$this->db->config['table_writings'].".number as '".__('piece number')."', ".
-			$this->db->config['table_writings'].".amount_excl_vat as ".__('amount excluding vat').", ".
-			$this->db->config['table_writings'].".vat as ".__('VAT').", ".
-			$this->db->config['table_writings'].".amount_inc_vat as ".__('amount including vat').", ".
-			$this->db->config['table_banks'].".name as ".__('bank').", ".
-			$this->db->config['table_categories'].".name as ".__('category').", ".
-			$this->db->config['table_sources'].".name as ".__('source').", ".
-			$this->db->config['table_accountingcodes'].".number as '".__('accounting code')."', ".
-			$this->db->config['table_writings'].".comment as ".__('comment').", ".
-			$this->db->config['table_writings'].".information as ".__('information')." ".
-			"FROM ".$this->db->config['table_writings'].
-			" LEFT JOIN ".$this->db->config['table_banks'].
-			" ON ".$this->db->config['table_banks'].".id = ".$this->db->config['table_writings'].".banks_id".
-			" LEFT JOIN ".$this->db->config['table_categories'].
-			" ON ".$this->db->config['table_categories'].".id = ".$this->db->config['table_writings'].".categories_id".
-			" LEFT JOIN ".$this->db->config['table_sources'].
-			" ON ".$this->db->config['table_sources'].".id = ".$this->db->config['table_writings'].".sources_id".
+			$this->db->config['table_writings'].".day as '0', ".
+			$this->db->config['table_accountingcodes'].".number as '2', ".
+			$this->db->config['table_writings'].".number as '3', ".
+			$this->db->config['table_writings'].".comment as '4', ".
+			$this->db->config['table_writings'].".information, ".
+			$this->db->config['table_writings'].".amount_inc_vat as '5' 
+			 FROM ".$this->db->config['table_writings'].
 			" LEFT JOIN ".$this->db->config['table_accountingcodes'].
 			" ON ".$this->db->config['table_accountingcodes'].".id = ".$this->db->config['table_writings'].".accountingcodes_id".
 			" WHERE (1=1)".
 			$querywhere.
-			" ORDER BY date ASC"
+			" ORDER BY day ASC"
 		);
 		if ($result_export[1] > 0) {
 			while ($row_export = $this->db->fetchArray($result_export[0])) {
-				if (!isset($title)) {
-					$title = array_keys($row_export);
-				}
 				$value[] = $row_export;
 			}
-			export_excel($title, $value);
+			
+			for ($i = 0; $i < count($value); $i++) {
+				$value[$i][0] = date("d/m/Y", $value[$i][0]);
+				
+				$value[$i][1] = "BQC";
+				
+				$value[$i][4] .= " ".$value[$i]["information"];
+				unset($value[$i]["information"]);
+				
+				if ($value[$i][5] >= 0) {
+					$value[$i][5] = (float)$value[$i][5];
+					$value[$i][6] = 0;
+				} else {
+					$value[$i][6] = -(float)$value[$i][5];
+					$value[$i][5] = 0;
+				}
+				
+				$value[$i][7] = "E";
+				
+				ksort($value[$i]);
+			}
+			export_excel("", $value);
 		}
 	}
 }
