@@ -23,7 +23,7 @@ if (isset($_REQUEST['action'])) {
 	switch ($_REQUEST['action']) {
 	case "open_attachment" :
 		$file = new File();
-		$file->load((int)$_REQUEST['id']);
+		$file->load(array('id' => (int)$_REQUEST['id']));
 		$file->open_attachment();
 		exit();
 		break;

@@ -20,7 +20,7 @@ switch ($_REQUEST['action']) {
 	
 	case "form_edit":
 		$writing = new Writings_Simulation();
-		$writing->load((int)$_REQUEST['table_simulations_modify_id']);
+		$writing->load(array('id' => (int)$_REQUEST['table_simulations_modify_id']));
 		echo $writing->form_in_table();
 
 		exit(0);
@@ -28,7 +28,7 @@ switch ($_REQUEST['action']) {
 	
 	case "form_duplicate" :
 		$writing = new Writings_Simulation();
-		$writing->load((int)$_POST['table_simulations_form_duplicate_id']);
+		$writing->load(array('id' => (int)$_POST['table_simulations_form_duplicate_id']));
 		echo $writing->form_duplicate();
 		exit(0);
 		break;
@@ -44,7 +44,7 @@ switch ($_REQUEST['action']) {
 	case 'edit':
 		$writingssimulation = new Writings_Simulation();
 		if (isset($_POST['id']) and $_POST['id'] > 0 and $writingssimulation->is_form_valid($_POST)) {
-			$writingssimulation->load($_POST['id']);
+			$writingssimulation->load(array('id' => $_POST['id']));
 			$writingssimulation->fill($_POST);
 			$writingssimulation->save();
 		}
@@ -60,7 +60,7 @@ switch ($_REQUEST['action']) {
 	case 'duplicate':
 		if (isset($_POST['simulation_id']) and isset($_POST['table_simulations_duplicate_amount'])) {
 			$writingssimulation = new Writings_Simulation();
-			$writingssimulation->load((int)$_POST['simulation_id']);
+			$writingssimulation->load(array('id' => (int)$_POST['simulation_id']));
 			$writingssimulation->duplicate($_POST['table_simulations_duplicate_amount']);
 		}
 		break;

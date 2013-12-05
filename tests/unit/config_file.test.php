@@ -35,8 +35,8 @@ class tests_Config_File extends TableTestCase {
 		$this->assertEqual($table_user_name, "");
 
 		$dbconfig = new Config_File(__DIR__."/../../cfg/config.inc.php.dist", "dbconfig");
-		$table_user_name = $dbconfig->read_value("table_user");
-		$this->assertEqual($table_user_name, $GLOBALS['dbconfig']['table_user']);
+		$table_user_name = $dbconfig->read_value("table_users");
+		$this->assertEqual($table_user_name, $GLOBALS['dbconfig']['table_users']);
 	}
 	
 	function test_find_default_value() {

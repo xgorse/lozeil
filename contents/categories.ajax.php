@@ -5,7 +5,7 @@ if (isset($_POST)) {
 	
 	if (isset($_POST['action']) and $_POST['action'] == "fill_vat") {
 		$category = new Category();
-		$category->load((int)$_REQUEST['value']);
+		$category->load(array('id' => (int)$_REQUEST['value']));
 		echo $category->vat;
 		exit(0);
 	}
@@ -15,7 +15,7 @@ if (isset($_POST)) {
 	
 	if ($cleaned) {
 		foreach($cleaned as $id => $values) {
-			$category->load($id);
+			$category->load(array('id' => $id));
 			if (!empty($values['name'])) {
 				if ($category->name != $values['name'] or $category->vat != $values['vat'] or $category->vat_category != $values['vat_category']) {
 					$category->name = $values['name'];

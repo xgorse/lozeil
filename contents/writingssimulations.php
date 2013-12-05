@@ -15,7 +15,7 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 		case 'edit':
 			$writingssimulation = new Writings_Simulation();
 			if (isset($_POST['id']) and $_POST['id'] > 0 and $writingssimulation->is_form_valid($_POST)) {
-				$writingssimulation->load($_POST['id']);
+				$writingssimulation->load(array('id' => $_POST['id']));
 				$writingssimulation->fill($_POST);
 				$writingssimulation->save();
 			}
@@ -31,7 +31,7 @@ if (isset($_POST['action']) and count($_POST) > 0) {
 		case 'duplicate':
 			if (isset($_POST['table_writingssimulation_duplicate_id']) and isset($_POST['table_writingssimulation_duplicate_amount'])) {
 				$writingssimulation = new Writings_Simulation();
-				$writingssimulation->load((int)$_POST['table_writingssimulation_duplicate_id']);
+				$writingssimulation->load(array('id' => (int)$_POST['table_writingssimulation_duplicate_id']));
 				$writingssimulation->duplicate($_POST['table_writingssimulation_duplicate_amount']);
 			}
 			break;

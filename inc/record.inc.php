@@ -38,46 +38,7 @@ abstract class Record {
 		return $this;
 	}
 
-	protected function match_existing(array $patterns, $table, $db = null) {
-		$this->id = null;
-
-		if (sizeof($patterns) > 0) {
-			if ($db === null) {
-				$db = new db();
-			} else {
-				$db = $this->db;
-			}
-
-			$where = array();
-
-			foreach ($patterns as $field => $pattern) {
-				if (is_numeric($field)) {
-					$where[] = $this->object_property_to_db_column($pattern)." = ".$db->quote($this->$pattern);
-				} else {
-					$where[] = $this->object_property_to_db_column($field)." = ".$db->quote($pattern);
-				}
-			}
-
-			$this->id = $db->value("
-				SELECT id
-				FROM ".$db->config['table_'.$table]."
-				WHERE " . join(" AND ", $where)."
-				ORDER BY id DESC
-				LIMIT 0, 1
-			");
-		}
-
-		return $this->id !== null;
-	}
-
-	protected function load($id, $table, $columns = null) {
-		if ($id === null or $id == 0) {
-			$id = $this->id;
-		}
-		if ($id === null or $id == 0) {
-			return false;
-		}
-
+	protected function load(array $key, $table, $columns = null) {
 		if ($columns === null) {
 			$columns = $this->get_db_columns();
 		}
@@ -85,7 +46,7 @@ abstract class Record {
 		$result = $this->db->query("
 			SELECT ".join(", ", $columns)."
 			FROM ".$this->db->config['table_'.$table]."
-			WHERE id = ".(int)$id
+			WHERE ".self::get_sql_key($key)
 		);
 
 		$row = $this->db->fetchArray($result[0]);
@@ -155,5 +116,15 @@ abstract class Record {
 		}
 
 		return $columns[$class_name];
+	}
+	
+	private function get_sql_key(array $key) {
+		$sql = array();
+
+		foreach ($key as $column => $value) {
+			$sql[] = $column." = ".$this->db->quote($value);
+		}
+
+		return join(" AND ", $sql);
 	}
 }

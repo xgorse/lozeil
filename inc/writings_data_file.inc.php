@@ -150,7 +150,7 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 					if ($writing->categories_id > 0) {
 						$category = new Category();
-						$category->load($writing->categories_id);
+						$category->load(array('id' => $writing->categories_id));
 						$writing->vat = $category->vat;
 					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
@@ -203,7 +203,7 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 					if ($writing->categories_id > 0) {
 						$category = new Category();
-						$category->load($writing->categories_id);
+						$category->load(array('id' => $writing->categories_id));
 						$writing->vat = $category->vat;
 					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
@@ -269,7 +269,7 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 					if ($writing->categories_id > 0) {
 						$category = new Category();
-						$category->load($writing->categories_id);
+						$category->load(array('id' => $writing->categories_id));
 						$writing->vat = $category->vat;
 					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
@@ -346,7 +346,7 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 					if ($writing->categories_id > 0) {
 						$category = new Category();
-						$category->load($writing->categories_id);
+						$category->load(array('id' => $writing->categories_id));
 						$writing->vat = $category->vat;
 					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
@@ -428,7 +428,7 @@ class Writings_Data_File {
 					$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 					if ($writing->categories_id > 0) {
 						$category = new Category();
-						$category->load($writing->categories_id);
+						$category->load(array('id' => $writing->categories_id));
 						$writing->vat = $category->vat;
 					}
 					$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);

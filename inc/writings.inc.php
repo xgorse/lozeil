@@ -550,7 +550,7 @@ class Writings extends Collector {
 		$banks->select();
 		if (isset($_SESSION['filter']['accountingcodes_id'])) {
 			$accountingcode = new Accounting_Code();
-			$accountingcode->load((int)$_SESSION['filter']['accountingcodes_id']);
+			$accountingcode->load(array('id' => (int)$_SESSION['filter']['accountingcodes_id']));
 		}
 		
 		$categories_names = $categories->names();
@@ -922,13 +922,13 @@ class Writings extends Collector {
 		}
 	}
 	
-	function change_category($value) {
+	function change_category($id) {
 		$bayesianelements = new Bayesian_Elements();
 		$category = new Category();
-		$category->load($value);
+		$category->load(array('id' => $id));
 		foreach ($this as $writing) {
 			$writing_before = clone $writing;
-			$writing->categories_id = $value;
+			$writing->categories_id = $id;
 			if($writing->vat == 0) {
 				$writing->vat = $category->vat;
 			}
@@ -937,13 +937,13 @@ class Writings extends Collector {
 		}
 	}
 	
-	function change_accounting_code($value) {
+	function change_accounting_code($id) {
 		$bayesianelements = new Bayesian_Elements();
 		$accounting_code = new Accounting_Code();
-		$accounting_code->load($value);
+		$accounting_code->load(array('id' => $id));
 		foreach ($this as $writing) {
 			$writing_before = clone $writing;
-			$writing->accountingcodes_id = $value;
+			$writing->accountingcodes_id = $id;
 			$bayesianelements->increment_decrement($writing_before, $writing);
 			$writing->update();
 		}
@@ -1279,7 +1279,7 @@ class Writings extends Collector {
 		
 		foreach($ids as $id) {
 			$writing = new Writing();
-			$writing->load($id);
+			$writing->load(array('id' => $id));
 			$writing->accountingcodes_id = $bayesianelements_accounting_codes_id->fisher_element_id_estimated($writing);
 			$writing->update();
 		}
@@ -1290,7 +1290,7 @@ class Writings extends Collector {
 		$bayesianelements_categories_id->prepare_id_estimation($GLOBALS['dbconfig']['table_categories']);
 		foreach($ids as $id) {
 			$writing = new Writing();
-			$writing->load($id);
+			$writing->load(array('id' => $id));
 			$writing->categories_id = $bayesianelements_categories_id->fisher_element_id_estimated($writing);
 			$writing->update();
 		}
@@ -1334,7 +1334,7 @@ class Writings extends Collector {
 			
 			$writing = new Writing();
 			if (count($writings) == 1) {
-				$writing->load($writings[0]->id);
+				$writing->load(array('id' => $writings[0]->id));
 			}
 			$writing->categories_id = $category->id;
 			$writing->day = $timestamp;

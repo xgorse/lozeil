@@ -43,9 +43,9 @@ class tests_Source extends TableTestCase {
 		$source->name = "premier source";
 		$source->save();
 		$source_loaded = new Source();
-		$this->assertTrue($source_loaded->load(1));
+		$this->assertTrue($source_loaded->load(array('id' => 1 )));
 		$source->delete();
-		$this->assertFalse($source_loaded->load(1));
+		$this->assertFalse($source_loaded->load(array('id' => 1 )));
 	}
 	
 	function test_is_deletable() {

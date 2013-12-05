@@ -50,9 +50,9 @@ class tests_Writing_Imported extends TableTestCase {
 		$writing_imported->hash = "65sd65f651sd65f1dsf651sdf";
 		$writing_imported->save();
 		$writing_imported_loaded = new Writing_Imported();
-		$this->assertTrue($writing_imported_loaded->load(1));
+		$this->assertTrue($writing_imported_loaded->load(array('id' => 1 )));
 		$writing_imported->delete();
-		$this->assertFalse($writing_imported_loaded->load(1));
+		$this->assertFalse($writing_imported_loaded->load(array('id' => 1 )));
 		$this->truncateTable("writingsimported");
 	}
 }

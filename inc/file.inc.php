@@ -19,16 +19,15 @@ class File extends Record {
 		}
 	}
 	
-	function load($id = null, $table = "files", $columns = null) {
-		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
-			return false;
-
-		} else {
-			if ($id === null) {
-				$id = $this->id;
+	function load(array $key = array(), $table = "files", $columns = null) {
+		if (empty($key)) {
+			if ($this->id === 0) {
+				return false;
+			} else {
+				$key = array ("id" => $this->id);
 			}
-			return parent::load($id, $table, $columns);
 		}
+		return parent::load($key, $table, $columns);
 	}
 	
 	function save() {
@@ -78,7 +77,7 @@ class File extends Record {
 		$file = $raw_file[$key];
 		$writing_id = substr($key, 6);
 		$writing = new Writing();
-		if ($writing->load((int)$writing_id) and $file['error'] == 0) {
+		if ($writing->load(array('id' => (int)$writing_id)) and $file['error'] == 0) {
 			$name_hashed = hash_hmac("sha256", time()."_".$file['name'], uniqid());
 			if (move_uploaded_file($file['tmp_name'], dirname( __FILE__ )."/../var/upload/".$name_hashed)) {
 				$this->writings_id = (int)$writing_id;
@@ -114,7 +113,7 @@ class File extends Record {
 	
 	function delete_attachment() {
 		$writing = new Writing();
-		$writing->load($this->writings_id);
+		$writing->load(array('id' => $this->writings_id));
 		unlink(dirname( __FILE__ )."/../var/upload/".$this->hash);
 		$this->delete();
 		$files = new Files();

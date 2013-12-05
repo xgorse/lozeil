@@ -30,16 +30,15 @@ class Writing extends Record {
 		}
 	}
 	
-	function load($id = null, $table = "writings", $columns = null) {
-		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
-			return false;
-
-		} else {
-			if ($id === null) {
-				$id = $this->id;
+	function load(array $key = array(), $table = "writings", $columns = null) {
+		if (empty($key)) {
+			if ($this->id === 0) {
+				return false;
+			} else {
+				$key = array ("id" => $this->id);
 			}
-			return parent::load($id, $table, $columns);
 		}
+		return parent::load($key, $table, $columns);
 	}
 	
 	function save() {
@@ -149,11 +148,11 @@ class Writing extends Record {
 	
 	function search_index() {
 		$bank = new Bank();
-		$bank->load($this->banks_id);
+		$bank->load(array('id' => $this->banks_id));
 		$source = new Source();
-		$source->load($this->sources_id);
+		$source->load(array('id' => $this->sources_id));
 		$category = new Category();
-		$category->load($this->categories_id);
+		$category->load(array('id' => $this->categories_id));
 		
 		return date("d/m/Y",$this->day)." ".$this->vat." ".$this->amount_excl_vat." ".$this->amount_inc_vat." ".$bank->name." ".$this->comment." ".$this->information." ".$this->number." ".$source->name." ".$category->name;
 	}
@@ -201,7 +200,7 @@ class Writing extends Record {
 				$this->amount_inc_vat = ($this->amount_inc_vat - $split_amount);
 
 				$writing = new Writing();
-				$writing->load($this->id);
+				$writing->load(array('id' => $this->id));
 				$writing->amount_inc_vat = $split_amount;
 				$writing->insert();
 			}
@@ -308,7 +307,7 @@ class Writing extends Record {
 		
 		$accountingcode = new Accounting_Code();
 		$currentcode = array();
-		if ($accountingcode->load($this->accountingcodes_id)) {
+		if ($accountingcode->load(array('id' => $this->accountingcodes_id))) {
 			$currentcode[] = $accountingcode->fullname();
 		}
 		

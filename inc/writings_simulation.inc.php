@@ -29,16 +29,15 @@ class Writings_Simulation extends Record {
 		}
 	}
 	
-	function load($id = null, $table = "writingssimulations", $columns = null) {
-		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
-			return false;
-
-		} else {
-			if ($id === null) {
-				$id = $this->id;
+	function load(array $key = array(), $table = "writingssimulations", $columns = null) {
+		if (empty($key)) {
+			if ($this->id === 0) {
+				return false;
+			} else {
+				$key = array ("id" => $this->id);
 			}
-			return parent::load($id, $table, $columns);
 		}
+		return parent::load($key, $table, $columns);
 	}
 	
 	function save() {

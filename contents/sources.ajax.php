@@ -12,7 +12,7 @@ if (isset($_POST) and !empty($_POST)) {
 	
 	foreach ($_POST as $id => $name) {
 		$source = new Source();
-		$source->load($id);
+		$source->load(array('id' => $id));
 		if ($source->name != $name and !empty($name)) {
 			$source->name = $name;
 			$source->save();

@@ -43,9 +43,9 @@ class tests_Bank extends TableTestCase {
 		$bank->name = "premier bank";
 		$bank->save();
 		$bank_loaded = new Bank();
-		$this->assertTrue($bank_loaded->load(1));
+		$this->assertTrue($bank_loaded->load(array('id' => 1)));
 		$bank->delete();
-		$this->assertFalse($bank_loaded->load(1));
+		$this->assertFalse($bank_loaded->load(array('id' => 1)));
 		$this->truncateTable("banks");
 	}
 	

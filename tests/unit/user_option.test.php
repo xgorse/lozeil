@@ -128,33 +128,6 @@ class tests_User_Option extends TableTestCase {
 		$this->truncateTable('useroptions');
 	}
 
-	function test_match_existing() {
-		$option = new User_Option();
-		$this->assertFalse($option->match_existing());
-
-		$name = uniqid();
-		$option->name = $name;
-		$value = uniqid();
-		$option->value = $value;
-		$option->insert();
-		$id = $option->id;
-
-		$option = new User_Option();
-		$option->name = $name;
-		$this->assertTrue($option->match_existing(array('name')));
-		$this->assertEqual($option->id, $id);
-
-		$option = new User_Option();
-		$this->assertTrue($option->match_existing(array('name' => $name)));
-		$this->assertEqual($option->id, $id);
-
-		$option = new User_Option();
-		$this->assertFalse($option->match_existing(array('name' => uniqid())));
-		$this->assertNull($option->id, $id);
-
-		$this->truncateTable('useroptions');
-	}
-
 	private static function get_db() {
 		static $db = null;
 

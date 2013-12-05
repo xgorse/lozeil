@@ -432,7 +432,7 @@ Status : Telecollecte
 		fclose($handle);
 		unlink($name);
 		$writing = new Writing();
-		$this->assertFalse($writing->load(3));
+		$this->assertFalse($writing->load(array('id' => 5 )));
 		$this->truncateTable("writings");
 		$this->truncateTable("writingsimported");
 	}
@@ -507,7 +507,7 @@ Status : Telecollecte
 		fclose($handle);
 		unlink($name);
 		$writing = new Writing();
-		$this->assertFalse($writing->load(5));
+		$this->assertFalse($writing->load(array('id' => 5 )));
 		$this->truncateTable("writings");
 		$this->truncateTable("writingsimported");
 	}
@@ -597,7 +597,7 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		fclose($handle);
 		unlink($name);
 		$writing = new Writing();
-		$this->assertFalse($writing->load(4));
+		$this->assertFalse($writing->load(array('id' => 4 )));
 		$this->truncateTable("writings");
 		$this->truncateTable("writingsimported");
 	}
@@ -739,14 +739,14 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 				)
 		);
 		$writing = new Writing();
-		$this->assertFalse($writing->load(5));
+		$this->assertFalse($writing->load(array('id' => 5 )));
 		
 		$data = new Writings_Data_File($name);
 		$data->banks_id = 1;
 		$data->import_as_ofx();
 		
-		$this->assertTrue($writing->load(4));
-		$this->assertFalse($writing->load(5));
+		$this->assertTrue($writing->load(array('id' => 4 )));
+		$this->assertFalse($writing->load(array('id' => 5 )));
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("writingsimported");
@@ -829,14 +829,14 @@ ENCORE UN CHAMP INCONNU
 				)
 		);
 		$writing = new Writing();
-		$this->assertFalse($writing->load(5));
+		$this->assertFalse($writing->load(array('id' => 5 )));
 		
 		$data = new Writings_Data_File($name);
 		$data->banks_id = 1;
 		$data->import_as_qif();
 		
-		$this->assertTrue($writing->load(4));
-		$this->assertFalse($writing->load(5));
+		$this->assertTrue($writing->load(array('id' => 4 )));
+		$this->assertFalse($writing->load(array('id' => 5 )));
 		
 		$this->truncateTable("writings");
 		$this->truncateTable("writingsimported");

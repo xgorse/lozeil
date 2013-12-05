@@ -15,7 +15,7 @@ if (isset($_POST) and !empty($_POST)) {
 	if (isset($_POST['bank'])) {
 		foreach ($_POST['bank'] as $id => $values) {
 			$bank = new Bank();
-			$bank->load($id);
+			$bank->load(array('id' => $id));
 			$selected = isset($values['selected']) ? 1 : 0;
 			if (($bank->name != $values['name'] and !empty($values['name'])) or $selected != $bank->selected) {
 				$bank->name = $values['name'];

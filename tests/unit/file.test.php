@@ -54,9 +54,9 @@ class tests_File extends TableTestCase {
 		$file->value = "fichier.pdf";
 		$file->save();
 		$file_loaded = new File();
-		$this->assertTrue($file_loaded->load(1));
+		$this->assertTrue($file_loaded->load(array('id' => 1 )));
 		$file->delete();
-		$this->assertFalse($file_loaded->load(1));
+		$this->assertFalse($file_loaded->load(array('id' => 1 )));
 		$this->truncateTable("files");
 	}
 	

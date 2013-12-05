@@ -78,24 +78,14 @@ class User_Option extends Record {
 		return (is_numeric($this->id) and $this->id > 0) ? $this->update() : $this->insert();
 	}
 
-	function match_existing(array $patterns = array("name"), $table = "useroptions", $db = null) {
-		return parent::match_existing($patterns, $table, $db);
-	}
-
-	function load($id = null, $table = "useroptions", $columns = null) {
-		if ($id === null or $id === 0) {
-			if ($this->match_existing(array("name", "user_id"))) {
-				$this->value = $this->db->value("
-					SELECT value
-					FROM ".$table."
-					WHERE user_id = ".(int)$this->user_id."
-					AND name = ".$this->db->quote($this->name)
-				);
-				return true;
+	function load(array $key = array(), $table = "useroptions", $columns = null) {
+		if (empty($key)) {
+			if ($this->id === 0) {
+				return false;
+			} else {
+				$key = array ("id" => $this->id);
 			}
-			return false;
-		} else {
-			return parent::load($id, $table, $columns);
 		}
+		return parent::load($key, $table, $columns);
 	}
 }

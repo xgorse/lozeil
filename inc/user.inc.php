@@ -26,8 +26,15 @@ class User extends Record  {
 		}
 	}
 	
-	function load($id = null, $table = "users", $columns = null) {
-		return parent::load($id, $table, $columns);
+	function load(array $key = array(), $table = "users", $columns = null) {
+		if (empty($key)) {
+			if ($this->id === 0) {
+				return false;
+			} else {
+				$key = array ("id" => $this->id);
+			}
+		}
+		return parent::load($key, $table, $columns);
 	}
 	
 	function save() {
@@ -130,7 +137,7 @@ class User extends Record  {
 			$row = $db->fetchArray($result[0]);
 
 			if ($row['timestamp'] > strtotime("-1 hour")) {
-				$this->load($row['user_id']);
+				$this->load(array('id' => $row['user_id']));
 				$this->password = substr(md5(time().$token), 0, 8);
 				$this->save();
 				$db->query("

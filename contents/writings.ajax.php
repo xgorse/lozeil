@@ -15,7 +15,7 @@ if (isset($_REQUEST['action'])) {
 
 		case "preview_changes" :
 			$writing = new Writing();
-			$writing->load((int)$_REQUEST['id']);
+			$writing->load(array('id' => (int)$_REQUEST['id']));
 			if (preg_match("/table_writings_split_amount/", $_REQUEST['type']) or preg_match("/table_writings_split_submit/", $_REQUEST['type'])) {
 				echo $writing->preview_split($_REQUEST['form']);
 			}
@@ -30,7 +30,7 @@ if (isset($_REQUEST['action'])) {
 
 		case "form_duplicate" :
 			$writing = new Writing();
-			$writing->load((int)$_POST['table_writings_form_duplicate_id']);
+			$writing->load(array('id' => (int)$_POST['table_writings_form_duplicate_id']));
 			echo $writing->form_duplicate();
 			exit(0);
 			break;
@@ -38,24 +38,24 @@ if (isset($_REQUEST['action'])) {
 
 		case "form_forward" :
 			$writing = new Writing();
-			$writing->load((int)$_POST['table_writings_form_forward_id']);
+			$writing->load(array('id' => (int)$_POST['table_writings_form_forward_id']));
 			echo $writing->form_forward();
 			exit(0);
 			break;
 
 		case "form_split" :
 			$writing = new Writing();
-			$writing->load((int)$_POST['table_writings_form_split_id']);
+			$writing->load(array('id' => (int)$_POST['table_writings_form_split_id']));
 			echo $writing->form_split();
 			exit(0);
 			break;
 
 		case "delete_attachment" :
 			$file = new File();
-			$file->load((int)$_REQUEST['id']);
+			$file->load(array('id' => (int)$_REQUEST['id']));
 			$file->delete_attachment();
 			$writing = new Writing();
-			$writing->load($file->writings_id);
+			$writing->load(array('id' => $file->writings_id));
 			echo json_encode(array('status' => show_status(), 'link' => $writing->link_to_file_attached()));
 			exit(0);
 			break;
@@ -75,16 +75,16 @@ if (isset($_REQUEST['action'])) {
 
 		case "merge":
 			$writing_from = new Writing();
-			$writing_from->load((int)$_REQUEST['writing_from']);
+			$writing_from->load(array('id' => (int)$_REQUEST['writing_from']));
 			$writing_into = new Writing();
-			$writing_into->load((int)$_REQUEST['writing_into']);
+			$writing_into->load(array('id' => (int)$_REQUEST['writing_into']));
 			$writing_into->merge_from($writing_from);
 			break;
 
 		case "edit":
 			if (isset($_POST['writings_id']) and $_POST['writings_id'] > 0) {
 				$writing = new Writing();
-				$writing->load((int)$_POST['writings_id']);
+				$writing->load(array('id' => (int)$_POST['writings_id']));
 				$writing_before = clone $writing;
 				$cleaned = $writing->clean($_POST);
 				$writing->fill($cleaned);
@@ -97,7 +97,7 @@ if (isset($_REQUEST['action'])) {
 
 		case "form_edit":
 			$writing = new Writing();
-			$writing->load((int)$_REQUEST['table_writings_modify_id']);
+			$writing->load(array('id' => (int)$_REQUEST['table_writings_modify_id']));
 			echo $writing->form_in_table();
 
 			exit(0);
@@ -123,7 +123,7 @@ if (isset($_REQUEST['action'])) {
 			if (isset($_REQUEST['table_writings_split_amount'])) {
 				$writing = new Writing();
 				$amount = $writing->clean_amounts_from_ajax($_REQUEST['table_writings_split_amount']);
-				$writing->load((int)$_REQUEST['writing_id']);
+				$writing->load(array('id' => (int)$_REQUEST['writing_id']));
 				$writing->split($amount);
 			}
 			break;
@@ -131,7 +131,7 @@ if (isset($_REQUEST['action'])) {
 		case 'duplicate':
 			if (isset($_POST['writing_id']) and isset($_POST['table_writings_duplicate_amount'])) {
 				$writing = new Writing();
-				$writing->load((int)$_POST['writing_id']);
+				$writing->load(array('id' => (int)$_POST['writing_id']));
 				if (!empty($_POST['table_writings_duplicate_amount'])) {
 					$writing->duplicate($_POST['table_writings_duplicate_amount']);
 				} else {
@@ -143,7 +143,7 @@ if (isset($_REQUEST['action'])) {
 		case 'forward':
 			if (isset($_POST['writing_id']) and isset($_POST['table_writings_forward_amount'])) {
 				$writing = new Writing();
-				$writing->load((int)$_POST['writing_id']);
+				$writing->load(array('id' => (int)$_POST['writing_id']));
 				if (!empty($_POST['table_writings_forward_amount'])) {
 					$writing->forward($_POST['table_writings_forward_amount']);
 				} else {

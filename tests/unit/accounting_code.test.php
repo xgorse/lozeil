@@ -42,9 +42,9 @@ class tests_Accounting_Code extends TableTestCase {
 		$accountingcode->name = "premier accountingcode";
 		$accountingcode->save();
 		$accountingcode_loaded = new Accounting_Code();
-		$this->assertTrue($accountingcode_loaded->load(1));
+		$this->assertTrue($accountingcode_loaded->load(array('id' => 1)));
 		$accountingcode->delete();
-		$this->assertFalse($accountingcode_loaded->load(1));
+		$this->assertFalse($accountingcode_loaded->load(array('id' => 1)));
 		$this->truncateTable("accountingcodes");
 	}
 }

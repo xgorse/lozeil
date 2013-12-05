@@ -77,7 +77,7 @@ class tests_Writing extends TableTestCase {
 		$writing_loaded->attachment = 1;
 		$writing_loaded->vat = 5.5;
 		$writing_loaded->save();
-		$writing_loaded->load(1);
+		$writing_loaded->load(array('id' => 1 ));
 		$this->assertEqual($writing_loaded->categories_id, 2);
 		$this->assertEqual($writing_loaded->amount_excl_vat, 236.966825);
 		$this->assertEqual($writing_loaded->amount_inc_vat, 250);
@@ -180,7 +180,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writing->merge_from($writing_to_merge);
 		$writing->save();
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		
 		$this->assertTrue($writing_to_merge->categories_id == $writing->categories_id);
 		$this->assertTrue($writing_to_merge->amount_excl_vat == $writing->amount_excl_vat);
@@ -221,7 +221,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writing->merge_from($writing_to_merge_2);
 		$writing->save();
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertTrue($writing_to_merge_3->categories_id == $writing->categories_id);
 		$this->assertTrue($writing_to_merge_3->amount_excl_vat == $writing->amount_excl_vat);
 		$this->assertTrue($writing_to_merge_3->amount_inc_vat == $writing->amount_inc_vat);
@@ -248,8 +248,8 @@ class tests_Writing extends TableTestCase {
 		
 		$writing_loaded = new Writing();
 		$writing2_loaded = new Writing();
-		$this->assertTrue($writing2_loaded->load(2));
-		$this->assertTrue($writing_loaded->load(1));
+		$this->assertTrue($writing2_loaded->load(array('id' => 2 )));
+		$this->assertTrue($writing_loaded->load(array('id' => 1 )));
 		$this->assertTrue($writing2_loaded->categories_id == $writing2->categories_id);
 		$this->assertTrue($writing2_loaded->banks_id == $writing2->banks_id);
 		$this->assertTrue($writing_loaded->categories_id == $writing->categories_id);
@@ -289,8 +289,8 @@ class tests_Writing extends TableTestCase {
 		$writing->merge_from($writing2);
 		$writing2_loaded = new Writing();
 		$writing_loaded = new Writing();
-		$this->assertTrue($writing2_loaded->load(1));
-		$this->assertFalse($writing_loaded->load(2));
+		$this->assertTrue($writing2_loaded->load(array('id' => 1 )));
+		$this->assertFalse($writing_loaded->load(array('id' => 2 )));
 		
 		$this->assertEqual($writing2_loaded->categories_id, 2);
 		$this->assertEqual($writing2_loaded->amount_excl_vat, 236.966825);
@@ -322,7 +322,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writing->merge_from($writing2);
 		$writing->save();
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		
 		$this->assertTrue($writing->amount_inc_vat == 250);
 		$this->assertTrue($writing->vat == 19.6);
@@ -345,7 +345,7 @@ class tests_Writing extends TableTestCase {
 		$writing2->merge_from($writing);
 		
 		$writing2->save();
-		$writing2->load(1);
+		$writing2->load(array('id' => 1 ));
 		$this->assertTrue($writing2->amount_inc_vat == 250);
 		$this->assertTrue($writing2->vat == 19.6);
 		$this->assertTrue($writing2->amount_excl_vat == 209.030100);
@@ -382,8 +382,8 @@ class tests_Writing extends TableTestCase {
 		$writing2->merge_from($writing);
 		$writing2_loaded = new Writing();
 		$writing_loaded = new Writing();
-		$this->assertTrue($writing_loaded->load(2));
-		$this->assertFalse($writing2_loaded->load(1));
+		$this->assertTrue($writing_loaded->load(array('id' => 2 )));
+		$this->assertFalse($writing2_loaded->load(array('id' => 1 )));
 		
 		$this->assertEqual($writing_loaded->categories_id, 1);
 		$this->assertEqual($writing_loaded->amount_excl_vat, 209.030100);
@@ -418,9 +418,9 @@ Autre complément d'infos");
 		$writing->save();
 		
 		$writing->split(250);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$writing_splited = new Writing();
-		$writing_splited->load(2);
+		$writing_splited->load(array('id' => 2 ));
 		$this->assertEqual($writing->amount_inc_vat, -50);
 		$this->assertEqual($writing->amount_excl_vat, -41.806020);
 		$this->assertEqual($writing_splited->categories_id, 1);
@@ -448,9 +448,9 @@ Autre complément d'infos");
 		$writing->save();
 		
 		$writing->split(225);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$writing_splited = new Writing();
-		$writing_splited->load(2);
+		$writing_splited->load(array('id' => 2 ));
 		$this->assertEqual($writing->amount_inc_vat, 0);
 		$this->assertEqual($writing->amount_excl_vat, 0);
 		$this->assertEqual($writing_splited->categories_id, 1);
@@ -564,17 +564,17 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 6);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(0, 0, 0, 8, 26, 2013), $writing->day);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 26, 2013), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 10, 26, 2013), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 11, 26, 2013), $writing->day);
-		$writing->load(5);
+		$writing->load(array('id' => 5 ));
 		$this->assertEqual(mktime(0, 0, 0, 12, 26, 2013), $writing->day);
-		$writing->load(6);
+		$writing->load(array('id' => 6 ));
 		$this->assertEqual(mktime(0, 0, 0, 1, 26, 2014), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -585,11 +585,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 3, 5, 2014), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 6, 5, 2014), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -600,11 +600,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 3, 5, 2014), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 6, 5, 2014), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -615,11 +615,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 3, 5, 2014), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 6, 5, 2014), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -630,11 +630,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 3, 5, 2014), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 6, 5, 2014), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -645,11 +645,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2014), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2015), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2016), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -660,11 +660,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2014), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2015), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2016), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -675,11 +675,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2014), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2015), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2016), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -690,11 +690,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2014), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2015), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 9, 5, 2016), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -705,11 +705,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 10, 5, 2013), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 11, 5, 2013), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -720,11 +720,11 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 4);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 10, 5, 2013), $writing->day);
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 11, 5, 2013), $writing->day);
-		$writing->load(4);
+		$writing->load(array('id' => 4 ));
 		$this->assertEqual(mktime(0, 0, 0, 12, 5, 2013), $writing->day);
 		$this->truncateTable("writings");
 		
@@ -736,10 +736,10 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 3);
-		$writing->load(2);
+		$writing->load(array('id' => 2 ));
 		$this->assertEqual(mktime(0, 0, 0, 10, 5, 2013), $writing->day);
 		$this->assertTrue(empty($writing->number));
-		$writing->load(3);
+		$writing->load(array('id' => 3 ));
 		$this->assertEqual(mktime(0, 0, 0, 11, 5, 2013), $writing->day);
 		$this->assertTrue(empty($writing->number));
 		$this->truncateTable("writings");
@@ -803,7 +803,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 9, 11, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -815,7 +815,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -827,7 +827,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 9, 11, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -839,7 +839,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -851,7 +851,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -863,7 +863,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 5, 11, 2014), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -875,7 +875,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 11, 11, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -887,7 +887,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 5, 11, 2014), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -899,7 +899,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2014), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -911,7 +911,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2016), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -923,7 +923,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2014), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -935,7 +935,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 8, 11, 2016), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -947,7 +947,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 9, 22, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -959,7 +959,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 10, 1, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -971,7 +971,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 9, 22, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -983,7 +983,7 @@ Autre complément d'infos");
 		$writings = new Writings();
 		$writings->select();
 		$this->assertTrue(count($writings) == 1);
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertEqual(mktime(10, 0, 0, 10, 1, 2013), $writing->day);
 		
 		$this->truncateTable("writings");
@@ -1170,7 +1170,7 @@ Autre complément d'infos");
 	function test_is_recently_modified() {
 		$writing = new Writing();
 		$writing->save();
-		$writing->load(1);
+		$writing->load(array('id' => 1 ));
 		$this->assertTrue($writing->is_recently_modified());
 		$writing->timestamp = $writing->timestamp - 11;
 		$this->assertFalse($writing->is_recently_modified());

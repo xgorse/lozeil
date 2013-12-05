@@ -62,9 +62,9 @@ class tests_Bayesian_Element extends TableTestCase {
 		$bayesianelement->element = "premier";
 		$bayesianelement->save();
 		$bayesianelement_loaded = new Bayesian_Element();
-		$this->assertTrue($bayesianelement_loaded->load(1));
+		$this->assertTrue($bayesianelement_loaded->load(array('id' => 1)));
 		$bayesianelement->delete();
-		$this->assertFalse($bayesianelement_loaded->load(1));
+		$this->assertFalse($bayesianelement_loaded->load(array('id' => 1)));
 	}
 	
 	function test_increment() {

@@ -30,7 +30,7 @@ class Writings_Followup  {
 			foreach ($data_per_category as $categories_id => $values) {
 				$cubismchart->data = $values;
 				$category = new Category();
-				$cubismchart->title = $category->load($categories_id) ? $category->name : __('&#60none&#62');
+				$cubismchart->title = $category->load(array('id' => $categories_id)) ? $category->name : __('&#60none&#62');
 				$charts .= $cubismchart->display();
 			}
 		}
@@ -60,7 +60,7 @@ class Writings_Followup  {
 			foreach ($data_per_bank as $banks_id => $values) {
 				$cubismchart->data = $values;
 				$bank = new Bank();
-				$cubismchart->title = $bank->load($banks_id) ? $bank->name : __('&#60none&#62');
+				$cubismchart->title = $bank->load(array('id' => $banks_id)) ? $bank->name : __('&#60none&#62');
 				$charts .= $cubismchart->display();
 			}
 		}

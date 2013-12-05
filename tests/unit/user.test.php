@@ -57,8 +57,8 @@ class tests_User extends TableTestCase {
 		$user->name = "premier user";
 		$user->save();
 		$user_loaded = new User();
-		$this->assertTrue($user_loaded->load(1));
+		$this->assertTrue($user_loaded->load(array('id' => 1 )));
 		$user->delete();
-		$this->assertFalse($user_loaded->load(1));
+		$this->assertFalse($user_loaded->load(array('id' => 1 )));
 	}
 }
