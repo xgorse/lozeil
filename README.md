@@ -53,7 +53,7 @@ Occasionally, your bank isn't as accurate as you wanted to. Some writings are ac
 From your actual budget you can build your forecast. To do so use the plus icon that shows up when hovering the writings. Tell lozeil the frequency of this writing and it will create the corresponding one's, which won't be affiliated to a bank.
 
 ### Statistics
-The statistics are accessible through 'consult statistics', you can have a precise overview of your cashflow filtered by categories and banks scalable by day, month and week.
+The statistics are accessible through 'consult statistics', you can have a precise overview of your cashflow filtered by categories and banks scalable by day, week and month.
 
 ### Simulations
 See how a new income/outcome would impact your accounting and your forecast bugdet.
