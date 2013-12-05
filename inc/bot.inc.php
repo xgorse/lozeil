@@ -34,7 +34,7 @@ class Bot {
 		}
 		
 		$param_file = new Param_File($this->directory_cfg."/param.inc.php");
-		$param_file->overwrite(new Param_File($this->directory_cfg."/param.inc.php.dist"));
+		$param_file->overwrite_file(new Param_File($this->directory_cfg."/param.inc.php.dist"));
 		
 		$load_config = new Config_File(dirname(__FILE__)."/../cfg/config.inc.php", "dbconfig");
 		$load_config->load_at_global_level();

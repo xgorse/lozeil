@@ -38,7 +38,7 @@ abstract class Record {
 		return $this;
 	}
 
-	protected function match_existing($table, array $patterns, $db = null) {
+	protected function match_existing(array $patterns, $table, $db = null) {
 		$this->id = null;
 
 		if (sizeof($patterns) > 0) {
@@ -70,7 +70,14 @@ abstract class Record {
 		return $this->id !== null;
 	}
 
-	protected function load($table, array $key, $columns = null) {
+	protected function load($id, $table, $columns = null) {
+		if ($id === null or $id == 0) {
+			$id = $this->id;
+		}
+		if ($id === null or $id == 0) {
+			return false;
+		}
+
 		if ($columns === null) {
 			$columns = $this->get_db_columns();
 		}
@@ -78,7 +85,7 @@ abstract class Record {
 		$result = $this->db->query("
 			SELECT ".join(", ", $columns)."
 			FROM ".$this->db->config['table_'.$table]."
-			WHERE ".self::get_sql_key($key)
+			WHERE id = ".(int)$id
 		);
 
 		$row = $this->db->fetchArray($result[0]);
@@ -148,15 +155,5 @@ abstract class Record {
 		}
 
 		return $columns[$class_name];
-	}
-
-	private function get_sql_key(array $key) {
-		$sql = array();
-
-		foreach ($key as $column => $value) {
-			$sql[] = $column." = ".$this->db->quote($value);
-		}
-
-		return join(" AND ", $sql);
 	}
 }

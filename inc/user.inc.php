@@ -26,16 +26,8 @@ class User extends Record  {
 		}
 	}
 	
-	function load($id = null) {
-		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
-			return false;
-
-		} else {
-			if ($id === null) {
-				$id = $this->id;
-			}
-			return parent::load($this->db->config['table_users'], array('id' => (int)$id));
-		}
+	function load($id = null, $table = "users", $columns = null) {
+		return parent::load($id, $table, $columns);
 	}
 	
 	function save() {
@@ -115,7 +107,7 @@ class User extends Record  {
 					'Body' => sprintf($GLOBALS['array_email']['password_request'][1], $this->username, $url),
 				),
 			);
-
+			
 			email_send($emails);
 
 			return true;

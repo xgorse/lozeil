@@ -244,8 +244,8 @@ class Config_File {
 	}
 	
 	private function input($message) {
-	  fwrite(STDOUT, "$message: ");
-	  $input = trim(fgets(STDIN));
-	  return $input;
+		fwrite(STDOUT, "$message: ");
+		$input = trim(fgets(STDIN));
+		return $input;
 	}
 }

@@ -5,14 +5,14 @@ require_once dirname(__FILE__)."/../inc/require.inc.php";
 
 class tests_Theme_default extends TableTestCase {
 	
-	function test_css_files() {
+	function test_css() {
 		$theme = new Theme_Default();
 		$GLOBALS['config']['layout_mediaserver'] = "";
-		$this->assertPattern("/stylesheet/", $theme->css_files());
-		$this->assertPattern("/medias\/css\/styles.css/", $theme->css_files());
+		$this->assertPattern("/stylesheet/", $theme->css());
+		$this->assertPattern("/medias\/css\/styles.css/", $theme->css());
 		$GLOBALS['config']['layout_mediaserver'] = "autre/chemin/";
-		$this->assertPattern("/autre\/chemin\//", $theme->css_files());
-		$this->assertPattern("/\?v=".$GLOBALS['config']['version']."/", $theme->css_files());
+		$this->assertPattern("/autre\/chemin\//", $theme->css());
+		$this->assertPattern("/\?v=".$GLOBALS['config']['version']."/", $theme->css());
 	}
 	
 	function test_js_files() {

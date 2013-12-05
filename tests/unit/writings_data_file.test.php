@@ -602,17 +602,6 @@ SÃ©quence de PrÃ©sentation : SÃ©quence de PrÃ©sentation 1
 		$this->truncateTable("writingsimported");
 	}
 	
-	function test_form_import_bank() {
-		$data = new Writings_Data_File();
-		$form_import = $data->form_import_bank("label");
-		$this->assertPattern("/id=\"menu_actions_import_bank\"/", $form_import);
-		$this->assertPattern("/label/", $form_import);
-		$this->assertPattern("/menu_actions_import_file/", $form_import);
-		$this->assertPattern("/menu_actions_import_submit/", $form_import);
-		
-		$this->truncateTable("banks");
-	}
-	
 	function test_import_as_ofx() {
 		$name = tempnam('/tmp', 'ofx');
 		

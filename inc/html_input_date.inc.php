@@ -24,7 +24,7 @@ class Html_Input_Date extends Html_Input {
 		return $day->input_hidden();
 	}
 	
-	function item($label, $complement = "") {
+	function item($label, $display = "", $complement = "") {
 		return $this->label($label).$this->input().$complement;
 	}
 	

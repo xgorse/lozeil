@@ -5,9 +5,10 @@ $config['name'] = "Lozeil";
 $config['title'] = "Lozeil";
 $config['version'] = "26";
 
-$config['layout_mediaserver'] = "http://localhost/~adrien/lozeil.com/lozeil/";		// serveur pour tous les medias -- js, css, images ("", par défaut)
+$config['layout_mediaserver'] = "http://localhost/~adrien/lozeil/";		// serveur pour tous les medias -- js, css, images ("", par défaut)
 $config['message_log'] = 1;
 $config['mysql_password'] = "password";
+$config['root_url'] = "http://localhost/~adrien/lozeil";
 
 ## database config
 $dbconfig['type'] = "mysql";		// type de serveur de la base de données (mysql, par défaut)

@@ -4,13 +4,13 @@
 class User_Authenticated extends User {
 	private $exists = false;
 
-	function __construct($id=0) {
+	function __construct($id = 0) {
 		parent::__construct($id);
 		$this->load();
 	}
 
-	function load() {
-		$this->exists = parent::load();
+	function load($id = null, $table = "users", $columns = null) {
+		$this->exists = parent::load($id, $table, $columns);
 		return $this->exists();
 	}
 	

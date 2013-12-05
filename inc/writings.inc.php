@@ -1307,8 +1307,10 @@ class Writings extends Collector {
 		}
 		$color_class = " duplicate_brown";
 		foreach ($duplicate as $timestamp => $amount) {
-			if (array_shift(array_values($amount))) {
-				$duplicate[$timestamp][array_shift(array_keys($amount))] = $color_class;
+			$values = array_values($amount);
+			if (array_shift($values)) {
+				$keys = array_keys($amount);
+				$duplicate[$timestamp][array_shift($keys)] = $color_class;
 				$color_class = ($color_class == " duplicate_brown") ? " duplicate_green" : " duplicate_brown";
 			}
 		}

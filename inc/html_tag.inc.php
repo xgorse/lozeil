@@ -2,7 +2,7 @@
 /* Lozeil -- Copyright (C) No Parking 2013 - 2013 */
 
 class Html_Tag {
-	function a($url, $string = "", $properties = array()) {
+	static function a($url, $string = "", $properties = array()) {
 		if (!$string) {
 			$string = $url;
 		}

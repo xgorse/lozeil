@@ -11,24 +11,7 @@ class Param_File extends Config_File {
 		return $return && parent::update($values);
 	}
 	
-	
-	function find_default_value($var = "") {
-		if (!$this->is_readable()) {
-			return false;
-		} else {
-			foreach (file($this->path) as $line) {
-				if (preg_match('|^\\$([^[]+)\\[\'([^\']+)\'\\]\s*=\s*"([^"]*)";.*$|u', $line, $parameters)) {
-					if ($parameters[1] == $this->type and $parameters[2] == $var) {
-						return $parameters[3]; 
-					}
-				}
-			}
-
-			return false;
-		}
-	}
-	
-	function change_config_value($value = "", Param_file $file_fallback = null) {
+	function change_param_value($value = "", Param_file $file_fallback = null) {
 		if ($this->exists()) {
 			$default_value = $this->find_default_value($value);
 		}
@@ -58,7 +41,7 @@ class Param_File extends Config_File {
 		}			
 	}
 	
-	function overwrite(Param_file $dist_config_file = null) {
+	function overwrite_file(Param_file $dist_config_file = null) {
 		if ($this->exists()) {
 			echo utf8_ucfirst(__('param file already exists, do you want to overwrite? (y/n)'))."\n";
 			while(empty($config_answer)) {
@@ -74,11 +57,13 @@ class Param_File extends Config_File {
 			} else {
 				try {
 					$this->copy($dist_config_file);
+					return true;
 				} catch (exception $exception) {
 					die($exception->getMessage());
 				}
 			}
 		}
+		return false;
 	}
 	
 	private function input($message) {

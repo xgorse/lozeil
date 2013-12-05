@@ -18,7 +18,7 @@ class Writing_Imported extends Record {
 		}
 	}
 	
-	function load($id = null) {
+	function load($id = null, $table = "writingsimported", $columns = null) {
 		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
 			return false;
 
@@ -26,7 +26,7 @@ class Writing_Imported extends Record {
 			if ($id === null) {
 				$id = $this->id;
 			}
-			return parent::load($this->db->config['table_writingsimported'], array('id' => (int)$id));
+			return parent::load($id, $table, $columns);
 		}
 	}
 	

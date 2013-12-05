@@ -19,7 +19,7 @@ class File extends Record {
 		}
 	}
 	
-	function load($id = null) {
+	function load($id = null, $table = "files", $columns = null) {
 		if (($id === null or $id == 0) and ($this->id === null or $this->id == 0)) {
 			return false;
 
@@ -27,7 +27,7 @@ class File extends Record {
 			if ($id === null) {
 				$id = $this->id;
 			}
-			return parent::load($this->db->config['table_files'], array('id' => (int)$id));
+			return parent::load($id, $table, $columns);
 		}
 	}
 	

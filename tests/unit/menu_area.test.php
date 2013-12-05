@@ -18,7 +18,6 @@ class tests_Menu_area extends TableTestCase {
 		$menu->prepare_navigation("writings.php");
 		$area_html = $menu->show();
 		$this->assertPattern("/header/", $area_html);
-		$this->assertPattern("/".$GLOBALS['config']['layout_mediaserver']."medias\/images\/logo.png/", $area_html);
 		$this->assertPattern("/content=writings.php/", $area_html);
 		$this->assertPattern("/menu_actions_import/", $area_html);
 		$this->assertPattern("/file/", $area_html);
