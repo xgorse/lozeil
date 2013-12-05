@@ -27,17 +27,17 @@ class tests_Category extends TableTestCase {
 		$category->vat_category = 1;
 		$category->save();
 		$category_loaded = new Category();
-		$this->assertTrue($category_loaded->load(1));
+		$this->assertTrue($category_loaded->load(array('id' => 1)));
 		$this->assertEqual($category_loaded->name, $category->name);
 		$this->assertTrue($category_loaded->vat == 0);
 		$this->assertTrue($category_loaded->vat_category == 0);
-		$this->assertTrue($category_loaded->load(2));
+		$this->assertTrue($category_loaded->load(array("id" => 2 )));
 		$this->assertTrue($category_loaded->vat == 15.26);
 		$this->assertTrue($category_loaded->vat_category == 0);
-		$this->assertTrue($category_loaded->load(3));
+		$this->assertTrue($category_loaded->load(array("id" => 3 )));
 		$this->assertTrue($category_loaded->vat == 0);
 		$this->assertTrue($category_loaded->vat_category == 1);
-		$this->assertFalse($category_loaded->load(4));
+		$this->assertFalse($category_loaded->load(array("id" => 4 )));
 		$this->truncateTable("categories");
 	}
 	
@@ -54,7 +54,7 @@ class tests_Category extends TableTestCase {
 		$category_loaded->vat_category = 1;
 		$category_loaded->update();
 		$category_loaded2 = new Category();
-		$this->assertTrue($category_loaded2->load(1));
+		$this->assertTrue($category_loaded2->load(array("id" => 1 )));
 		$this->assertNotEqual($category_loaded2->name, $category->name);
 		$this->assertNotEqual($category_loaded2->vat, $category->vat);
 		$this->assertNotEqual($category_loaded2->vat_category, $category->vat_category);
@@ -66,9 +66,9 @@ class tests_Category extends TableTestCase {
 		$category->name = "première category";
 		$category->save();
 		$category_loaded = new Category();
-		$this->assertTrue($category_loaded->load(1));
+		$this->assertTrue($category_loaded->load(array("id" => 1 )));
 		$category->delete();
-		$this->assertFalse($category_loaded->load(1));
+		$this->assertFalse($category_loaded->load(array("id" => 1 )));
 		$this->truncateTable("categories");
 	}
 	
