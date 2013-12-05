@@ -18,7 +18,7 @@ class Accounting_Code extends Record {
 	}
 	
 	function load(array $key = array(), $table = "accountingcodes", $columns = null) {
-		if (empty($key) or $key->id == 0) {
+		if (empty($key) or $key['id'] == 0) {
 			if ($this->id === 0) {
 				return false;
 			} else {
