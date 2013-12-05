@@ -10,4 +10,7 @@ echo $heading->show();
 
 $accounting_codes = new Accounting_Codes();
 $accounting_codes->select();
-echo $accounting_codes->display();
+
+$working = $accounting_codes->display();
+$area = new Working_Area($working);
+echo $area->show();

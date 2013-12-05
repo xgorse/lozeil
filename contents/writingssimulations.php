@@ -53,7 +53,10 @@ echo $heading->show();
 
 $simulations = new Writings_Simulations();
 $simulations->select();
-echo $simulations->display();
+$working = $simulations->display();
 
 $simulation = new Writings_Simulation();
-echo $simulation->form($timestamp_selected);
+$working .= $simulation->form($timestamp_selected);
+
+$area = new Working_Area($working);
+echo $area->show();

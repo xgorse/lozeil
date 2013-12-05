@@ -83,6 +83,10 @@ img { border: none; }
 	min-height: 600px;
 }
 
+.content_working {
+	margin: 0 70px 0 30px;
+}
+
 .content_copyright {
 	width: 1195px;
 	text-align: left;
@@ -228,11 +232,6 @@ input[type="submit"]:hover {
 	cursor: pointer;
 }
 
-#table_writings {
-	margin: 0 70px 0 30px;
-	width: 1095px;
-}
-
 #table_writings td:last-of-type,
 #table_simulations td:last-of-type {
 	position: absolute;
@@ -291,7 +290,6 @@ input[type="submit"]:hover {
 /* --- form modify writings --- */
 
 #select_writings {
-	margin: 10px 50px 0 30px;
 	width: 70%;
 	display: inline-block;
 }
@@ -359,10 +357,6 @@ textarea#information {
 	vertical-align: middle;
 	margin-left: 5px;
 	width: 40px;
-}
-
-#table_simulations {
-	margin: 25px 70px 0 30px;
 }
 
 #table_writings td,
@@ -519,6 +513,11 @@ tr.modified {
 }
 
 /*Timeline*/
+
+#heading_timeline {
+	margin-bottom: 20px;
+}
+
 #heading_timeline a,
 #heading_timeline a {
     font-size:0.9em;
@@ -613,7 +612,7 @@ label[for="filter_number_duplicate"] {
 /*Extra*/
 
 .extra {
-	margin: 25px 0 10px 0;
+	margin: 0px 0 10px 0;
 	padding-top: 5px;
 	border: 1px #EDEDED solid;
 }
@@ -736,30 +735,11 @@ label[for="filter_number_duplicate"] {
 
 /* --- Banques --- */
 
-#edit_banks {
-	margin: 0 50px;
-}
-
 #edit_banks input[type="text"] {
 	width: 400px;
 }
 
-/* --- Catégories --- */
-
-#edit_categories {
-	margin: 0 50px;
-}
-
-/* --- Sources --- */
-
-#edit_sources {
-	margin: 0 50px;
-}
 /* --- accounting codes --- */
-
-#accounting_codes {
-	margin: 0 50px;
-}
 
 #accounting_codes tr.accounting_codes_parent{
 	cursor: pointer;

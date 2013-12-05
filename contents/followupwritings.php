@@ -30,13 +30,16 @@ if (isset($_POST) and !empty($_POST)) {
 
 switch ($followupwritings->filter) {
 	case 'categories':
-		echo $followupwritings->show_timeseries_per_category_at($_GET['start']);
+		$working = $followupwritings->show_timeseries_per_category_at($_GET['start']);
 		break;
 	
 	case 'banks':
-		echo $followupwritings->show_timeseries_per_bank_at($_GET['start']);
+		$working = $followupwritings->show_timeseries_per_bank_at($_GET['start']);
 		break;
 
 	default:
 		break;
 }
+
+$area = new Working_Area($working);
+echo $area->show();

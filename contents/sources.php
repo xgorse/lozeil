@@ -10,4 +10,7 @@ echo $heading->show();
 
 $sources = new Sources();
 $sources->select();
-echo $sources->show_form();
+
+$working = $sources->show_form();
+$area = new Working_Area($working);
+echo $area->show();

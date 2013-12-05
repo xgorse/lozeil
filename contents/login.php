@@ -5,6 +5,8 @@ if (isset($_SESSION)) {
 	session_destroy();
 }
 $auth = new User_Authentication();
-$html = $auth->form();
 
-echo "<div id=\"form_login\">".$html."</div>";
+$working = $auth->form();
+$working .= "<div id=\"form_login\">".$html."</div>";
+$area = new Working_Area($working);
+echo $area->show();

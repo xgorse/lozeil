@@ -10,4 +10,7 @@ echo $heading->show();
 
 $banks = new Banks();
 $banks->select();
-echo $banks->show_form();
+
+$working = $banks->show_form();
+$area = new Working_Area($working);
+echo $area->show();

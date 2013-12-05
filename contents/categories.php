@@ -10,4 +10,7 @@ echo $heading->show();
 
 $categories = new Categories();
 $categories->select();
-echo $categories->show_form();
+
+$working = $categories->show_form();
+$area = new Working_Area($working);
+echo $area->show();

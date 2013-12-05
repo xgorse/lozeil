@@ -52,8 +52,13 @@ $writings->select();
 $heading = new Heading_Area(utf8_ucfirst(__('consult balance sheet')), $writings->display_timeline_at($_SESSION['filter']['start']), $writings->form_filter($_SESSION['filter']['start'], $_SESSION['filter']['stop']));
 echo $heading->show();
 
-echo $writings->display();
-echo $writings->modify_options();
+
+
+$working =  $writings->display();
+$working .= $writings->modify_options();
 
 $writing = new Writing();
-echo $writing->form();
+$working .= $writing->form();
+
+$area = new Working_Area($working);
+echo $area->show();
