@@ -171,7 +171,7 @@ class Bot {
 		// Investissement de départ
 		$writing = new Writing();
 		$category = new Category();
-		$category->load(1);
+		$category->load(array("id" => 1 ));
 		$writing->day = mktime(0, 0, 0, date('m', time()), 1, date('Y', time()) - 1);
 		$writing->number = rand(52, 52445621);
 		$writing->vat = $category->vat;
@@ -184,7 +184,7 @@ class Bot {
 			for ($j = 0; $j < 3; $j++) {
 				$writing = new Writing();
 				$category = new Category();
-				$category->load(1);
+				$category->load(array("id" => 1 ));
 				$writing->day = mktime(0, 0, 0, date('m', time()) + $i, rand(15,25), date('Y', time()) - 1);
 				$writing->categories_id = 1;
 				$writing->number = rand(52, 52445621);
