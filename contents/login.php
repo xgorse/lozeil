@@ -6,7 +6,6 @@ if (isset($_SESSION)) {
 }
 $auth = new User_Authentication();
 
-$working = $auth->form();
-$working .= "<div id=\"form_login\">".$html."</div>";
+$working = "<div id=\"form_login\">".$auth->form()."</div>";
 $area = new Working_Area($working);
 echo $area->show();
