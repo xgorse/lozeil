@@ -6,18 +6,10 @@ class User_Authenticated extends User {
 
 	function __construct($id = 0) {
 		parent::__construct($id);
-		$this->load();
+		$this->load(array('id' => $id));
 	}
 
-	
 	function load(array $key = array(), $table = "users", $columns = null) {
-		if (empty($key) or $key['id'] == 0) {
-			if ($this->id === 0) {
-				return false;
-			} else {
-				$key = array ("id" => $this->id);
-			}
-		}
 		$this->exists = parent::load($key, $table, $columns);
 		return $this->exists();
 	}

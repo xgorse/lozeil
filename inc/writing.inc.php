@@ -31,13 +31,6 @@ class Writing extends Record {
 	}
 	
 	function load(array $key = array(), $table = "writings", $columns = null) {
-		if (empty($key) or $key['id'] == 0) {
-			if ($this->id === 0) {
-				return false;
-			} else {
-				$key = array ("id" => $this->id);
-			}
-		}
 		return parent::load($key, $table, $columns);
 	}
 	

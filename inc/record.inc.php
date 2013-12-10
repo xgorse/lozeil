@@ -51,7 +51,7 @@ abstract class Record {
 
 		$row = $this->db->fetchArray($result[0]);
 
-		if ($row === false) {
+		if ($row === false or $row === null) {
 			return false;
 		} else {
 			foreach ($row as $column => $value) {

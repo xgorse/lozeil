@@ -20,8 +20,7 @@ class tests_Bayesian_Element extends TableTestCase {
 		$bayesianelement->occurrences = 15;
 		$bayesianelement->save();
 		$bayesianelement_loaded = new Bayesian_Element();
-		$bayesianelement_loaded->id = 1;
-		$bayesianelement_loaded->load();
+		$bayesianelement_loaded->load(array('id' => 1));
 		$this->assertEqual($bayesianelement_loaded->element, $bayesianelement->element);
 		$this->assertEqual($bayesianelement_loaded->field, $bayesianelement->field);
 		$this->assertEqual($bayesianelement_loaded->table_name, $bayesianelement->table_name);
@@ -47,8 +46,7 @@ class tests_Bayesian_Element extends TableTestCase {
 		$bayesianelement->occurrences = 12;
 		$bayesianelement_loaded->update();
 		$bayesianelement_loaded2 = new Bayesian_Element();
-		$bayesianelement_loaded2->id = 1;
-		$bayesianelement_loaded2->load();
+		$this->assertTrue($bayesianelement_loaded2->load(array('id' => 1)));
 		$this->assertNotEqual($bayesianelement_loaded2->element, $bayesianelement->element);
 		$this->assertNotEqual($bayesianelement_loaded2->field, $bayesianelement->field);
 		$this->assertNotEqual($bayesianelement_loaded2->table_name, $bayesianelement->table_name);

@@ -21,8 +21,7 @@ class tests_Writings_simulation extends TableTestCase {
 		$simulation->display = 1;
 		$simulation->save();
 		$simulation_loaded = new Writings_Simulation();
-		$simulation_loaded->id = 1;
-		$simulation_loaded->load();
+		$simulation_loaded->load(array('id' => 1));
 		$this->assertEqual($simulation_loaded->name, $simulation->name);
 		$this->assertEqual($simulation_loaded->amount_inc_vat, $simulation->amount_inc_vat);
 		$this->assertEqual($simulation_loaded->periodicity, $simulation->periodicity);

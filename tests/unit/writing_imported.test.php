@@ -19,7 +19,7 @@ class tests_Writing_Imported extends TableTestCase {
 		$writing_imported->save();
 		$writing_imported_loaded = new Writing_Imported();
 		$writing_imported_loaded->id = 1;
-		$writing_imported_loaded->load();
+		$writing_imported_loaded->load(array('id' => 1));
 		$this->assertEqual($writing_imported_loaded->hash, $writing_imported->hash);
 		$this->assertEqual($writing_imported_loaded->banks_id, $writing_imported->banks_id);
 		$this->assertEqual($writing_imported_loaded->sources_id, $writing_imported->sources_id);
@@ -39,8 +39,7 @@ class tests_Writing_Imported extends TableTestCase {
 		$writing_imported_loaded->sources_id = 5;
 		$writing_imported_loaded->update();
 		$writing_imported_loaded2 = new Writing_Imported();
-		$writing_imported_loaded2->id = 1;
-		$writing_imported_loaded2->load();
+		$this->assertTrue($writing_imported_loaded2->load(array('id' => 1)));
 		$this->assertNotEqual($writing_imported_loaded2->hash, $writing_imported->hash);
 		$this->truncateTable("writingsimported");
 	}

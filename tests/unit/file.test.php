@@ -18,8 +18,7 @@ class tests_File extends TableTestCase {
 		$file->value = "fichier.pdf";
 		$file->save();
 		$file_loaded = new File();
-		$file_loaded->id = 1;
-		$file_loaded->load();
+		$file_loaded->load(array('id' => 1));
 		$this->assertEqual($file_loaded->writings_id, $file->writings_id);
 		$this->assertEqual($file_loaded->hash, $file->hash);
 		$this->assertEqual($file_loaded->value, $file->value);
@@ -39,8 +38,7 @@ class tests_File extends TableTestCase {
 		$file_loaded->value = "fichier2.pdf";
 		$file_loaded->update();
 		$file_loaded2 = new File();
-		$file_loaded2->id = 1;
-		$file_loaded2->load();
+		$this->assertTrue($file_loaded2->load(array('id' => 1)));
 		$this->assertNotEqual($file_loaded2->writings_id, $file->writings_id);
 		$this->assertNotEqual($file_loaded2->hash, $file->hash);
 		$this->assertNotEqual($file_loaded2->value, $file->value);

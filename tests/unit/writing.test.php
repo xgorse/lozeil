@@ -31,8 +31,7 @@ class tests_Writing extends TableTestCase {
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
-		$writing_loaded->id = 1;
-		$writing_loaded->load();
+		$writing_loaded->load(array('id' => 1));
 		$this->assertEqual($writing_loaded->categories_id, $writing->categories_id);
 		$this->assertEqual($writing_loaded->amount_excl_vat, $writing->amount_excl_vat);
 		$this->assertEqual($writing_loaded->amount_inc_vat, $writing->amount_inc_vat);
@@ -65,8 +64,7 @@ class tests_Writing extends TableTestCase {
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
-		$writing_loaded->id = 1;
-		$writing_loaded->load();
+		$writing_loaded->load(array('id' => 1));
 		$writing_loaded->categories_id = 2;
 		$writing_loaded->amount_excl_vat = 19.50;
 		$writing_loaded->banks_id = 3;
@@ -107,8 +105,7 @@ class tests_Writing extends TableTestCase {
 		$writing->vat = 19.6;
 		$writing->save();
 		$writing_loaded = new Writing();
-		$writing_loaded->id = 1;
-		$writing_loaded->load();
+		$writing_loaded->load(array('id' => 1));
 		$writing_loaded->categories_id = 2;
 		$writing_loaded->amount_excl_vat = "";
 		$writing_loaded->amount_inc_vat = "";
@@ -141,11 +138,11 @@ class tests_Writing extends TableTestCase {
 		$writing->categories_id = 1;
 		$writing->save();
 		
-		$this->assertTrue($writing->load());
+		$this->assertTrue($writing->load(array('id' => 1)));
 		
 		$writing->delete();
 		
-		$this->assertFalse($writing->load());
+		$this->assertFalse($writing->load(array('id' => 1)));
 		$this->truncateTable("writings");
 	}
 	

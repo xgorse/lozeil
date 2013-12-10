@@ -132,8 +132,7 @@ class Writings extends Collector {
 		
 		return $sum['sum_amount_excl_vat'] - $sum['sum_amount_inc_vat'];
 	}
-	
-	
+		
 	function grid_header() {
 		if ($_SESSION['accountant_view']) {
 			return $this->grid_header_accountant();

@@ -19,8 +19,7 @@ class tests_User extends TableTestCase {
 		$user->email = "admin@noparking.net";
 		$user->save();
 		$user_loaded = new User();
-		$user_loaded->id = 1;
-		$user_loaded->load();
+		$user_loaded->load(array('id' => 1));
 		$this->assertEqual($user_loaded->name, $user->name);
 		$this->assertEqual($user_loaded->username, $user->username);
 		$this->assertEqual($user_loaded->password, "*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7");
@@ -43,8 +42,7 @@ class tests_User extends TableTestCase {
 		$user_loaded->email = "autreadmin@noparking.net";
 		$user_loaded->update();
 		$user_loaded2 = new User();
-		$user_loaded2->id = 1;
-		$user_loaded2->load();
+		$this->assertTrue($user_loaded2->load(array('id' => 1)));
 		$this->assertNotEqual($user_loaded2->name, $user->name);
 		$this->assertNotEqual($user_loaded2->username, $user->username);
 		$this->assertNotEqual($user_loaded2->password, $user->password);
