@@ -1114,7 +1114,7 @@ class Writings extends Collector {
 			}
 		}
 		
-		$nb_day = is_leap(date('Y',$timestamp) + 1) ? 366 : 365;
+		$nb_day = is_leap(date("Y", (int)$timestamp) + 1) ? 366 : 365;
 		$previous = 0;
 		$timestamp_start = $start;
 		
