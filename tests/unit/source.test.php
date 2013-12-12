@@ -17,8 +17,7 @@ class tests_Source extends TableTestCase {
 		$source->name = "première source";
 		$source->save();
 		$source_loaded = new Source();
-		$source_loaded->id = 1;
-		$source_loaded->load();
+		$source_loaded->load(array('id' => 1));
 		$this->assertEqual($source_loaded->name, $source->name);
 		$this->truncateTable("sources");
 	}
@@ -32,8 +31,7 @@ class tests_Source extends TableTestCase {
 		$source_loaded->name = "changement de nom";
 		$source_loaded->update();
 		$source_loaded2 = new Source();
-		$source_loaded2->id = 1;
-		$source_loaded2->load();
+		$source_loaded2->load(array('id' => 1));
 		$this->assertNotEqual($source_loaded2->name, $source->name);
 		$this->truncateTable("sources");
 	}

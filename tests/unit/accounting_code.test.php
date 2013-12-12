@@ -16,8 +16,7 @@ class tests_Accounting_Code extends TableTestCase {
 		$accountingcode->name = "première accountingcode";
 		$accountingcode->save();
 		$accountingcode_loaded = new Accounting_Code();
-		$accountingcode_loaded->id = 1;
-		$accountingcode_loaded->load();
+		$accountingcode_loaded->load(array('id' => 1));
 		$this->assertEqual($accountingcode_loaded->name, $accountingcode->name);
 		$this->truncateTable("accountingcodes");
 	}
@@ -31,8 +30,7 @@ class tests_Accounting_Code extends TableTestCase {
 		$accountingcode_loaded->name = "changement de nom";
 		$accountingcode_loaded->update();
 		$accountingcode_loaded2 = new Accounting_Code();
-		$accountingcode_loaded2->id = 1;
-		$accountingcode_loaded2->load();
+		$accountingcode_loaded2->load(array('id' => 1));
 		$this->assertNotEqual($accountingcode_loaded2->name, $accountingcode->name);
 		$this->truncateTable("accountingcodes");
 	}

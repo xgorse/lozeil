@@ -1154,7 +1154,7 @@ class tests_Writings extends TableTestCase {
 					"banks_id" => 0
 				)
 			);
-//		$this->truncateTable("writings");
-//		$this->truncateTable("categories");
+		$this->truncateTable("writings");
+		$this->truncateTable("categories");
 	}	
 }
