@@ -146,7 +146,7 @@ class tests_Writing extends TableTestCase {
 		$this->truncateTable("writings");
 	}
 	
-	function test_merge_from() {
+	function test_merge_from__no_bank() {
 		$writing = new Writing();
 		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
@@ -190,6 +190,12 @@ class tests_Writing extends TableTestCase {
 		$this->assertTrue($writing_to_merge->number == $writing->number);
 		$this->assertTrue($writing_to_merge->vat == $writing->vat);
 		
+	}
+	
+	function test_merge_from__empty_writing() {
+		$writing = new Writing();
+		$writing->load(array('id' => 1 ));
+	
 		$writing_to_merge_2 = new Writing();
 		$writing_to_merge_2->categories_id = 0;
 		$writing_to_merge_2->amount_excl_vat = 0;
@@ -230,7 +236,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertTrue($writing_to_merge_3->number == $writing->number);
 		$this->assertTrue($writing_to_merge_3->vat == $writing->vat);
 		$this->truncateTable("writings");
+	}
 		
+	function test_merge_from__two_banks_id() {
 		$writing = new Writing();
 		$writing->categories_id = "1";
 		$writing->banks_id = 1;
@@ -241,7 +249,7 @@ class tests_Writing extends TableTestCase {
 		$writing2->banks_id = 2;
 		$writing2->save();
 		
-		$writing->merge_from($writing2);
+		$this->assertFalse($writing->merge_from($writing2));
 		
 		$writing_loaded = new Writing();
 		$writing2_loaded = new Writing();
@@ -253,7 +261,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertTrue($writing_loaded->banks_id == $writing->banks_id);
 		
 		$this->truncateTable("writings");
+	}
 		
+	function test_merge_from__banks_id_writing_overwritten() {
 		$writing = new Writing();
 		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
@@ -303,7 +313,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertEqual($writing2_loaded->vat, 5.5);
 		
 		$this->truncateTable("writings");
+	}
 		
+	function test_merge_from__banks_id_writing_overwritten_2() {
 		$writing = new Writing();
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
@@ -319,7 +331,7 @@ class tests_Writing extends TableTestCase {
 		
 		$writing->merge_from($writing2);
 		$writing->save();
-		$writing->load(array('id' => 1 ));
+		$writing->load(array('id' => 1));
 		
 		$this->assertTrue($writing->amount_inc_vat == 250);
 		$this->assertTrue($writing->vat == 19.6);
@@ -328,6 +340,9 @@ class tests_Writing extends TableTestCase {
 		
 		$this->truncateTable("writings");
 		
+	}
+	
+	function test_merge_from__banks_id_writing_dragged() {
 		$writing = new Writing();
 		$writing->amount_excl_vat = 190.50;
 		$writing->amount_inc_vat = 250;
@@ -348,7 +363,9 @@ class tests_Writing extends TableTestCase {
 		$this->assertTrue($writing2->amount_excl_vat == 209.030100);
 		
 		$this->truncateTable("writings");
+	}
 		
+	function test_merge_from__banks_id_writing_overwritten_information() {
 		$writing = new Writing();
 		$writing->categories_id = 1;
 		$writing->amount_excl_vat = 190.50;
@@ -481,6 +498,7 @@ Autre complément d'infos");
 	
 	function test_display() {
 		$_SESSION['filter']['start'] = time();
+		$_SESSION['accountant_view'] = 0;
 		$writing = new Writing();
 		$display = $writing->display();
 		$this->assertPattern("/".date('m')."/", $display);
