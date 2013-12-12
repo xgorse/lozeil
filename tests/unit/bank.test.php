@@ -9,6 +9,7 @@ class tests_Bank extends TableTestCase {
 		$this->initializeTables(
 			"banks",
 			"sources",
+			"categories",
 			"writings"
 		);
 	}
